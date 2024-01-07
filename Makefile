@@ -5,7 +5,8 @@ VENV_PYTHON    = $(VENV_BIN)/python
 VENV_PIP       = $(VENV_BIN)/pip
 
 SRC_DIR        = src
-
+APP_NAME       = validation
+APP_DIR        = $(SRC_DIR)/$(APP_NAME)
 
 # Recipes
 
@@ -25,8 +26,10 @@ app: init
 	if [ ! -d $(SRC_DIR) ]; then \
 	    $(VENV_BIN)/django-admin startproject config; \
 	    mv config $(SRC_DIR); \
-	else\
-	    echo "Nothing to do.";\
+	fi; \
+	if [ ! -d $(APP_DIR) ]; then \
+	    cd $(SRC_DIR); \
+	    ../$(VENV_PYTHON) manage.py startapp $(APP_NAME); \
 	fi;
 
 # Run the development server
