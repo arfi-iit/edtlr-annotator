@@ -5,7 +5,7 @@ VENV_PYTHON    = $(VENV_BIN)/python
 VENV_PIP       = $(VENV_BIN)/pip
 
 SRC_DIR        = src
-APP_NAME       = validation
+APP_NAME       = annotation
 APP_DIR        = $(SRC_DIR)/$(APP_NAME)
 
 # Recipes
