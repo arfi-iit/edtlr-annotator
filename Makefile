@@ -4,6 +4,8 @@ VENV_BIN       = $(VENV)/bin
 VENV_PYTHON    = $(VENV_BIN)/python
 VENV_PIP       = $(VENV_BIN)/pip
 
+SRC_DIR        = src
+
 
 # Recipes
 
@@ -20,9 +22,13 @@ init: requirements.txt
 
 # Create the Django app
 app: init
-	if [ ! -d src ]; then \
+	if [ ! -d $(SRC_DIR) ]; then \
 	    $(VENV_BIN)/django-admin startproject config; \
-	    mv config src; \
+	    mv config $(SRC_DIR); \
 	else\
 	    echo "Nothing to do.";\
 	fi;
+
+# Run the development server
+start: init
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver
