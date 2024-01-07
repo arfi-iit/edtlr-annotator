@@ -1,7 +1,8 @@
 # Variables
 VENV           = .venv
-VENV_PYTHON    = $(VENV)/bin/python
-VENV_PIP       = $(VENV)/bin/pip
+VENV_BIN       = $(VENV)/bin
+VENV_PYTHON    = $(VENV_BIN)/python
+VENV_PIP       = $(VENV_BIN)/pip
 
 
 # Recipes
@@ -17,3 +18,11 @@ init: requirements.txt
 	fi;\
 	$(VENV_PIP) install -r requirements.txt;
 
+# Create the Django app
+app: init
+	if [ ! -d src ]; then \
+	    $(VENV_BIN)/django-admin startproject config; \
+	    mv config src; \
+	else\
+	    echo "Nothing to do.";\
+	fi;
