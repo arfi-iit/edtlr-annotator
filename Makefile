@@ -34,4 +34,15 @@ app: init
 
 # Run the development server
 start: init
-	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver;
+
+# Create or update the .po file containing the translation strings
+messages: init
+	if [ ! -d $(APP_DIR)/locale ]; then \
+	    mkdir $(APP_DIR)/locale; \
+	fi; \
+	$(VENV_BIN)/django-admin makemessages --locale ro;
+
+# Compile the translations
+translations: messages
+	$(VENV_BIN)/django-admin compilemessages;
