@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en-US">
+ {% load i18n %}
+<head>
+	<meta charset="utf-8" />
+	<title>
+	  {% block title %}{% endblock %} - {% translate "eDTLR annotator" %}
+	</title>
+	{% block links %}
+	{% endblock %}
+</head>
+
+<body>
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
+	{% block scripts %}
+	{% endblock %}
+</body>
+
+</html>
