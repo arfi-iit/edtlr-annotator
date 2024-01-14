@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-07 21:01+0200\n"
+"POT-Creation-Date: 2024-01-14 18:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
+
 #: src/annotation/templates/annotation/base.html:7
 msgid "eDTLR annotator"
 msgstr "Adnotator eDTLR"
@@ -25,3 +26,11 @@ msgstr "Adnotator eDTLR"
 #: src/annotation/templates/annotation/validate.html:4
 msgid "Validate text"
 msgstr "Validare text"
+
+#: src/annotation/templates/annotation/validate.html:32
+msgid "Save annotation"
+msgstr "Salvează adnotare"
+
+#: src/annotation/templates/annotation/validate.html:36
+msgid "Mark valid"
+msgstr "Marchează validă"
