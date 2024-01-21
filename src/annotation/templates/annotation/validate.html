@@ -15,19 +15,20 @@
 {% endblock %}
 
 {% block content %}
-<div id="editor-container" class="row align-items-start justify-content-center">
-  <div class="col">
+<div id="editor-container" class="row">
+  <div class="col-md-6">
     <div id="image">
-      <img src="..." class="figure-img img-fluid rounded" alt="...">
+      <img src="{% static image_path %}" class="figure-img img-fluid rounded"/>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-6">
     <div id="editor">
     </div>
   </div>
 </div>
+<!-- buttons -->
 <div id="buttons-row" class="row align-items-end justify-content-start">
-  <div class="col-md-3 offset-md-9">
+  <div class="col-md-4 offset-md-8">
     <div class="d-flex flex-row-reverse bd-highlight">
       <button id="btn-save-annotation" type="button" class="btn btn-primary">
 	<i class="bi bi-save"></i>
@@ -55,6 +56,7 @@
   var quill = new Quill('#editor', {
     theme: 'snow'
   });
-
+  let editor = document.getElementById("editor");
+  editor.style.height = "96%";
 </script>
 {% endblock %}
