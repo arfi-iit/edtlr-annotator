@@ -46,3 +46,12 @@ messages: init
 # Compile the translations
 translations: messages
 	$(VENV_BIN)/django-admin compilemessages;
+
+# Make migrations
+migrations: app
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py makemigrations;
+
+# Apply migrations
+schema: migrations
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
