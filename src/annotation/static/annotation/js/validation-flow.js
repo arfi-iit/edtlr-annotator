@@ -1,5 +1,6 @@
 class ValidationFlow{
-    constructor(imageId, editorId, saveButtonId, markValidButtonId){
+    constructor(imageId, editorId, saveButtonId,
+                markValidButtonId, hiddenFieldNames){
         this.image = document.getElementById(imageId);
 
         this.editor = document.getElementById(editorId);
@@ -10,8 +11,19 @@ class ValidationFlow{
 
         this.btnSave = document.getElementById(saveButtonId);
         this.btnMarkValid = document.getElementById(markValidButtonId);
+        this.hiddenFields = hiddenFieldNames.map(name => document.getElementsByName(name))
+            .map(nodeList => Array.from(nodeList))
+            .flat();
+        this.onTextChange = this.onTextChange.bind(this);
+        this.quill.on('text-change', this.onTextChange);
+        
         this.setControlsEnabled(false);
         this.setControlsVisible(false);
+    }
+
+    onTextChange(delta, oldDelta, source){
+        const value = JSON.stringify(this.quill.getContents());
+        this.hiddenFields.map(hf => hf.value = value);
     }
 
     setControlsVisible(visible){
@@ -34,7 +46,7 @@ class ValidationFlow{
     }
 
     initialize(){
-        fetch("api/ocrresults")
+        fetch("api/ocrresults/128")
             .then(res => res.json())
             .then(data => {
                 const {text, image_path} = data;
@@ -42,6 +54,10 @@ class ValidationFlow{
                 this.image.src = image_path;
                 this.setControlsVisible(true);
                 this.setControlsEnabled(true);
+                const value = JSON.stringify(this.quill.getContents());
+                this.hiddenFields.map(hf =>{
+                    hf.value = value;
+                });
             });
     }
 }

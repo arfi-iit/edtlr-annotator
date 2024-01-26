@@ -31,14 +31,24 @@
 <div id="buttons-row" class="row align-items-end justify-content-start">
   <div class="col-md-4 offset-md-8">
     <div class="d-flex flex-row-reverse bd-highlight">
-      <button id="btn-save-annotation" type="button" class="btn btn-primary">
-	<i class="bi bi-save"></i>
-	{% translate "Save annotation" %}
-      </button>
-      <button id="btn-mark-valid" type="button" class="btn btn-success">
-	<i class="bi bi-check2"></i>
-	{% translate "Mark valid" %}
-      </button>
+      <form method="post" action="{% url 'annotation:save' %}">
+	{% csrf_token %}
+	<input type="hidden" name="contents" value="">
+	<button type="submit" id="btn-save-annotation"
+		class="btn btn-primary" value="" >
+	  <i class="bi bi-save"></i>
+	  {% translate 'Save annotation' %}
+	</button>
+      </form>
+      <form method="post" action="{% url 'annotation:mark-valid' %}">
+	{% csrf_token %}
+	<input type="hidden" name="contents" value="">
+	<button type="submit" id="btn-mark-valid"
+		class="btn btn-success">
+	  <i class="bi bi-check2"></i>
+	  {% translate "Mark valid" %}
+	</button>
+      </form>
     </div>
   </div>
 </div>
@@ -55,7 +65,9 @@
 <script src="{% static 'annotation/js/validation-flow.js' %}">
 </script>
 <script>
-  let validationFlow = new ValidationFlow('image', 'editor', 'btn-save-annotation', 'btn-mark-valid');
+  let validationFlow = new ValidationFlow('image', 'editor',
+					  'btn-save-annotation', 'btn-mark-valid',
+					  ['contents']);
   validationFlow.initialize();
 </script>
 {% endblock %}
