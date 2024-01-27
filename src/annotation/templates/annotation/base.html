@@ -23,12 +23,14 @@
 
 </head>
 
-<body>
-	<div id="content" class="container-fluid">
-		{% block content %}{% endblock %}
-	</div>
-	{% block scripts %}
-	{% endblock %}
+  <body>
+    {% block header %}
+    {% endblock %}
+    <div id="content" class="container-fluid">
+      {% block content %}{% endblock %}
+    </div>
+    {% block scripts %}
+    {% endblock %}
 </body>
 
 </html>

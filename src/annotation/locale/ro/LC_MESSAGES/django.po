@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-27 19:18+0200\n"
+"POT-Creation-Date: 2024-01-27 21:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,41 +27,49 @@ msgstr "Adnotator eDTLR"
 msgid "Validate text"
 msgstr "Validare text"
 
-#: src/annotation/templates/annotation/validate.html:34
+#: src/annotation/templates/annotation/validate.html:26
+msgid "Logout"
+msgstr "Deconectare"
+
+#: src/annotation/templates/annotation/validate.html:58
 msgid "Save annotation"
 msgstr "Salvează adnotare"
 
-#: src/annotation/templates/annotation/validate.html:43
+#: src/annotation/templates/annotation/validate.html:67
 msgid "Mark valid"
 msgstr "Marchează validă"
 
 #: src/annotation/templates/registration/login.html:7
-#: src/annotation/templates/registration/login.html:42
+#: src/annotation/templates/registration/login.html:47
 msgid "Login"
 msgstr "Autentificare"
 
-#: src/annotation/templates/registration/login.html:14
-msgid "Your username and password didn't match. Please try again."
-msgstr "Utilizatorul și parola introduse nu se potrivesc. Vă rugăm să încercați din nou."
-
-#: src/annotation/templates/registration/login.html:19
-msgid ""
-"Your account doesn't have access to this page. To proceed, please login with "
-"an account that has access."
-msgstr "Utilizatorul dumneavoastră nu are acces la această pagină. Vă rugăm să vă autentificați ca un utilizator care are acces."
-
-#: src/annotation/templates/registration/login.html:21
-msgid "Please login to see this page."
-msgstr "Vă rugăm să vă autentificați pentru a accesa pagina."
-
-#: src/annotation/templates/registration/login.html:28
+#: src/annotation/templates/registration/login.html:17
 msgid "Please sign in"
 msgstr "Vă rugăm să vă autentificați"
 
-#: src/annotation/templates/registration/login.html:31
+#: src/annotation/templates/registration/login.html:20
 msgid "Username"
 msgstr "Utilizator"
 
-#: src/annotation/templates/registration/login.html:37
+#: src/annotation/templates/registration/login.html:26
 msgid "Password"
 msgstr "Parolă"
+
+#: src/annotation/templates/registration/login.html:34
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+"Utilizatorul și parola introduse nu se potrivesc. Vă rugăm să încercați din "
+"nou."
+
+#: src/annotation/templates/registration/login.html:41
+msgid ""
+"Your account doesn't have access to this page. To proceed, please login with "
+"an account that has access."
+msgstr ""
+"Utilizatorul dumneavoastră nu are acces la această pagină. Vă rugăm să vă "
+"autentificați ca un utilizator care are acces."
+
+#: src/annotation/templates/registration/login.html:43
+msgid "Please login to see this page."
+msgstr "Vă rugăm să vă autentificați pentru a accesa pagina."
