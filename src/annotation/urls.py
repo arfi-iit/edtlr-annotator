@@ -9,5 +9,5 @@ urlpatterns = [
          views.get_ocr_result,
          name="get_ocr_result"),
     path("validate", views.mark_valid, name="mark-valid"),
-    path("save", views.save_annotation, name="save")
+    path("save", views.save_annotation, name="save"),
 ]

@@ -1,0 +1,50 @@
+{% extends "../annotation/base.html" %}
+{% load filters %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% translate 'Login' %}
+{% endblock %}
+
+
+{% block content %}
+
+<main class="form-signin w-100 m-auto">
+<form method="post" action="{% url 'login' %}" >
+  {% csrf_token %}
+  <img class="mb-4" src="{% static 'annotation/assets/svg/edtlr.svg' %}" alt="" height="50">
+  <h1 class="h3 mb-3 fw-normal">{% translate 'Please sign in' %}</h1>
+  <div class="mb-3">
+    <label for="id_username" class="form-label">
+      {% translate 'Username' %}
+    </label>
+    {{ form.username | addclass:'form-control' }}
+  </div>
+  <div class="mb-3">
+    <label for="id_password" class="form-label">
+      {% translate 'Password' %}
+    </label>
+    {{ form.password | addclass:'form-control' }}
+  </div>
+  <input type="hidden" name="next" value="{{ next }}">
+  <!-- Display errors area -->
+  {% if form.errors %}
+  <div class="login-error">
+    <p>{% translate "Your username and password didn't match. Please try again." %}</p>
+  </div>
+  {% endif %}
+
+  {% if next %}
+    <div class="login-error">
+      {% if user.is_authenticated %}
+      <p>{% translate "Your account doesn't have access to this page. To proceed, please login with an account that has access." %}</p>
+      {% else %}
+      <p>{% translate 'Please login to see this page.' %}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+  <button type="submit" class="btn btn-primary">{% translate 'Login' %}</button>
+</form>
+</main>
+{% endblock %}
