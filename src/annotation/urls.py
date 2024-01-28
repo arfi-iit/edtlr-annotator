@@ -5,7 +5,7 @@ from . import views
 app_name = "annotation"
 urlpatterns = [
     path("", views.validate, name="index"),
-    path("api/ocrresults/<int:page_no>",
+    path("api/ocrresults/<int:page_id>",
          views.get_ocr_result,
          name="get_ocr_result"),
     path("validate", views.mark_valid, name="mark-valid"),

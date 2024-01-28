@@ -9,12 +9,12 @@ from .models import OcrResult
 
 @login_required
 def validate(request):
-    return render(request, "annotation/validate.html")
+    return render(request, "annotation/validate.html", context={'page_id': 1})
 
 
 @login_required
-def get_ocr_result(request, page_no: int):
-    model = OcrResult.objects.get(pk=page_no)
+def get_ocr_result(request, page_id: int):
+    model = OcrResult.objects.get(pk=page_id)
     data = {
         'text': model.text,
         'image_path': f'/static/annotation/{model.image_path}'

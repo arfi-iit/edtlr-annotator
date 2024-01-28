@@ -38,7 +38,7 @@
   <div class="col-md-6">
     <div id="image-container">
       <img id="image" class="figure-img img-fluid rounded"
-	   src="{% static 'annotation/data/128.png' %}"/>
+	   src=""/>
     </div>
   </div>
   <div class="col-md-6">
@@ -88,6 +88,6 @@
   let validationFlow = new ValidationFlow('image', 'editor',
 					  'btn-save-annotation', 'btn-mark-valid',
 					  ['contents']);
-  validationFlow.initialize();
+  validationFlow.initialize({{page_id}});
 </script>
 {% endblock %}

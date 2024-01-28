@@ -1,11 +1,43 @@
 """Contains the models."""
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
 class OcrResult(models.Model):
     """Represents a pair of (page image, OCR text)."""
 
-    page_no = models.IntegerField(primary_key=True)
+    id = models.AutoField(verbose_name="id", primary_key=True)
     image_path = models.CharField(unique=True, null=False, max_length=1024)
-    text = models.CharField(max_length=4096, null=False)
+    text = models.TextField(max_length=8192, null=False)
+
+
+class Annotation(models.Model):
+    """Represents an annotation."""
+
+    class AnnotationStatus(models.TextChoices):
+        """Defines the possible values of an annotation status."""
+
+        IN_PROGRESS = 'InProgress', _('In progress')
+        COMPLETE = 'Complete', _('Complete')
+        CONFLICT = 'Conflict', _('Conflict')
+
+    id = models.AutoField(verbose_name="id", primary_key=True)
+    ocr_result_id = models.ForeignKey(OcrResult,
+                                      on_delete=models.CASCADE,
+                                      verbose_name="ocr_result_id")
+    user_id = models.ForeignKey(User,
+                                on_delete=models.CASCADE,
+                                verbose_name="user_id")
+    content = models.JSONField(verbose_name="content")
+    status = models.CharField(max_length=32,
+                              choices=AnnotationStatus,
+                              null=False,
+                              default=AnnotationStatus.IN_PROGRESS)
+    version = models.PositiveSmallIntegerField()
+    row_creation_timestamp = models.DateTimeField(blank=False,
+                                                  null=False,
+                                                  auto_created=True)
+    row_update_timestamp = models.DateTimeField(auto_now=True,
+                                                auto_created=True)

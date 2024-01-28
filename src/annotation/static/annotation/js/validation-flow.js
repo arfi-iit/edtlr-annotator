@@ -45,8 +45,8 @@ class ValidationFlow{
         this.image.disabled = !enabled;
     }
 
-    initialize(){
-        fetch("api/ocrresults/128")
+    initialize(pageId){
+        fetch(`api/ocrresults/${pageId}`)
             .then(res => res.json())
             .then(data => {
                 const {text, image_path} = data;
