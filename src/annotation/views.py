@@ -8,6 +8,11 @@ from .models import Page, Annotation
 
 
 @login_required
+def thank_you(request):
+    return render(request, "annotation/thank-you.html")
+
+
+@login_required
 def validate(request):
     return render(request, "annotation/validate.html", context={'page_id': 1})
 

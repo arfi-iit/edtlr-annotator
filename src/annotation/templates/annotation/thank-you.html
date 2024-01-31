@@ -1,0 +1,18 @@
+{% extends "./annotation-base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% translate "Validate text"  %}{% endblock %}
+
+{% block content %}
+<main>
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+	<h5 class="card-title"> {% translate 'No pages to annotate' %}</h5>
+	<p class="card-text"> {% translate 'There are no pages to annotate. Thank you!' %}</p>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
