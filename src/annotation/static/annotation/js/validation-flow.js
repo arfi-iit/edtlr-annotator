@@ -46,7 +46,7 @@ class ValidationFlow{
     }
 
     initialize(pageId){
-        fetch(`api/ocrresults/${pageId}`)
+        fetch(`api/pages/${pageId}`)
             .then(res => res.json())
             .then(data => {
                 const {text, image_path} = data;

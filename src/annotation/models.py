@@ -1,11 +1,12 @@
 """Contains the models."""
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
-class OcrResult(models.Model):
+class Page(models.Model):
     """Represents a pair of (page image, OCR text)."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)
@@ -24,9 +25,9 @@ class Annotation(models.Model):
         CONFLICT = 'Conflict', _('Conflict')
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    ocr_result_id = models.ForeignKey(OcrResult,
-                                      on_delete=models.CASCADE,
-                                      verbose_name="ocr_result_id")
+    page_id = models.ForeignKey(Page,
+                                on_delete=models.CASCADE,
+                                verbose_name="page_id")
     user_id = models.ForeignKey(User,
                                 on_delete=models.CASCADE,
                                 verbose_name="user_id")
@@ -38,6 +39,5 @@ class Annotation(models.Model):
     version = models.PositiveSmallIntegerField()
     row_creation_timestamp = models.DateTimeField(blank=False,
                                                   null=False,
-                                                  auto_created=True)
-    row_update_timestamp = models.DateTimeField(auto_now=True,
-                                                auto_created=True)
+                                                  default=timezone.now)
+    row_update_timestamp = models.DateTimeField(auto_now=True)
