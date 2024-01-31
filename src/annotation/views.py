@@ -4,6 +4,10 @@ from django.http import Http404
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from .models import Page, Annotation
+from django.db.models import Count
+import json
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 
@@ -12,9 +16,66 @@ def thank_you(request):
     return render(request, "annotation/thank-you.html")
 
 
-@login_required
-def validate(request):
-    return render(request, "annotation/validate.html", context={'page_id': 1})
+MAX_CONCURRENT_ANNOTATORS = 2
+
+
+class IndexView(LoginRequiredMixin, View):
+    """Implements the index view."""
+
+    template_name = "annotation/index.html"
+
+    def get(self, request):
+        """Handle the GET request.
+
+        Parameters
+        ----------
+        request: HttpRequest
+            The request object.
+        """
+        user_id = request.user.id
+        current_annotation = self.__get_in_progress_annotation(user_id)
+        if current_annotation is not None:
+            return render(request,
+                          self.template_name,
+                          context=self.__build_template_context(
+                              current_annotation.page_id.id))
+
+        page = self.__get_next_page()
+        if page is not None:
+            record = self.__insert_annotation(request.user, page)
+            return render(request,
+                          self.template_name,
+                          context=self.__build_template_context(page.id))
+
+        return redirect("annotation:thank-you")
+
+    def __get_next_page(self) -> Page | None:
+        in_progress_annotation = Annotation.objects.values('page_id')\
+                                                    .annotate(count=Count('page_id'))\
+                                                    .order_by('page_id')\
+                                                    .filter(count__lt=MAX_CONCURRENT_ANNOTATORS)\
+                                                    .first()
+        if in_progress_annotation is not None:
+            return Page.objects.get(pk=in_progress_annotation['page_id'])
+
+        in_progress_pages = list(Annotation.objects.values('page_id'))
+        return Page.objects.exclude(id__in=in_progress_pages).first()
+
+    def __insert_annotation(self, user, page: Page) -> Annotation:
+        status = Annotation.AnnotationStatus.IN_PROGRESS
+        record = Annotation(page_id=page, user_id=user, status=status)
+        record.content = json.dumps({'ops': [{'insert': page.text}]})
+        record.version = 1
+        record.save()
+        return record
+
+    def __build_template_context(self, page_id: int) -> dict:
+        return {'page_id': page_id}
+
+    def __get_in_progress_annotation(self, user_id: int) -> Annotation | None:
+        status = Annotation.AnnotationStatus.IN_PROGRESS
+        return Annotation.objects.filter(user_id=user_id,status=status)\
+                                 .first()
 
 
 @login_required
