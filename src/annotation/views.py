@@ -23,6 +23,7 @@ class IndexView(LoginRequiredMixin, View):
     """Implements the index view."""
 
     template_name = "annotation/index.html"
+    thank_you_page = 'annotation:thank-you'
 
     def get(self, request):
         """Handle the GET request.
@@ -40,25 +41,33 @@ class IndexView(LoginRequiredMixin, View):
                           context=self.__build_template_context(
                               current_annotation.page_id.id))
 
-        page = self.__get_next_page()
+        page = self.__get_next_page(request.user)
         if page is not None:
             record = self.__insert_annotation(request.user, page)
             return render(request,
                           self.template_name,
                           context=self.__build_template_context(page.id))
 
-        return redirect("annotation:thank-you")
+        return redirect(self.thank_you_page)
 
-    def __get_next_page(self) -> Page | None:
-        in_progress_annotation = Annotation.objects.values('page_id')\
+    def __get_next_page(self, user) -> Page | None:
+        in_progress_annotations = Annotation.objects.values('page_id')\
                                                     .annotate(count=Count('page_id'))\
                                                     .order_by('page_id')\
-                                                    .filter(count__lt=MAX_CONCURRENT_ANNOTATORS)\
-                                                    .first()
-        if in_progress_annotation is not None:
-            return Page.objects.get(pk=in_progress_annotation['page_id'])
+                                                    .filter(count__lt=MAX_CONCURRENT_ANNOTATORS)
+        user_annotations = Annotation.objects.filter(user_id=user)\
+                                             .values('page_id')
+        user_annotations = set([a['page_id'] for a in user_annotations])
 
-        in_progress_pages = list(Annotation.objects.values('page_id'))
+        for annotation in in_progress_annotations:
+            page_id = annotation['page_id']
+            if page_id not in user_annotations:
+                return Page.objects.get(pk=in_progress_annotations['page_id'])
+
+        in_progress_pages = [
+            p['page_id'] for p in Annotation.objects.values('page_id')
+        ]
+
         return Page.objects.exclude(id__in=in_progress_pages).first()
 
     def __insert_annotation(self, user, page: Page) -> Annotation:
