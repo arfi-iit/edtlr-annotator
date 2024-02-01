@@ -29,6 +29,7 @@
       <form method="post" action="{% url 'annotation:save' %}">
 	{% csrf_token %}
 	<input type="hidden" name="contents" value="">
+	<input type="hidden" name="page-id" value="{{page_id}}">
 	<button type="submit" id="btn-save-annotation"
 		class="btn btn-primary" value="" >
 	  <i class="bi bi-save"></i>
@@ -38,6 +39,7 @@
       <form method="post" action="{% url 'annotation:mark-valid' %}">
 	{% csrf_token %}
 	<input type="hidden" name="contents" value="">
+	<input type="hidden" name="page-id" value="{{page_id}}">
 	<button type="submit" id="btn-mark-valid"
 		class="btn btn-success">
 	  <i class="bi bi-check2"></i>

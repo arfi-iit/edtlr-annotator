@@ -1,3 +1,4 @@
+"""Defines the views of the application."""
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import Http404
@@ -8,6 +9,7 @@ from django.db.models import Count
 import json
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
 # Create your views here.
 
 
@@ -30,7 +32,7 @@ class IndexView(LoginRequiredMixin, View):
 
         Parameters
         ----------
-        request: HttpRequest
+        request: HttpRequest, required
             The request object.
         """
         user_id = request.user.id
@@ -95,8 +97,7 @@ def get_page(request, page_id: int):
         annotation = Annotation.objects.filter(page_id=page_id,
                                                user_id=user_id).first()
         data = {
-            'text': page.text,
-            'content': annotation.content,
+            'contents': annotation.content,
             'image_path': f'/static/annotation/{page.image_path}'
         }
         return JsonResponse(data)
@@ -106,6 +107,23 @@ def get_page(request, page_id: int):
 
 @login_required
 def save_annotation(request):
+    """Save the annotation from the request body.
+
+    Parameters
+    ----------
+    request: HttpRequest, required
+        The HTTP request object.
+    """
+    content = json.loads(request.POST['contents'])
+    page_id = int(request.POST['page-id'])
+    annotation = Annotation.objects.get(
+        page_id=page_id,
+        user_id=request.user,
+        status=Annotation.AnnotationStatus.IN_PROGRESS)
+    if annotation is not None:
+        annotation.content = json.dumps(content)
+        annotation.version = annotation.version + 1
+        annotation.save()
     return redirect("annotation:index")
 
 

@@ -49,9 +49,15 @@ class ValidationFlow{
         fetch(`api/pages/${pageId}`)
             .then(res => res.json())
             .then(data => {
-                const {text, image_path} = data;
-                this.quill.setText(text);
-                this.image.src = image_path;
+                const {contents, image_path} = data;
+                if (contents) {
+                    const delta = JSON.parse(contents);
+                    this.quill.setContents(delta.ops);
+                }
+                else{
+                    this.quill.setText("");
+                }
+                this.image.src = image_path; 
                 this.setControlsVisible(true);
                 this.setControlsEnabled(true);
                 const value = JSON.stringify(this.quill.getContents());
