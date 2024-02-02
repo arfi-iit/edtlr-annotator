@@ -31,7 +31,7 @@ class Annotation(models.Model):
     user_id = models.ForeignKey(User,
                                 on_delete=models.CASCADE,
                                 verbose_name="user_id")
-    content = models.JSONField(verbose_name="content")
+    contents = models.JSONField(verbose_name="contents")
     status = models.CharField(max_length=32,
                               choices=AnnotationStatus,
                               null=False,

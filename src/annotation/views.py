@@ -10,6 +10,7 @@ import json
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
+from typing import Tuple
 # Create your views here.
 
 
@@ -75,7 +76,7 @@ class IndexView(LoginRequiredMixin, View):
     def __insert_annotation(self, user, page: Page) -> Annotation:
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(page_id=page, user_id=user, status=status)
-        record.content = json.dumps({'ops': [{'insert': page.text}]})
+        record.contents = json.dumps({'ops': [{'insert': page.text}]})
         record.version = 1
         record.save()
         return record
@@ -97,7 +98,7 @@ def get_page(request, page_id: int):
         annotation = Annotation.objects.filter(page_id=page_id,
                                                user_id=user_id).first()
         data = {
-            'contents': annotation.content,
+            'contents': annotation.contents,
             'image_path': f'/static/annotation/{page.image_path}'
         }
         return JsonResponse(data)
@@ -105,26 +106,34 @@ def get_page(request, page_id: int):
         raise Http404()
 
 
-@login_required
-def save_annotation(request):
-    """Save the annotation from the request body.
+class SaveAnnotationView(LoginRequiredMixin, View):
+    """Implements the view for saving an annotation."""
 
-    Parameters
-    ----------
-    request: HttpRequest, required
-        The HTTP request object.
-    """
-    content = json.loads(request.POST['contents'])
-    page_id = int(request.POST['page-id'])
-    annotation = Annotation.objects.get(
-        page_id=page_id,
-        user_id=request.user,
-        status=Annotation.AnnotationStatus.IN_PROGRESS)
-    if annotation is not None:
-        annotation.content = json.dumps(content)
-        annotation.version = annotation.version + 1
-        annotation.save()
-    return redirect("annotation:index")
+    index_page = "annotation:index"
+
+    def post(self, request):
+        """Save the annotation from the request body.
+
+        Parameters
+        ----------
+        request: HttpRequest, required
+            The HTTP request object.
+        """
+        page_id, contents = self.__parse_request_body(request)
+        annotation = Annotation.objects.get(
+            page_id=page_id,
+            user_id=request.user,
+            status=Annotation.AnnotationStatus.IN_PROGRESS)
+        if annotation is not None:
+            annotation.contents = json.dumps(contents)
+            annotation.version = annotation.version + 1
+            annotation.save()
+        return redirect(self.index_page)
+
+    def __parse_request_body(self, request) -> Tuple[int, object]:
+        contents = json.loads(request.POST['contents'])
+        page_id = int(request.POST['page-id'])
+        return page_id, contents
 
 
 @login_required
