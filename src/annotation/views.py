@@ -1,16 +1,16 @@
 """Defines the views of the application."""
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.http import Http404
+from .models import Page, Annotation
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
-from .models import Page, Annotation
-from django.db.models import Count
-import json
-from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
+from django.http import Http404
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.views import View
 from typing import Tuple
+import json
 # Create your views here.
 
 
@@ -66,7 +66,7 @@ class IndexView(LoginRequiredMixin, View):
         for annotation in in_progress_annotations:
             page_id = annotation['page_id']
             if page_id not in user_annotations:
-                return Page.objects.get(pk=in_progress_annotations['page_id'])
+                return Page.objects.get(pk=page_id)
 
         in_progress_pages = [
             p['page_id'] for p in Annotation.objects.values('page_id')
@@ -145,4 +145,46 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
 
     def post(self, request):
         """Save the annotation from the request body and mark it as complete."""
+        page_id, contents = self.__parse_request_body(request)
+        self.__mark_annotation_complete(page_id, contents)
+        self.__check_conflicts(page_id)
         return redirect(self.index_page)
+
+    def __check_conflicts(self, page_id: int):
+        page_annotations = Annotation.objects.filter(
+            page_id=page_id, status=Annotation.AnnotationStatus.COMPLETE)
+        if len(page_annotations) < MAX_CONCURRENT_ANNOTATORS:
+            return
+
+        if self.__have_conflicts(page_annotations):
+            for annotation in page_annotations:
+                annotation.version = annotation.version + 1
+                annotation.status = Annotation.AnnotationStatus.CONFLICT
+                annotation.save()
+
+    def __have_conflicts(self, page_annotations) -> bool:
+        iterator = iter(page_annotations)
+
+        first = json.dumps(next(iterator).contents)
+        for item in iterator:
+            if first != json.dumps(item.contents):
+                return True
+
+        return False
+
+    def __mark_annotation_complete(self, page_id: int, contents: object):
+        annotation = Annotation.objects.get(
+            page_id=page_id,
+            user_id=request.user,
+            status=Annotation.AnnotationStatus.IN_PROGRESS)
+
+        if annotation is not None:
+            annotation.contents = json.dumps(contents)
+            annotation.version = annotation.version + 1
+            annotation.status = Annotation.AnnotationStatus.COMPLETE
+            annotation.save()
+
+    def __parse_request_body(self, request) -> Tuple[int, object]:
+        contents = json.loads(request.POST['contents'])
+        page_id = int(request.POST['page-id'])
+        return page_id, contents
