@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Validate text"  %}{% endblock %}
+{% block title %}{% translate "Annotate text"  %}{% endblock %}
 
 {% block links %}
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -36,14 +36,14 @@
 	  {% translate 'Save annotation' %}
 	</button>
       </form>
-      <form method="post" action="{% url 'annotation:mark-valid' %}">
+      <form method="post" action="{% url 'annotation:mark-complete' %}">
 	{% csrf_token %}
 	<input type="hidden" name="contents" value="">
 	<input type="hidden" name="page-id" value="{{page_id}}">
-	<button type="submit" id="btn-mark-valid"
+	<button type="submit" id="btn-mark-complete"
 		class="btn btn-success">
 	  <i class="bi bi-check2"></i>
-	  {% translate "Mark valid" %}
+	  {% translate "Mark complete" %}
 	</button>
       </form>
     </div>
@@ -56,12 +56,12 @@
 <!-- Include the Quill library -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-<script src="{% static 'annotation/js/validation-flow.js' %}">
+<script src="{% static 'annotation/js/annotation-flow.js' %}">
 </script>
 <script>
-  let validationFlow = new ValidationFlow('image', 'editor',
-					  'btn-save-annotation', 'btn-mark-valid',
+  let annotationFlow = new AnnotationFlow('image', 'editor',
+					  'btn-save-annotation', 'btn-mark-complete',
 					  ['contents']);
-  validationFlow.initialize({{page_id}});
+  annotationFlow.initialize({{page_id}});
 </script>
 {% endblock %}

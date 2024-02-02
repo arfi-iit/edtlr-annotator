@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-27 21:14+0200\n"
+"POT-Creation-Date: 2024-02-02 21:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,25 +19,49 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
+#: src/annotation/models.py:23
+msgid "In progress"
+msgstr "În desfășurare"
+
+#: src/annotation/models.py:24
+msgid "Complete"
+msgstr "Completă"
+
+#: src/annotation/models.py:25
+msgid "Conflict"
+msgstr "Conflict"
+
+#: src/annotation/templates/annotation/annotation-base.html:26
+msgid "Logout"
+msgstr "Deconectare"
+
 #: src/annotation/templates/annotation/base.html:9
 msgid "eDTLR annotator"
 msgstr "Adnotator eDTLR"
 
-#: src/annotation/templates/annotation/validate.html:5
-msgid "Validate text"
-msgstr "Validare text"
+#: src/annotation/templates/annotation/index.html:5
+msgid "Annotate text"
+msgstr ""
 
-#: src/annotation/templates/annotation/validate.html:26
-msgid "Logout"
-msgstr "Deconectare"
-
-#: src/annotation/templates/annotation/validate.html:58
+#: src/annotation/templates/annotation/index.html:36
 msgid "Save annotation"
 msgstr "Salvează adnotare"
 
-#: src/annotation/templates/annotation/validate.html:67
-msgid "Mark valid"
-msgstr "Marchează validă"
+#: src/annotation/templates/annotation/index.html:46
+msgid "Mark complete"
+msgstr "Marchează finalizată"
+
+#: src/annotation/templates/annotation/thank-you.html:5
+msgid "Thank you!"
+msgstr "Vă mulțumim!"
+
+#: src/annotation/templates/annotation/thank-you.html:12
+msgid "No pages to annotate"
+msgstr "Nu sunt pagini pentru a fi adnotate"
+
+#: src/annotation/templates/annotation/thank-you.html:13
+msgid "There are no pages to annotate. Thank you!"
+msgstr "Nu sunt pagini pentru a fi adnotate. Vă mulțumim!"
 
 #: src/annotation/templates/registration/login.html:7
 #: src/annotation/templates/registration/login.html:47

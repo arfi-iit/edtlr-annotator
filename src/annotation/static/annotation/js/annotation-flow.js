@@ -1,6 +1,6 @@
-class ValidationFlow{
+class AnnotationFlow{
     constructor(imageId, editorId, saveButtonId,
-                markValidButtonId, hiddenFieldNames){
+                markCompleteButtonId, hiddenFieldNames){
         this.image = document.getElementById(imageId);
 
         this.editor = document.getElementById(editorId);
@@ -10,7 +10,7 @@ class ValidationFlow{
         this.editor.style.height="96%";
 
         this.btnSave = document.getElementById(saveButtonId);
-        this.btnMarkValid = document.getElementById(markValidButtonId);
+        this.btnMarkComplete = document.getElementById(markCompleteButtonId);
         this.hiddenFields = hiddenFieldNames.map(name => document.getElementsByName(name))
             .map(nodeList => Array.from(nodeList))
             .flat();
@@ -28,7 +28,7 @@ class ValidationFlow{
 
     setControlsVisible(visible){
         let controls = [
-            this.btnMarkValid,
+            this.btnMarkComplete,
             this.btnSave,
             this.image,
             this.editor
@@ -39,7 +39,7 @@ class ValidationFlow{
     }
     
     setControlsEnabled(enabled){
-        this.btnMarkValid.disabled = !enabled;
+        this.btnMarkComplete.disabled = !enabled;
         this.btnSave.disabled = !enabled;
         this.quill.enable(enabled);
         this.image.disabled = !enabled;

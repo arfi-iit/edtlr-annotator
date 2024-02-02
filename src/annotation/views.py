@@ -16,6 +16,7 @@ from typing import Tuple
 
 @login_required
 def thank_you(request):
+    """Render a thank you message when there are no pages to annotate."""
     return render(request, "annotation/thank-you.html")
 
 
@@ -92,6 +93,7 @@ class IndexView(LoginRequiredMixin, View):
 
 @login_required
 def get_page(request, page_id: int):
+    """Retrieve the page image and the text contents."""
     try:
         user_id = request.user.id
         page = Page.objects.get(pk=page_id)
@@ -136,6 +138,11 @@ class SaveAnnotationView(LoginRequiredMixin, View):
         return page_id, contents
 
 
-@login_required
-def mark_valid(request):
-    return redirect("annotation:index")
+class MarkAnnotationCompleteView(LoginRequiredMixin, View):
+    """Implements the view for marking an annotation as being complete."""
+
+    index_page = "annotation:index"
+
+    def post(self, request):
+        """Save the annotation from the request body and mark it as complete."""
+        return redirect(self.index_page)
