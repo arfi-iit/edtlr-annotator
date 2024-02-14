@@ -3,6 +3,7 @@ from .models import Page, Annotation
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import Http404
 from django.http import JsonResponse
@@ -54,7 +55,7 @@ class IndexView(LoginRequiredMixin, View):
 
         return redirect(self.thank_you_page)
 
-    def __get_next_page(self, user) -> Page | None:
+    def __get_next_page(self, user: User) -> Page | None:
         in_progress_annotations = Annotation.objects.values('page_id')\
                                                     .annotate(count=Count('page_id'))\
                                                     .order_by('page_id')\
@@ -74,7 +75,7 @@ class IndexView(LoginRequiredMixin, View):
 
         return Page.objects.exclude(id__in=in_progress_pages).first()
 
-    def __insert_annotation(self, user, page: Page) -> Annotation:
+    def __insert_annotation(self, user: User, page: Page) -> Annotation:
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(page_id=page, user_id=user, status=status)
         record.contents = json.dumps({'ops': [{'insert': page.text}]})
@@ -146,7 +147,7 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
     def post(self, request):
         """Save the annotation from the request body and mark it as complete."""
         page_id, contents = self.__parse_request_body(request)
-        self.__mark_annotation_complete(page_id, contents)
+        self.__mark_annotation_complete(page_id, contents, request.user)
         self.__check_conflicts(page_id)
         return redirect(self.index_page)
 
@@ -172,10 +173,11 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
 
         return False
 
-    def __mark_annotation_complete(self, page_id: int, contents: object):
+    def __mark_annotation_complete(self, page_id: int, contents: object,
+                                   user: User):
         annotation = Annotation.objects.get(
             page_id=page_id,
-            user_id=request.user,
+            user_id=user,
             status=Annotation.AnnotationStatus.IN_PROGRESS)
 
         if annotation is not None:
