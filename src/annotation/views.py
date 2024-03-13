@@ -128,13 +128,13 @@ class SaveAnnotationView(LoginRequiredMixin, View):
             user_id=request.user,
             status=Annotation.AnnotationStatus.IN_PROGRESS)
         if annotation is not None:
-            annotation.contents = json.dumps(contents)
+            annotation.contents = contents
             annotation.version = annotation.version + 1
             annotation.save()
         return redirect(self.index_page)
 
     def __parse_request_body(self, request) -> Tuple[int, object]:
-        contents = json.loads(request.POST['contents'])
+        contents = request.POST['contents']
         page_id = int(request.POST['page-id'])
         return page_id, contents
 
@@ -166,9 +166,9 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
     def __have_conflicts(self, page_annotations) -> bool:
         iterator = iter(page_annotations)
 
-        first = json.dumps(next(iterator).contents)
+        first = next(iterator).contents
         for item in iterator:
-            if first != json.dumps(item.contents):
+            if first != item.contents:
                 return True
 
         return False
@@ -181,12 +181,12 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
             status=Annotation.AnnotationStatus.IN_PROGRESS)
 
         if annotation is not None:
-            annotation.contents = json.dumps(contents)
+            annotation.contents = contents
             annotation.version = annotation.version + 1
             annotation.status = Annotation.AnnotationStatus.COMPLETE
             annotation.save()
 
     def __parse_request_body(self, request) -> Tuple[int, object]:
-        contents = json.loads(request.POST['contents'])
+        contents = request.POST['contents']
         page_id = int(request.POST['page-id'])
         return page_id, contents

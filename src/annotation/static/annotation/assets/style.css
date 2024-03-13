@@ -2,6 +2,16 @@
     margin-top: 25px;
 }
 
+#editor{
+    display: none !important;
+}
+
+.superscript{
+    position: relative;
+    top: -0.5em;
+    font-size: 75%;
+}
+
 #buttons-row{
     margin-top: 10px;
     margin-bottom: 10px;

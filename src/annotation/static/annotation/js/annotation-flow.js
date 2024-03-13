@@ -1,28 +1,28 @@
+// import {AnnotationEditor} from './annotation-editor.js';
+
 class AnnotationFlow{
     constructor(imageId, editorId, saveButtonId,
                 markCompleteButtonId, hiddenFieldNames){
         this.image = document.getElementById(imageId);
 
         this.editor = document.getElementById(editorId);
-        this.quill = new Quill(`#${editorId}`,{
-            theme: 'snow'
-        });
-        this.editor.style.height="96%";
-
         this.btnSave = document.getElementById(saveButtonId);
         this.btnMarkComplete = document.getElementById(markCompleteButtonId);
         this.hiddenFields = hiddenFieldNames.map(name => document.getElementsByName(name))
             .map(nodeList => Array.from(nodeList))
             .flat();
         this.onTextChange = this.onTextChange.bind(this);
-        this.quill.on('text-change', this.onTextChange);
-        
+
         this.setControlsEnabled(false);
         this.setControlsVisible(false);
+
+        this.mdeEditor = new AnnotationEditor(this.editor, this.onTextChange);
+
+        window.mdeEditor = this.mdeEditor.simpleMde;
+        window.codeMirror = this.mdeEditor.codeMirror;
     }
 
-    onTextChange(delta, oldDelta, source){
-        const value = JSON.stringify(this.quill.getContents());
+    onTextChange(value){
         this.hiddenFields.map(hf => hf.value = value);
     }
 
@@ -41,7 +41,6 @@ class AnnotationFlow{
     setControlsEnabled(enabled){
         this.btnMarkComplete.disabled = !enabled;
         this.btnSave.disabled = !enabled;
-        this.quill.enable(enabled);
         this.image.disabled = !enabled;
     }
 
@@ -50,20 +49,11 @@ class AnnotationFlow{
             .then(res => res.json())
             .then(data => {
                 const {contents, image_path} = data;
-                if (contents) {
-                    const delta = JSON.parse(contents);
-                    this.quill.setContents(delta.ops);
-                }
-                else{
-                    this.quill.setText("");
-                }
+                this.mdeEditor.text = contents;
                 this.image.src = image_path; 
                 this.setControlsVisible(true);
                 this.setControlsEnabled(true);
-                const value = JSON.stringify(this.quill.getContents());
-                this.hiddenFields.map(hf =>{
-                    hf.value = value;
-                });
             });
     }
 }
+
