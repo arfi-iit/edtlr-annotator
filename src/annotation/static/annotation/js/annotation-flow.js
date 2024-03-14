@@ -1,16 +1,16 @@
 // import {AnnotationEditor} from './annotation-editor.js';
 
 class AnnotationFlow{
-    constructor(imageId, editorId, saveButtonId,
+    constructor(carouselId, editorId, saveButtonId,
                 markCompleteButtonId, hiddenFieldNames){
-        this.image = document.getElementById(imageId);
-
         this.editor = document.getElementById(editorId);
         this.btnSave = document.getElementById(saveButtonId);
         this.btnMarkComplete = document.getElementById(markCompleteButtonId);
         this.hiddenFields = hiddenFieldNames.map(name => document.getElementsByName(name))
             .map(nodeList => Array.from(nodeList))
             .flat();
+        this.carousel = new PageCarousel(carouselId);
+        
         this.onTextChange = this.onTextChange.bind(this);
 
         this.setControlsEnabled(false);
@@ -30,18 +30,20 @@ class AnnotationFlow{
         let controls = [
             this.btnMarkComplete,
             this.btnSave,
-            this.image,
             this.editor
         ];
         controls.map(c => {
-            c.style.display = visible?"inherit":"none";
-        });        
+            DomUtils.setElementVisible(c, visible);
+        });
+        
+        this.carousel.setControlsVisible(visible);
     }
     
     setControlsEnabled(enabled){
         this.btnMarkComplete.disabled = !enabled;
         this.btnSave.disabled = !enabled;
-        this.image.disabled = !enabled;
+
+        this.carousel.setControlsEnabled(enabled);
     }
 
     initialize(pageId){
@@ -50,7 +52,12 @@ class AnnotationFlow{
             .then(data => {
                 const {contents, image_path} = data;
                 this.mdeEditor.text = contents;
-                this.image.src = image_path; 
+                this.carousel.setImages({
+                    previous:null,
+                    current: image_path,
+                    next:null
+                });
+                
                 this.setControlsVisible(true);
                 this.setControlsEnabled(true);
             });
