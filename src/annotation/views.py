@@ -11,7 +11,6 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from typing import Tuple
-import json
 # Create your views here.
 
 
@@ -78,7 +77,7 @@ class IndexView(LoginRequiredMixin, View):
     def __insert_annotation(self, user: User, page: Page) -> Annotation:
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(page_id=page, user_id=user, status=status)
-        record.contents = json.dumps({'ops': [{'insert': page.text}]})
+        record.contents = page.text
         record.version = 1
         record.save()
         return record
