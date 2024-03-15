@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from typing import Tuple
+from django.conf import settings
 # Create your views here.
 
 
@@ -20,7 +21,7 @@ def thank_you(request):
     return render(request, "annotation/thank-you.html")
 
 
-MAX_CONCURRENT_ANNOTATORS = 2
+MAX_CONCURRENT_ANNOTATORS = getattr(settings, "MAX_CONCURRENT_ANNOTATORS", 2)
 
 
 class IndexView(LoginRequiredMixin, View):
