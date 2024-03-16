@@ -7,13 +7,20 @@ class DomUtils {
         }
     }
 
+    static get imageNotAvailablePath(){
+        return "/static/annotation/assets/png/page-not-available.png";
+    }
+    
     static updateImageSrc(img, src){
         if (src == null || !src) {
-            // Set the image to a 1x1 px white gif as suggested
-            // here: https://stackoverflow.com/a/8425853/844006
-            img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+            // Display page not available message.
+            img.src = DomUtils.imageNotAvailablePath;
         }else{
             img.src = src;
         }
+    }
+
+    static isPageNotFoundImg(img){
+        return img.src.endsWith(DomUtils.imageNotAvailablePath);
     }
 }
