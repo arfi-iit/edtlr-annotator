@@ -50,12 +50,12 @@ class AnnotationFlow{
         fetch(`api/pages/${pageId}`)
             .then(res => res.json())
             .then(data => {
-                const {contents, image_path} = data;
+                const {contents, current_page, previous_page, next_page} = data;
                 this.mdeEditor.text = contents;
                 this.carousel.setImages({
-                    previous:null,
-                    current: image_path,
-                    next:null
+                    previous: previous_page,
+                    current: current_page,
+                    next: next_page
                 });
                 
                 this.setControlsVisible(true);

@@ -1,5 +1,6 @@
 """Defines the views of the application."""
 from .models import Page, Annotation
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,7 +12,6 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from typing import Tuple
-from django.conf import settings
 # Create your views here.
 
 
@@ -21,7 +21,8 @@ def thank_you(request):
     return render(request, "annotation/thank-you.html")
 
 
-MAX_CONCURRENT_ANNOTATORS = getattr(settings, "MAX_CONCURRENT_ANNOTATORS", 2)
+MAX_CONCURRENT_ANNOTATORS = int(
+    getattr(settings, "MAX_CONCURRENT_ANNOTATORS", 2))
 
 
 class IndexView(LoginRequiredMixin, View):
@@ -92,21 +93,80 @@ class IndexView(LoginRequiredMixin, View):
                                  .first()
 
 
-@login_required
-def get_page(request, page_id: int):
-    """Retrieve the page image and the text contents."""
-    try:
-        user_id = request.user.id
-        page = Page.objects.get(pk=page_id)
-        annotation = Annotation.objects.filter(page_id=page_id,
-                                               user_id=user_id).first()
-        data = {
-            'contents': annotation.contents,
-            'image_path': f'/static/annotation/{page.image_path}'
-        }
-        return JsonResponse(data)
-    except (Page.DoesNotExist, Annotation.DoesNotExist):
-        raise Http404()
+class GetPageContentsView(LoginRequiredMixin, View):
+    """Implements the view for retrieving the text contents, the page image and surrounding page images."""
+
+    def get(self, request, page_id: int) -> JsonResponse | Http404:
+        """Retrieve the contents for the specified page.
+
+        Parameters
+        ----------
+        request: HttpRequest, required
+            The HttpRequest object.
+        page_id: int, required
+            The id of the page for which to load the data.
+
+        Returns
+        -------
+        response: JsonResponse or Http404
+            The response data.
+            If the response is a JsonResponse, then it contains the following fields:
+            - 'contents': the text of the page,
+            - 'current_page': the path of the current page image,
+            - 'previous_page': the path of the image of the previous page,
+            - 'next_page': the path of the image of the next page.
+        """
+        try:
+            user_id = request.user.id
+            page = Page.objects.get(pk=page_id)
+            annotation = Annotation.objects.filter(page_id=page_id,
+                                                   user_id=user_id).first()
+            prev_page, next_page = self.__get_surrounding_pages(page.page_no)
+
+            data = {
+                'contents': annotation.contents,
+                'current_page': self.__get_image_path(page),
+                'previous_page': self.__get_image_path(prev_page),
+                'next_page': self.__get_image_path(next_page)
+            }
+            return JsonResponse(data)
+        except (Page.DoesNotExist, Annotation.DoesNotExist):
+            raise Http404()
+
+    def __get_image_path(self, page: Page | None) -> str | None:
+        """Get the image path of the specified page.
+
+        Parameters
+        ----------
+        page: Page, required
+            The page for which to get the image path.
+
+        Returns
+        -------
+        image_path: str or None
+            The image path of the image, or None if the page is None.
+        """
+        if page is None:
+            return None
+        return f'/static/annotation/{page.image_path}'
+
+    def __get_surrounding_pages(
+            self, page_no: int) -> Tuple[Page | None, Page | None]:
+        """Get surrounding pages for the specified page number.
+
+        Parameters
+        ----------
+        page_no: int, required
+            The page number.
+
+        Returns
+        -------
+        (prev_page, next_page): tuple of (Page, Page)
+            The previous and next pages if found; None if not found.
+        """
+        prev_page = Page.objects.filter(page_no=page_no - 1).first()
+        next_page = Page.objects.filter(page_no=page_no + 1).first()
+        return (prev_page, next_page)
 
 
 class SaveAnnotationView(LoginRequiredMixin, View):

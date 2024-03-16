@@ -5,7 +5,9 @@ from . import views
 app_name = "annotation"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
-    path("api/pages/<int:page_id>", views.get_page, name="get-page"),
+    path("api/pages/<int:page_id>",
+         views.GetPageContentsView.as_view(),
+         name="get-page"),
     path("complete",
          views.MarkAnnotationCompleteView.as_view(),
          name="mark-complete"),
