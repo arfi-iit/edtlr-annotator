@@ -123,18 +123,20 @@ class AnnotationEditor {
     }
     
     static toggleSuperscript(editor){
-        let marker="^";
+        const marker="^";
+        const className = "superscript";
+        
         let cm = editor.codemirror;
         let start = cm.getCursor("start");
         let end = cm.getCursor("end");
-        let mark = AnnotationEditor.getSuperscriptMarkAtCursor(editor);
+        let mark = AnnotationEditor.getMarkAtCursor(editor, className);
         if (mark == null) {
             let initialText = cm.getSelection();
             let formattedText = marker + initialText + marker;
             cm.replaceSelection(formattedText);
             end.ch = start.ch + formattedText.length;
             cm.setSelection(start, end);
-            cm.markText(start, end, {className: "superscript"});
+            cm.markText(start, end, {className: className});
         }else{
             const line = mark.lines[0];
             const {from, to} = line.markedSpans[0];
@@ -146,17 +148,16 @@ class AnnotationEditor {
         cm.focus();
     }
 
-    static getSuperscriptMarkAtCursor(editor){
-        let cm = editor.codemirror;
-
-        let marks = cm.findMarksAt(cm.getCursor());
+    static getMarkAtCursor(editor, markType){
+        const cm = editor.codemirror;
+        const marks = cm.findMarksAt(cm.getCursor());
         if (marks.length == 0) {
             return null;
         }
 
-        const superscriptMark = marks.find(m => m.className == "superscript");
-        if (superscriptMark) {
-            return superscriptMark;
+        const mark = marks.find(m => m.className == markType);
+        if (mark) {
+            return mark;
         }
 
         return null;
