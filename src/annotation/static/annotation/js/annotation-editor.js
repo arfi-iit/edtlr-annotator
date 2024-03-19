@@ -23,6 +23,7 @@ class AnnotationEditor {
     set text(val){
         this.editor.value(val);
         this.markAllSuperscripts();
+        this.markAllAcronyms();
     }
     
     initializeEditor(editorElement){
@@ -63,7 +64,9 @@ class AnnotationEditor {
                 codeSyntaxHighlighting: true,
             },
             shortcuts: {
-                drawTable: "Cmd-Alt-T"
+                drawTable: "Cmd-Alt-T",
+                toggleBold: "Cmd-B",
+                toggleItalic: "Cmd-I"
             },
             showIcons: ["code", "table"],
             spellChecker: false,
@@ -96,6 +99,16 @@ class AnnotationEditor {
                 action: AnnotationEditor.toggleSuperscript,
                 className: "fa fa-superscript",
                 title: "Superscript"
+            },{
+                name: "acronym",
+                action: AnnotationEditor.toggleAcronym,
+                className: "fa fa-object-ungroup",
+                title: "Acronym"
+            },{
+                name: "spaced",
+                action: AnnotationEditor.toggleSpaced,
+                className: "fa fa-text-width",
+                title: "Spaced"
             }],
             toolbarTips: false,
         });
@@ -103,33 +116,64 @@ class AnnotationEditor {
         return simplemde;
     }
 
-    markAsSuperscript(from, to){
-        this.codeMirror.markText(from, to, {className: "superscript"});
+    markAllAcronyms(){
+        const pattern = /@.*@/g;
+        this.markPattern(pattern, "acronym");
     }
     
     markAllSuperscripts(){
-        let cm = this.codeMirror;
         const pattern = /\^.*\^/g;
+        this.markPattern(pattern, "superscript");
+    }
+
+    markPattern(pattern, className){
+        const cm = this.codeMirror;
         let index = 0;
         cm.eachLine(l => {
             const matches = l.text.matchAll(pattern);
             for(const match of matches){
                 const from = {line: index, ch: match.index};
                 const to = {line: index, ch: match.index + match[0].length};
-                this.markAsSuperscript(from, to);
+                cm.markText(from, to, {className: className});
             }
             index = index + 1;
-        });
+        });        
+    }
+
+    static toggleSpaced(editor){
+        const className = "spaced";
+        // const mark = AnnotationEditor.getMarkAtCursor(editor, className);
+        // if (!mark) {
+        //     const cm = editor.codemirror;
+        //     const start = cm.getCursor("start");
+        //     const end = cm.getCursor("end");
+        //     const initialText = cm.getSelection();
+        //     const spaced = initialText.split("").join(" ");
+        //     cm.replaceSelection(spaced);
+        //     cm.setSelection(start, {line: end.line, ch: start.ch + spaced.length});
+        // }
+        
+        const marker = "~";
+        AnnotationEditor.toggleMark(editor, marker, className);
+    }
+    
+    static toggleAcronym(editor){
+        const marker = "@";
+        const className = "acronym";
+        AnnotationEditor.toggleMark(editor, marker, className);
     }
     
     static toggleSuperscript(editor){
         const marker="^";
         const className = "superscript";
-        
-        let cm = editor.codemirror;
-        let start = cm.getCursor("start");
-        let end = cm.getCursor("end");
-        let mark = AnnotationEditor.getMarkAtCursor(editor, className);
+        AnnotationEditor.toggleMark(editor, marker, className);
+    }
+
+    static toggleMark(editor, marker, className){
+        const cm = editor.codemirror;
+        const start = cm.getCursor("start");
+        const end = cm.getCursor("end");
+        const mark = AnnotationEditor.getMarkAtCursor(editor, className);
         if (mark == null) {
             let initialText = cm.getSelection();
             let formattedText = marker + initialText + marker;

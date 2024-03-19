@@ -12,6 +12,14 @@
     font-size: 75%;
 }
 
+.acronym{
+    background-color: antiquewhite;
+}
+
+.spaced{
+    letter-spacing: 3px;
+}
+
 #buttons-row{
     margin-top: 10px;
     margin-bottom: 10px;
