@@ -141,18 +141,7 @@ class AnnotationEditor {
     }
 
     static toggleSpaced(editor){
-        const className = "spaced";
-        // const mark = AnnotationEditor.getMarkAtCursor(editor, className);
-        // if (!mark) {
-        //     const cm = editor.codemirror;
-        //     const start = cm.getCursor("start");
-        //     const end = cm.getCursor("end");
-        //     const initialText = cm.getSelection();
-        //     const spaced = initialText.split("").join(" ");
-        //     cm.replaceSelection(spaced);
-        //     cm.setSelection(start, {line: end.line, ch: start.ch + spaced.length});
-        // }
-        
+        const className = "spaced";        
         const marker = "~";
         AnnotationEditor.toggleMark(editor, marker, className);
     }
