@@ -177,9 +177,24 @@ class AnnotationEditor {
             cm.setSelection(start, end);
             cm.markText(start, end, {className: className});
         }else{
-            const line = mark.lines[0];
-            const {from, to} = line.markedSpans[0];
-            const lineNumber = cm.getCursor().line;
+            const cursorPos = cm.getCursor();
+            const lineNumber = cursorPos.line;
+            const charNumber = cursorPos.ch;
+
+            const line = mark.lines[lineNumber];
+            const span = line.markedSpans.find(({from, to}) => {
+                const start = Number(from) - 1;
+                const end = Number(to) + 1;
+                return start <= charNumber && charNumber <= end;
+            });
+
+            if (!span) {
+                cm.focus();
+                return;
+            }
+
+            const {from, to} = span;
+
             cm.setSelection({line: lineNumber, ch: from}, {line: lineNumber, ch: to});
             const text = cm.getSelection();
             cm.replaceSelection(text.replaceAll(marker, ""));
