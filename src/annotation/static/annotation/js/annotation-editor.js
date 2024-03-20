@@ -24,8 +24,9 @@ class AnnotationEditor {
         this.editor.value(val);
         this.markAllSuperscripts();
         this.markAllAcronyms();
+        this.markAllSpaced();
     }
-    
+
     initializeEditor(editorElement){
         // Most options demonstrate the non-default behavior
         let simplemde =new SimpleMDE({
@@ -112,18 +113,23 @@ class AnnotationEditor {
             }],
             toolbarTips: false,
         });
-        
+
         return simplemde;
     }
 
     markAllAcronyms(){
-        const pattern = /@.*@/g;
+        const pattern = /@[^@]*@/gm;
         this.markPattern(pattern, "acronym");
     }
-    
+
     markAllSuperscripts(){
-        const pattern = /\^.*\^/g;
+        const pattern = /\^[^\^]*\^/gm;
         this.markPattern(pattern, "superscript");
+    }
+
+    markAllSpaced(){
+        const pattern = /~[^~]*~/gm;
+        this.markPattern(pattern, "spaced");
     }
 
     markPattern(pattern, className){
@@ -137,21 +143,21 @@ class AnnotationEditor {
                 cm.markText(from, to, {className: className});
             }
             index = index + 1;
-        });        
+        });
     }
 
     static toggleSpaced(editor){
-        const className = "spaced";        
+        const className = "spaced";
         const marker = "~";
         AnnotationEditor.toggleMark(editor, marker, className);
     }
-    
+
     static toggleAcronym(editor){
         const marker = "@";
         const className = "acronym";
         AnnotationEditor.toggleMark(editor, marker, className);
     }
-    
+
     static toggleSuperscript(editor){
         const marker="^";
         const className = "superscript";
