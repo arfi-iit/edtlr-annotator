@@ -35,40 +35,40 @@
     </div>
   </div>
   <div class="col-md-6">
-    <textarea id="editor">
-
+    <div id="editor-container" class="sticky-top">
+      <textarea id="editor">
       </textarea>
-    <!-- <div id="editor"> -->
-    <!-- </div> -->
-  </div>
-</div>
-<!-- buttons -->
-<div id="buttons-row" class="row align-items-end justify-content-start">
-  <div class="col-md-4 offset-md-8">
-    <div class="d-flex flex-row-reverse bd-highlight">
-      <form method="post" action="{% url 'annotation:save' %}">
-	{% csrf_token %}
-	<input type="hidden" name="contents" value="">
-	<input type="hidden" name="page-id" value="{{page_id}}">
-	<button type="submit" id="btn-save-annotation"
-		class="btn btn-primary" value="" >
-	  <i class="bi bi-save"></i>
-	  {% translate 'Save annotation' %}
-	</button>
-      </form>
-      <form method="post" action="{% url 'annotation:mark-complete' %}">
-	{% csrf_token %}
-	<input type="hidden" name="contents" value="">
-	<input type="hidden" name="page-id" value="{{page_id}}">
-	<button type="submit" id="btn-mark-complete"
-		class="btn btn-success">
-	  <i class="bi bi-check2"></i>
-	  {% translate "Mark complete" %}
-	</button>
-      </form>
+      <!-- buttons -->
+      <div id="buttons-row" class="row align-items-end justify-content-start">
+	<div class="col-md-8 offset-md-4">
+	  <div class="d-flex flex-row-reverse bd-highlight">
+	    <form method="post" action="{% url 'annotation:save' %}">
+	      {% csrf_token %}
+	      <input type="hidden" name="contents" value="">
+	      <input type="hidden" name="page-id" value="{{page_id}}">
+	      <button type="submit" id="btn-save-annotation"
+		      class="btn btn-primary" value="" >
+		<i class="bi bi-save"></i>
+		{% translate 'Save annotation' %}
+	      </button>
+	    </form>
+	    <form method="post" action="{% url 'annotation:mark-complete' %}">
+	      {% csrf_token %}
+	      <input type="hidden" name="contents" value="">
+	      <input type="hidden" name="page-id" value="{{page_id}}">
+	      <button type="submit" id="btn-mark-complete"
+		      class="btn btn-success">
+		<i class="bi bi-check2"></i>
+		{% translate "Mark complete" %}
+	      </button>
+	    </form>
+	  </div>
+	</div>
+      </div>
     </div>
   </div>
 </div>
+
 </main>
 {% endblock %}
 

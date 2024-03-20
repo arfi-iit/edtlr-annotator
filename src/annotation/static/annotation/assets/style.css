@@ -56,3 +56,11 @@
   font-size: .875em;
   color: var(--bs-form-invalid-color);
 }
+
+.CodeMirror{
+    height: 75vh;
+}
+
+#editor-container{
+    margin-top: 0px;
+}
