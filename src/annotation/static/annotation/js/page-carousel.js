@@ -7,41 +7,30 @@ class PageCarousel {
         this.btnNextPage = buttons[1];
 
         const images = Array.from(this.carousel.getElementsByTagName("img"));
-        this.imgPreviousPage = images[0];
-        this.imgCurrentPage = images[1];
-        this.imgNextPage = images[2];
+
+        DomUtils.setElementVisible(this.btnPrevPage, false);
+        if (images.length <= 1) {
+            DomUtils.setElementVisible(this.btnNextPage, false);
+        }
 
         this.carousel.addEventListener('slide.bs.carousel', function (eventArgs) {
-            console.log(eventArgs);
             const {target, from, to} = eventArgs;
             const buttons = Array.from(target.getElementsByTagName("button"));
             const btnPrevPage = buttons[0];
             const btnNextPage = buttons[1];
+            const images = Array.from(target.getElementsByTagName("img"));
             
             if (to === 0) {
                 DomUtils.setElementVisible(btnPrevPage, false);
-                DomUtils.setElementVisible(btnNextPage, true);                
-            }
-            if (to === 1) {
-                const images = Array.from(target.getElementsByTagName("img"));
-                DomUtils.setElementVisible(btnPrevPage,  !DomUtils.isPageNotFoundImg(images[0]));
-                DomUtils.setElementVisible(btnNextPage, !DomUtils.isPageNotFoundImg(images[2]));
-            }
-            if (to === 2) {
-                DomUtils.setElementVisible(btnPrevPage, true);
-                DomUtils.setElementVisible(btnNextPage, false);
+                DomUtils.setElementVisible(btnNextPage, images.length > 1);                
+            }else if (to === images.length - 1) {
+                DomUtils.setElementVisible(btnPrevPage, images.length > 1);
+                DomUtils.setElementVisible(btnNextPage, false);                
+            }else{
+                DomUtils.setElementVisible(btnPrevPage, to > 0 && images.length > 1);
+                DomUtils.setElementVisible(btnNextPage, to < images.length -1 && images.length > 1);                
             }
         });
-    }
-
-    setImages(images){
-        const {previous, current, next} = images;
-        DomUtils.updateImageSrc(this.imgPreviousPage, previous);
-        this.imgCurrentPage.src = current;
-        DomUtils.updateImageSrc(this.imgNextPage, next);
-
-        DomUtils.setElementVisible(this.btnPrevPage, previous != null && previous);
-        DomUtils.setElementVisible(this.btnNextPage, next != null && next);
     }
 
     setControlsEnabled(enabled){

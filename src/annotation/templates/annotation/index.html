@@ -14,15 +14,17 @@
   <div class="col-md-6">
     <div id="image-container" class="carousel slide carousel-fade" data-bs-theme="dark" data-wrap="true">
       <div class="carousel-inner">
-	<div class="carousel-item">
-	  <img id="prev-image" src="" class="d-block w-100" alt="">
-	</div>
+	{% for img_path in page_images  %}
+	{% if forloop.first %}
 	<div class="carousel-item active">
-	  <img id="image" src="" class="d-block w-100" alt="">
+	  <img id="image" src="{{img_path}}" class="d-block w-100" alt="">
 	</div>
+	{% else %}
 	<div class="carousel-item">
-	  <img id="next-image" src="" class="d-block w-100" alt="">
+	  <img id="prev-image" src="{{img_path}}" class="d-block w-100" alt="">
 	</div>
+	{% endif %}
+	{% endfor  %}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#image-container" data-bs-slide="prev">
 	<span class="carousel-control-prev-icon" aria-hidden="true"></span>

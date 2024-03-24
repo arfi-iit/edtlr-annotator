@@ -52,11 +52,6 @@ class AnnotationFlow{
             .then(data => {
                 const {contents, current_page, previous_page, next_page} = data;
                 this.mdeEditor.text = contents;
-                this.carousel.setImages({
-                    previous: previous_page,
-                    current: current_page,
-                    next: next_page
-                });
                 
                 this.setControlsVisible(true);
                 this.setControlsEnabled(true);
