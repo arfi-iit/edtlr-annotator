@@ -16,20 +16,46 @@ class Page(models.Model):
     """Represents a pair of (page image, OCR text)."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    volume_id = models.ForeignKey(Volume,
-                                  on_delete=models.CASCADE,
-                                  verbose_name="volume_id")
+    volume = models.ForeignKey(Volume, on_delete=models.CASCADE, default=1)
     page_no = models.PositiveIntegerField(verbose_name="page_no",
                                           unique=True,
                                           null=False)
     image_path = models.CharField(unique=True, null=False, max_length=1024)
-    text = models.TextField(max_length=8192, null=False)
 
     class Meta:
         """Metadata of the Page model."""
+
         constraints = [
-            models.UniqueConstraint(fields=["volume_id", "page_no"],
+            models.UniqueConstraint(fields=["volume", "page_no"],
                                     name="UX_volume_id_page_no")
+        ]
+
+
+class Entry(models.Model):
+    """Represents a dictionary entry."""
+
+    id = models.AutoField(verbose_name="id", primary_key=True)
+    text = models.TextField(max_length=250_000, null=False)
+
+    class Meta:
+        """Defines metadata of the Entry model."""
+
+        verbose_name_plural = "Entries"
+
+
+class EntryPages(models.Model):
+    """Represents an association between a page and a dictionary entry."""
+
+    id = models.AutoField(verbose_name="id", primary_key=True)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+
+    class Meta:
+        """Defines the metadata of the PageEntry model."""
+
+        constraints = [
+            models.UniqueConstraint(fields=["entry", "page"],
+                                    name="UX_entry_id_page_id")
         ]
 
 
@@ -44,13 +70,12 @@ class Annotation(models.Model):
         CONFLICT = 'Conflict', _('Conflict')
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    page_id = models.ForeignKey(Page,
-                                on_delete=models.CASCADE,
-                                verbose_name="page_id")
-    user_id = models.ForeignKey(User,
-                                on_delete=models.CASCADE,
-                                verbose_name="user_id")
-    contents = models.TextField(verbose_name="contents", null=True)
+    entry = models.ForeignKey(Entry,
+                              on_delete=models.CASCADE,
+                              null=False,
+                              default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    text = models.TextField(verbose_name="text", null=True, max_length=250_000)
     status = models.CharField(max_length=32,
                               choices=AnnotationStatus,
                               null=False,

@@ -46,8 +46,8 @@ class AnnotationFlow{
         this.carousel.setControlsEnabled(enabled);
     }
 
-    initialize(pageId){
-        fetch(`api/pages/${pageId}`)
+    initialize(entryId){
+        fetch(`api/entries/${entryId}`)
             .then(res => res.json())
             .then(data => {
                 const {contents, current_page, previous_page, next_page} = data;

@@ -1,12 +1,12 @@
 """Defines the views of the application."""
-from .models import Page, Annotation
+from .models import Page, Annotation, EntryPages, Entry
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.http import Http404
+from django.http import Http404, HttpRequest
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -23,6 +23,24 @@ def thank_you(request):
 
 MAX_CONCURRENT_ANNOTATORS = int(
     getattr(settings, "MAX_CONCURRENT_ANNOTATORS", 2))
+
+
+def get_image_path(page: Page | None) -> str:
+    """Get the image path of the specified page.
+
+    Parameters
+    ----------
+    page: Page, required
+        The page for which to get the image path.
+
+    Returns
+    -------
+    image_path: str or None
+        The image path of the image, or None if the page is None.
+    """
+    if page is None:
+        return None
+    return f'/static/annotation/{page.image_path}'
 
 
 class IndexView(LoginRequiredMixin, View):
@@ -45,47 +63,50 @@ class IndexView(LoginRequiredMixin, View):
             return render(request,
                           self.template_name,
                           context=self.__build_template_context(
-                              current_annotation.page_id.id))
+                              current_annotation.entry))
 
-        page = self.__get_next_page(request.user)
-        if page is not None:
-            record = self.__insert_annotation(request.user, page)
+        entry = self.__get_next_entry(request.user)
+        if entry is not None:
+            record = self.__insert_annotation(request.user, entry)
             return render(request,
                           self.template_name,
-                          context=self.__build_template_context(page.id))
+                          context=self.__build_template_context(entry))
 
         return redirect(self.thank_you_page)
 
-    def __get_next_page(self, user: User) -> Page | None:
-        in_progress_annotations = Annotation.objects.values('page_id')\
-                                                    .annotate(count=Count('page_id'))\
-                                                    .order_by('page_id')\
+    def __get_next_entry(self, user: User) -> Page | None:
+        in_progress_annotations = Annotation.objects.values('entry')\
+                                                    .annotate(count=Count('entry'))\
+                                                    .order_by('entry')\
                                                     .filter(count__lt=MAX_CONCURRENT_ANNOTATORS)
-        user_annotations = Annotation.objects.filter(user_id=user)\
-                                             .values('page_id')
-        user_annotations = set([a['page_id'] for a in user_annotations])
+
+        user_annotations = Annotation.objects.filter(user=user)\
+                                             .values('entry')
+        user_annotations = set([a['entry'] for a in user_annotations])
 
         for annotation in in_progress_annotations:
-            page_id = annotation['page_id']
-            if page_id not in user_annotations:
-                return Page.objects.get(pk=page_id)
+            entry_id = annotation['entry']
+            if entry_id not in user_annotations:
+                return Entry.objects.get(pk=entry_id)
 
-        in_progress_pages = [
-            p['page_id'] for p in Annotation.objects.values('page_id')
+        in_progress_entries = [
+            p['entry'] for p in Annotation.objects.values('entry')
         ]
 
-        return Page.objects.exclude(id__in=in_progress_pages).first()
+        return Entry.objects.exclude(id__in=in_progress_entries).first()
 
-    def __insert_annotation(self, user: User, page: Page) -> Annotation:
+    def __insert_annotation(self, user: User, entry: Entry) -> Annotation:
         status = Annotation.AnnotationStatus.IN_PROGRESS
-        record = Annotation(page_id=page, user_id=user, status=status)
-        record.contents = page.text
+        record = Annotation(entry=entry, user=user, status=status)
+        record.text = entry.text
         record.version = 1
         record.save()
         return record
 
-    def __build_template_context(self, page_id: int) -> dict:
-        return {'page_id': page_id}
+    def __build_template_context(self, entry: Entry) -> dict:
+        entry_pages = EntryPages.objects.filter(entry=entry)
+        page_images = [get_image_path(e.page) for e in entry_pages]
+        return {'entry_id': entry.id, 'page_images': page_images}
 
     def __get_in_progress_annotation(self, user_id: int) -> Annotation | None:
         status = Annotation.AnnotationStatus.IN_PROGRESS
@@ -93,41 +114,40 @@ class IndexView(LoginRequiredMixin, View):
                                  .first()
 
 
-class GetPageContentsView(LoginRequiredMixin, View):
-    """Implements the view for retrieving the text contents, the page image and surrounding page images."""
+class GetEntryContentsView(LoginRequiredMixin, View):
+    """Implements the view for retrieving the contents of the specified entry."""
 
-    def get(self, request, page_id: int) -> JsonResponse | Http404:
-        """Retrieve the contents for the specified page.
+    def get(self, request, entry_id: int) -> JsonResponse | Http404:
+        """Retrieve the contents for the specified entry.
 
         Parameters
         ----------
         request: HttpRequest, required
             The HttpRequest object.
-        page_id: int, required
-            The id of the page for which to load the data.
+        entry_id: int, required
+            The id of the entry for which to load the data.
 
         Returns
         -------
         response: JsonResponse or Http404
             The response data.
             If the response is a JsonResponse, then it contains the following fields:
-            - 'contents': the text of the page,
-            - 'current_page': the path of the current page image,
-            - 'previous_page': the path of the image of the previous page,
-            - 'next_page': the path of the image of the next page.
+            - 'contents': the text of the entry
         """
         try:
             user_id = request.user.id
-            page = Page.objects.get(pk=page_id)
-            annotation = Annotation.objects.filter(page_id=page_id,
-                                                   user_id=user_id).first()
-            prev_page, next_page = self.__get_surrounding_pages(page.page_no)
+            entry = Entry.objects.get(pk=entry_id)
+            annotation = Annotation.objects.filter(entry=entry,
+                                                   user=request.user).first()
+
+            entry_page = EntryPages.objects.filter(entry=entry)\
+                                            .first()
 
             data = {
-                'contents': annotation.contents,
-                'current_page': self.__get_image_path(page),
-                'previous_page': self.__get_image_path(prev_page),
-                'next_page': self.__get_image_path(next_page)
+                'contents': annotation.text,
+                'current_page': self.__get_image_path(entry_page.page),
+                'previous_page': None,
+                'next_page': None
             }
             return JsonResponse(data)
         except (Page.DoesNotExist, Annotation.DoesNotExist):
@@ -146,27 +166,7 @@ class GetPageContentsView(LoginRequiredMixin, View):
         image_path: str or None
             The image path of the image, or None if the page is None.
         """
-        if page is None:
-            return None
-        return f'/static/annotation/{page.image_path}'
-
-    def __get_surrounding_pages(
-            self, page_no: int) -> Tuple[Page | None, Page | None]:
-        """Get surrounding pages for the specified page number.
-
-        Parameters
-        ----------
-        page_no: int, required
-            The page number.
-
-        Returns
-        -------
-        (prev_page, next_page): tuple of (Page, Page)
-            The previous and next pages if found; None if not found.
-        """
-        prev_page = Page.objects.filter(page_no=page_no - 1).first()
-        next_page = Page.objects.filter(page_no=page_no + 1).first()
-        return (prev_page, next_page)
+        return get_image_path(page)
 
 
 class SaveAnnotationView(LoginRequiredMixin, View):
@@ -182,21 +182,21 @@ class SaveAnnotationView(LoginRequiredMixin, View):
         request: HttpRequest, required
             The HTTP request object.
         """
-        page_id, contents = self.__parse_request_body(request)
+        entry_id, text = self.__parse_request_body(request)
         annotation = Annotation.objects.get(
-            page_id=page_id,
-            user_id=request.user,
+            entry=entry_id,
+            user=request.user,
             status=Annotation.AnnotationStatus.IN_PROGRESS)
         if annotation is not None:
-            annotation.contents = contents
+            annotation.text = text
             annotation.version = annotation.version + 1
             annotation.save()
         return redirect(self.index_page)
 
-    def __parse_request_body(self, request) -> Tuple[int, object]:
-        contents = request.POST['contents']
-        page_id = int(request.POST['page-id'])
-        return page_id, contents
+    def __parse_request_body(self, request) -> Tuple[int, HttpRequest]:
+        text = request.POST['text']
+        entry_id = int(request.POST['entry-id'])
+        return entry_id, text
 
 
 class MarkAnnotationCompleteView(LoginRequiredMixin, View):
@@ -206,47 +206,46 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
 
     def post(self, request):
         """Save the annotation from the request body and mark it as complete."""
-        page_id, contents = self.__parse_request_body(request)
-        self.__mark_annotation_complete(page_id, contents, request.user)
-        self.__check_conflicts(page_id)
+        entry_id, contents = self.__parse_request_body(request)
+        self.__mark_annotation_complete(entry_id, contents, request.user)
+        self.__check_conflicts(entry_id)
         return redirect(self.index_page)
 
-    def __check_conflicts(self, page_id: int):
-        page_annotations = Annotation.objects.filter(
-            page_id=page_id, status=Annotation.AnnotationStatus.COMPLETE)
-        if len(page_annotations) < MAX_CONCURRENT_ANNOTATORS:
+    def __check_conflicts(self, entry_id: int):
+        entry_annotations = Annotation.objects.filter(
+            entry=entry_id, status=Annotation.AnnotationStatus.COMPLETE)
+        if len(entry_annotations) < MAX_CONCURRENT_ANNOTATORS:
             return
 
-        if self.__have_conflicts(page_annotations):
-            for annotation in page_annotations:
+        if self.__have_conflicts(entry_annotations):
+            for annotation in entry_annotations:
                 annotation.version = annotation.version + 1
                 annotation.status = Annotation.AnnotationStatus.CONFLICT
                 annotation.save()
 
-    def __have_conflicts(self, page_annotations) -> bool:
-        iterator = iter(page_annotations)
+    def __have_conflicts(self, entry_annotations) -> bool:
+        iterator = iter(entry_annotations)
 
-        first = next(iterator).contents
+        first = next(iterator).text
         for item in iterator:
-            if first != item.contents:
+            if first != item.text:
                 return True
 
         return False
 
-    def __mark_annotation_complete(self, page_id: int, contents: object,
-                                   user: User):
+    def __mark_annotation_complete(self, entry_id: int, text: str, user: User):
         annotation = Annotation.objects.get(
-            page_id=page_id,
-            user_id=user,
+            entry=entry_id,
+            user=user,
             status=Annotation.AnnotationStatus.IN_PROGRESS)
 
         if annotation is not None:
-            annotation.contents = contents
+            annotation.text = text
             annotation.version = annotation.version + 1
             annotation.status = Annotation.AnnotationStatus.COMPLETE
             annotation.save()
 
     def __parse_request_body(self, request) -> Tuple[int, object]:
-        contents = request.POST['contents']
-        page_id = int(request.POST['page-id'])
-        return page_id, contents
+        text = request.POST['text']
+        entry_id = int(request.POST['entry-id'])
+        return entry_id, text

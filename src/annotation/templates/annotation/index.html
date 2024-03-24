@@ -44,8 +44,8 @@
 	  <div class="d-flex flex-row-reverse bd-highlight">
 	    <form method="post" action="{% url 'annotation:save' %}">
 	      {% csrf_token %}
-	      <input type="hidden" name="contents" value="">
-	      <input type="hidden" name="page-id" value="{{page_id}}">
+	      <input type="hidden" name="text" value="">
+	      <input type="hidden" name="entry-id" value="{{entry_id}}">
 	      <button type="submit" id="btn-save-annotation"
 		      class="btn btn-primary" value="" >
 		<i class="bi bi-save"></i>
@@ -54,8 +54,8 @@
 	    </form>
 	    <form method="post" action="{% url 'annotation:mark-complete' %}">
 	      {% csrf_token %}
-	      <input type="hidden" name="contents" value="">
-	      <input type="hidden" name="page-id" value="{{page_id}}">
+	      <input type="hidden" name="text" value="">
+	      <input type="hidden" name="entry-id" value="{{entry_id}}">
 	      <button type="submit" id="btn-mark-complete"
 		      class="btn btn-success">
 		<i class="bi bi-check2"></i>
@@ -81,8 +81,9 @@
 <script>
   let annotationFlow = new AnnotationFlow('image-container', 'editor',
 					  'btn-save-annotation', 'btn-mark-complete',
-					  ['contents']);
-  annotationFlow.initialize({{page_id}});
+					  ['text']);
+  // TODO: Pass full url using {% url } instead of hardcoding in class
+  annotationFlow.initialize({{entry_id}});
 
 </script>
 {% endblock %}
