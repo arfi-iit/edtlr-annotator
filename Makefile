@@ -8,6 +8,10 @@ SRC_DIR        = src
 APP_NAME       = annotation
 APP_DIR        = $(SRC_DIR)/$(APP_NAME)
 
+STATIC_DIR     = $(APP_DIR)/static/annotation
+DATA_DIR       = $(STATIC_DIR)/data
+IMPORT_DIR     = $(DATA_DIR)
+
 # Recipes
 
 # Initialize the development environment
@@ -55,3 +59,10 @@ migrations: app
 schema: migrations
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
+
+import: init
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py importdata \
+		--entries-directory $(IMPORT_DIR)/entries \
+		--images-directory $(IMPORT_DIR)/images \
+		--static-directory $(STATIC_DIR) \
+		--mappings-file $(IMPORT_DIR)/mappings.csv;

@@ -17,9 +17,7 @@ class Page(models.Model):
 
     id = models.AutoField(verbose_name="id", primary_key=True)
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE, default=1)
-    page_no = models.PositiveIntegerField(verbose_name="page_no",
-                                          unique=True,
-                                          null=False)
+    page_no = models.PositiveIntegerField(verbose_name="page_no", null=False)
     image_path = models.CharField(unique=True, null=False, max_length=1024)
 
     class Meta:
@@ -43,6 +41,7 @@ class Entry(models.Model):
         verbose_name_plural = "Entries"
 
 
+# TODO: Rename this model to EntryPage
 class EntryPages(models.Model):
     """Represents an association between a page and a dictionary entry."""
 
