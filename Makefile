@@ -37,6 +37,11 @@ app: init
 	    ../$(VENV_PYTHON) manage.py startapp $(APP_NAME); \
 	fi;
 
+# Create super user
+# make superuser DJANGO_SUPERUSER_USERNAME=<username> DJANGO_SUPERUSER_PASSWORD=<password>
+superuser: init
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py createsuperuser --no-input;
+
 # Run the development server
 start: init
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver 0.0.0.0:$(PORT);
