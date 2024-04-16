@@ -12,6 +12,7 @@ STATIC_DIR     = $(APP_DIR)/static/annotation
 DATA_DIR       = $(STATIC_DIR)/data
 IMPORT_DIR     = $(DATA_DIR)
 
+PORT           = 8000
 # Recipes
 
 # Initialize the development environment
@@ -38,7 +39,7 @@ app: init
 
 # Run the development server
 start: init
-	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver;
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver 0.0.0.0:$(PORT);
 
 # Create or update the .po file containing the translation strings
 messages: init
