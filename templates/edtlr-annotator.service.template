@@ -1,0 +1,21 @@
+[Unit]
+Description=eDTLR Annotator daemon
+Requires=edtlr-annotator.socket
+After=network.target
+
+[Service]
+Type=notify
+# the specific user that our service will run as
+User=__USER__
+Group=__GROUP__
+
+# Full path of the src directory.
+WorkingDirectory=__SRC_DIR_PATH__
+ExecStart=__GUNICORN_PATH__ -c __SRC_DIR_PATH__/config/gunicorn.conf.py config.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

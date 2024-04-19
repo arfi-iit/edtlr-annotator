@@ -1,0 +1,6 @@
+# Full path of the gunicorn executable. E. g.: /app/venv/bin/gunicorn
+command='__GUNICORN_PATH__'
+# Full path of the src directory
+pythonpath = '__SRC_DIR_PATH__'
+bind='unix:/run/edtlr-annotator.sock'
+workers=__NUM_WORKERS__
