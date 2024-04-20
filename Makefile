@@ -64,7 +64,10 @@ migrations: app
 # Apply migrations
 schema: migrations
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
-	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
+
+# Collect static files
+static-files: app
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py collectstatic;
 
 import: init
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py importdata \
