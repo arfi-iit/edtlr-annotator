@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-02 21:02+0200\n"
+"POT-Creation-Date: 2024-04-25 21:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,19 +19,29 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/models.py:23
+#: src/annotation/models.py:67
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models.py:24
+#: src/annotation/models.py:68
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models.py:25
+#: src/annotation/models.py:69
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/annotation/templates/annotation/annotation-base.html:26
+#: src/annotation/templates/annotation/annotation-base.html:23
+msgid "Admin panel"
+msgstr "Panou administrare"
+
+#: src/annotation/templates/annotation/annotation-base.html:35
+#, fuzzy
+#| msgid "Password"
+msgid "Change password"
+msgstr "Parolă"
+
+#: src/annotation/templates/annotation/annotation-base.html:43
 msgid "Logout"
 msgstr "Deconectare"
 
@@ -41,13 +51,13 @@ msgstr "Adnotator eDTLR"
 
 #: src/annotation/templates/annotation/index.html:5
 msgid "Annotate text"
-msgstr ""
+msgstr "Adnotare text"
 
-#: src/annotation/templates/annotation/index.html:36
+#: src/annotation/templates/annotation/index.html:54
 msgid "Save annotation"
 msgstr "Salvează adnotare"
 
-#: src/annotation/templates/annotation/index.html:46
+#: src/annotation/templates/annotation/index.html:64
 msgid "Mark complete"
 msgstr "Marchează finalizată"
 

@@ -3,29 +3,51 @@
 {% load static %}
 
 {% block header %}
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'annotation:index'  %}">
       <img src="{% static 'annotation/assets/svg/edtlr.svg' %}" alt="eDTLR" width="75"/>
     </a>
-    <button class="navbar-toggler" type="button"
-	    data-bs-toggle="collapse"
-	    data-bs-target="#navbarSupportedContent"
-	    aria-controls="navbarSupportedContent"
-	    aria-expanded="false"
-	    aria-label="Toggle navigation">
+
+    <!-- Toggler button for collapsed menu on smaller screens -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+    <!-- Menu items on the right -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <!-- Admin menu entry -->
+	{% if user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin:index' %}">
+	    {% translate 'Admin panel' %}
+	  </a>
+        </li>
+	{% endif %}
+        <!-- Dropdown menu -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{% static 'annotation/assets/png/avatar.png' %}" alt="User Avatar" class="rounded-circle" width="30" height="30">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+	      <a class="dropdown-item" href="/accounts/password_change/">
+		{% translate 'Change password' %}
+	      </a>
+	    </li>
+            <li>
+	      <form class="d-flex" role="logout" method="post" action="{% url 'logout' %}">
+		{% csrf_token %}
+		<button class="btn btn-link" type="submit">
+		  <i class="bi bi-box-arrow-left"></i>
+		  {% translate 'Logout' %}
+		</button>
+	      </form>
+	    </li>
+          </ul>
+        </li>
       </ul>
-      <form class="d-flex" role="logout" method="post" action="{% url 'logout' %}">
-	{% csrf_token %}
-        <button class="btn btn-outline-primary" type="submit">
-	  <i class="bi bi-box-arrow-left"></i>
-	  {% translate 'Logout' %}
-	</button>
-      </form>
     </div>
   </div>
 </nav>
