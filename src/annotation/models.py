@@ -41,8 +41,7 @@ class Entry(models.Model):
         verbose_name_plural = "Entries"
 
 
-# TODO: Rename this model to EntryPage
-class EntryPages(models.Model):
+class EntryPage(models.Model):
     """Represents an association between a page and a dictionary entry."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)

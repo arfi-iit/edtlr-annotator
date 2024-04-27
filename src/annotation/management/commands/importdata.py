@@ -1,6 +1,6 @@
 """Defines the command for importing data into the database."""
 from django.core.management.base import BaseCommand, CommandError
-from annotation.models import Volume, Page, Entry, EntryPages
+from annotation.models import Volume, Page, Entry, EntryPage
 from annotation.utils.xml2edtlrmd import convert_xml_to_edtlr_markdown
 from pathlib import Path
 from typing import Generator, List, Dict, Callable
@@ -98,7 +98,7 @@ class Command(BaseCommand):
 
         entry = self.__create_entry(entry_file)
         for page in pages_:
-            ep = EntryPages(entry=entry, page=page)
+            ep = EntryPage(entry=entry, page=page)
             ep.save()
 
     def __create_entry(self, entry_file: Path) -> Entry:

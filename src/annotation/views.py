@@ -1,5 +1,5 @@
 """Defines the views of the application."""
-from .models import Page, Annotation, EntryPages, Entry
+from .models import Page, Annotation, EntryPage, Entry
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
@@ -104,7 +104,7 @@ class IndexView(LoginRequiredMixin, View):
         return record
 
     def __build_template_context(self, entry: Entry) -> dict:
-        entry_pages = EntryPages.objects.filter(entry=entry)
+        entry_pages = EntryPage.objects.filter(entry=entry)
         page_images = [get_image_path(e.page) for e in entry_pages]
         return {'entry_id': entry.id, 'page_images': page_images}
 
@@ -140,7 +140,7 @@ class GetEntryContentsView(LoginRequiredMixin, View):
             annotation = Annotation.objects.filter(entry=entry,
                                                    user=request.user).first()
 
-            entry_page = EntryPages.objects.filter(entry=entry)\
+            entry_page = EntryPage.objects.filter(entry=entry)\
                                             .first()
 
             data = {
