@@ -23,6 +23,7 @@ class AnnotationEditor {
     set text(val){
         this.editor.value(val);
         this.markAllSuperscripts();
+        this.markAllSubscripts();
         this.markAllAcronyms();
         this.markAllSpaced();
     }
@@ -101,6 +102,11 @@ class AnnotationEditor {
                 className: "fa fa-superscript",
                 title: "Superscript"
             },{
+                name: "subscript",
+                action: AnnotationEditor.toggleSubscript,
+                className: "fa fa-subscript",
+                title: "Subscript"
+            },{
                 name: "acronym",
                 action: AnnotationEditor.toggleAcronym,
                 className: "fa fa-object-ungroup",
@@ -115,6 +121,11 @@ class AnnotationEditor {
         });
 
         return simplemde;
+    }
+
+    markAllSubscripts(){
+        const pattern = /\/[^/]*\//gm;
+        this.markPattern(pattern, "subscript");
     }
 
     markAllAcronyms(){
@@ -161,6 +172,12 @@ class AnnotationEditor {
     static toggleSuperscript(editor){
         const marker="^";
         const className = "superscript";
+        AnnotationEditor.toggleMark(editor, marker, className);
+    }
+    
+    static toggleSubscript(editor){
+        const marker="/";
+        const className = "subscript";
         AnnotationEditor.toggleMark(editor, marker, className);
     }
 

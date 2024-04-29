@@ -11,6 +11,11 @@
     top: -0.5em;
     font-size: 75%;
 }
+.subscript{
+    position: relative;
+    top: 0.5em;
+    font-size: 75%;
+}
 
 .acronym{
     background-color: antiquewhite;
