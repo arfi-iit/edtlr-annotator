@@ -19,10 +19,12 @@
 
 .acronym{
     background-color: antiquewhite;
+    font-variant-caps: small-caps;
 }
 
 .spaced{
     letter-spacing: 3px;
+    background-color: #f9f9f9;
 }
 
 #buttons-row{
