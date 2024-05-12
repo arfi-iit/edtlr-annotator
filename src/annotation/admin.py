@@ -6,9 +6,37 @@ from .models import EntryPage
 from .models import Volume
 from django.contrib import admin
 
+
 # Register your models here.
-admin.site.register(Volume)
-admin.site.register(Page)
-admin.site.register(Annotation)
+class VolumeAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for Volume."""
+
+    list_display = ["id", "name"]
+
+
+class PageAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for Page."""
+
+    list_display = ["volume", "page_no", "image_path"]
+    list_filter = ["volume"]
+
+
+class EntryPageAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for EntryPage."""
+
+    list_display = ["entry", "page"]
+    list_filter = ["page"]
+
+
+class AnnotationAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for Annotation."""
+
+    list_display = ["entry", "user", "status"]
+    list_filter = ["status", "user"]
+
+
+admin.site.register(Volume, VolumeAdmin)
+admin.site.register(Page, PageAdmin)
+admin.site.register(Annotation, AnnotationAdmin)
 admin.site.register(Entry)
-admin.site.register(EntryPage)
+admin.site.register(EntryPage, EntryPageAdmin)
