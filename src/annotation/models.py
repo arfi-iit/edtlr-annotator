@@ -3,6 +3,25 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+import re
+
+
+def extract_entry(text: str) -> str | None:
+    """Extract the entry from the provided text.
+
+    Parameters
+    ----------
+    text: str, required
+        The text from which to extract the entry.
+
+    Returns
+    -------
+    entry: str
+        The extracted entry, or None.
+    """
+    match = re.match(r'\*\*[^*]*\*\*', text)
+    entry = f'{match.group(0).replace("*", "")}'
+    return entry
 
 
 class Volume(models.Model):
@@ -10,6 +29,10 @@ class Volume(models.Model):
 
     id = models.AutoField(verbose_name="id", primary_key=True)
     name = models.CharField(unique=True, null=False, max_length=128)
+
+    def __str__(self):
+        """Override the string representation of the model."""
+        return str(self.name)
 
 
 class Page(models.Model):
@@ -19,6 +42,10 @@ class Page(models.Model):
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE, default=1)
     page_no = models.PositiveIntegerField(verbose_name="page_no", null=False)
     image_path = models.CharField(unique=True, null=False, max_length=1024)
+
+    def __str__(self):
+        """Override the string representation of the model."""
+        return str(self.page_no)
 
     class Meta:
         """Metadata of the Page model."""
@@ -39,6 +66,10 @@ class Entry(models.Model):
         """Defines metadata of the Entry model."""
 
         verbose_name_plural = "Entries"
+
+    def __str__(self):
+        """Override the string representation of the model."""
+        return extract_entry(self.text)
 
 
 class EntryPage(models.Model):
@@ -83,3 +114,7 @@ class Annotation(models.Model):
                                                   null=False,
                                                   default=timezone.now)
     row_update_timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        """Override the string representation of the model."""
+        return extract_entry(self.text)
