@@ -5,6 +5,7 @@ from .models import Page
 from .models import EntryPage
 from .models import Volume
 from django.contrib import admin
+from django.urls import reverse_lazy
 
 
 # Register your models here.
@@ -40,3 +41,5 @@ admin.site.register(Page, PageAdmin)
 admin.site.register(Annotation, AnnotationAdmin)
 admin.site.register(Entry)
 admin.site.register(EntryPage, EntryPageAdmin)
+
+admin.site.site_url = reverse_lazy('annotation:index')
