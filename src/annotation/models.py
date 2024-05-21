@@ -20,6 +20,9 @@ def extract_entry(text: str) -> str | None:
         The extracted entry, or None.
     """
     match = re.match(r'\*\*[^*]*\*\*', text)
+    if match is None:
+        return text
+
     entry = f'{match.group(0).replace("*", "")}'
     return entry
 
