@@ -124,7 +124,7 @@ class AnnotationEditor {
     }
 
     markAllSubscripts(){
-        const pattern = /\/[^/]*\//gm;
+        const pattern = /\/[^/\s]*\//gm;
         this.markPattern(pattern, "subscript");
     }
 
