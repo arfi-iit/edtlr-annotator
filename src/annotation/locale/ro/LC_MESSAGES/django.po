@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-25 21:26+0300\n"
+"POT-Creation-Date: 2024-05-21 20:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,29 +19,33 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/models.py:67
+#: src/annotation/models.py:97
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models.py:68
+#: src/annotation/models.py:98
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models.py:69
+#: src/annotation/models.py:99
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/annotation/templates/annotation/annotation-base.html:23
+#: src/annotation/templates/annotation/annotation-base.html:24
 msgid "Admin panel"
 msgstr "Panou administrare"
 
-#: src/annotation/templates/annotation/annotation-base.html:35
+#: src/annotation/templates/annotation/annotation-base.html:31
+msgid "Annotation manual"
+msgstr "Reguli de adnotare"
+
+#: src/annotation/templates/annotation/annotation-base.html:42
 #, fuzzy
 #| msgid "Password"
 msgid "Change password"
 msgstr "Parolă"
 
-#: src/annotation/templates/annotation/annotation-base.html:43
+#: src/annotation/templates/annotation/annotation-base.html:50
 msgid "Logout"
 msgstr "Deconectare"
 
