@@ -67,7 +67,6 @@ class IndexView(LoginRequiredMixin, View):
 
         entry = self.__get_next_entry(request.user)
         if entry is not None:
-            record = self.__insert_annotation(request.user, entry)
             return render(request,
                           self.template_name,
                           context=self.__build_template_context(entry))
@@ -105,12 +104,13 @@ class IndexView(LoginRequiredMixin, View):
 
     def __build_template_context(self, entry: Entry) -> dict:
         entry_pages = EntryPage.objects.filter(entry=entry)
-        page_images = [get_image_path(e.page) for e in entry_pages]
+        pages = sorted([e.page for e in entry_pages], key=lambda p: p.page_no)
+        page_images = [get_image_path(p) for p in pages]
         return {'entry_id': entry.id, 'page_images': page_images}
 
     def __get_in_progress_annotation(self, user_id: int) -> Annotation | None:
         status = Annotation.AnnotationStatus.IN_PROGRESS
-        return Annotation.objects.filter(user_id=user_id,status=status)\
+        return Annotation.objects.filter(user_id=user_id, status=status)\
                                  .first()
 
 
@@ -135,13 +135,12 @@ class GetEntryContentsView(LoginRequiredMixin, View):
             - 'contents': the text of the entry
         """
         try:
-            user_id = request.user.id
             entry = Entry.objects.get(pk=entry_id)
             annotation = Annotation.objects.filter(entry=entry,
                                                    user=request.user).first()
 
             entry_page = EntryPage.objects.filter(entry=entry)\
-                                            .first()
+                                          .first()
 
             data = {
                 'contents': annotation.text,
