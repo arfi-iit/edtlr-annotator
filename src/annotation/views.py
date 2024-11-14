@@ -67,6 +67,7 @@ class IndexView(LoginRequiredMixin, View):
 
         entry = self.__get_next_entry(request.user)
         if entry is not None:
+            _ = self.__insert_annotation(request.user, entry)
             return render(request,
                           self.template_name,
                           context=self.__build_template_context(entry))
