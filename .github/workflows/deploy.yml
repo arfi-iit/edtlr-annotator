@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup ssh authorization
       env:
         SSH_PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
@@ -35,9 +35,6 @@ jobs:
 
     - name: Update
       run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd app && git pull"
-      
+
     - name: Cleanup
       run: rm -rf ~/.ssh
-      
-        
-  

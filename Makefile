@@ -132,3 +132,10 @@ template-expansion: app
 	sed -i "s/__SERVER_NAME__/$(SERVER_NAME)/g" templates/edtlr-annotator;
 	sed -i "s/__STATIC_ROOT__/$(STATIC_ROOT)/g" templates/edtlr-annotator;
 	sed -i "s~__APP_ROOT__~$(APP_ROOT)~g" templates/edtlr-annotator;
+
+.PHONY: update
+update:
+	git pull;
+	sudo systemctl restart edtlr-annotator.service;
+	sudo systemctl restart edtlr-annotator.socket;
+	sudo systemctl restart nginx;
