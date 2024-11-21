@@ -34,7 +34,8 @@ jobs:
         ssh-keyscan ${{secrets.HOST}} >> ~/.ssh/known_hosts
 
     - name: Test SSH
-      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} echo "Hello World!"  
+      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} cd ~/edtlr-annotator/ && git pull
+      
     - name: Cleanup
       run: rm -rf ~/.ssh
       
