@@ -33,8 +33,10 @@ jobs:
         ssh-keyscan -H 'github.com' >> ~/.ssh/known_hosts
         ssh-keyscan ${{secrets.HOST}} >> ~/.ssh/known_hosts
 
-    - name: Test SSH
-      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} cd ~/edtlr-annotator/ && git pull
+    - name: Update
+      env:
+        REPO_NAME: $(basename ${{ github.repository }})
+      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "echo $REPO_NAME"
       
     - name: Cleanup
       run: rm -rf ~/.ssh
