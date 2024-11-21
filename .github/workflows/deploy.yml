@@ -34,9 +34,7 @@ jobs:
         ssh-keyscan ${{secrets.HOST}} >> ~/.ssh/known_hosts
 
     - name: Update
-      env:
-        REPO_NAME: $(basename ${{ github.repository }})
-      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "echo $REPO_NAME"
+      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd app && git pull"
       
     - name: Cleanup
       run: rm -rf ~/.ssh
