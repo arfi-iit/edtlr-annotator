@@ -136,6 +136,7 @@ template-expansion: $(SRC_DIR)/manage.py
 .PHONY: update
 update:
 	git pull;
+	make translations;
 	sudo systemctl restart edtlr-annotator.service;
 	sudo systemctl restart edtlr-annotator.socket;
 	sudo systemctl restart nginx;
