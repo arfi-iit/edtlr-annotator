@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-28 21:07+0200\n"
+"POT-Creation-Date: 2024-11-28 21:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/models.py:36
+#: src/annotation/models.py:36 src/annotation/models.py:57
 msgid "volume"
 msgstr "volum"
 
@@ -31,47 +31,55 @@ msgstr "volume"
 msgid "name"
 msgstr "nume"
 
-#: src/annotation/models.py:65
+#: src/annotation/models.py:59
+msgid "page number"
+msgstr "număr pagină"
+
+#: src/annotation/models.py:63
+msgid "image path"
+msgstr "cale imagine"
+
+#: src/annotation/models.py:72
 msgid "page"
 msgstr "pagină"
 
-#: src/annotation/models.py:66
+#: src/annotation/models.py:73
 msgid "pages"
 msgstr "pagini"
 
-#: src/annotation/models.py:82
+#: src/annotation/models.py:89
 msgid "entry"
 msgstr "intrare"
 
-#: src/annotation/models.py:83
+#: src/annotation/models.py:90
 msgid "entries"
 msgstr "intrări"
 
-#: src/annotation/models.py:100
+#: src/annotation/models.py:107
 msgid "page entry"
 msgstr "pagină intrare"
 
-#: src/annotation/models.py:101
+#: src/annotation/models.py:108
 msgid "page entries"
 msgstr "pagini intrări"
 
-#: src/annotation/models.py:114
+#: src/annotation/models.py:121
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models.py:115
+#: src/annotation/models.py:122
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models.py:116
+#: src/annotation/models.py:123
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/annotation/models.py:121
+#: src/annotation/models.py:128
 msgid "annotation"
 msgstr "adnotare"
 
-#: src/annotation/models.py:122
+#: src/annotation/models.py:129
 msgid "annotations"
 msgstr "adnotări"
 

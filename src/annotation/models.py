@@ -51,9 +51,16 @@ class Page(models.Model):
     """Represents a pair of (page image, OCR text)."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    volume = models.ForeignKey(Volume, on_delete=models.CASCADE, default=1)
-    page_no = models.PositiveIntegerField(verbose_name="page_no", null=False)
-    image_path = models.CharField(unique=True, null=False, max_length=1024)
+    volume = models.ForeignKey(Volume,
+                               on_delete=models.CASCADE,
+                               default=1,
+                               verbose_name=_('volume'))
+    page_no = models.PositiveIntegerField(null=False,
+                                          verbose_name=_('page number'))
+    image_path = models.CharField(unique=True,
+                                  null=False,
+                                  max_length=1024,
+                                  verbose_name=_('image path'))
 
     def __str__(self):
         """Override the string representation of the model."""
