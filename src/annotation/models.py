@@ -37,7 +37,10 @@ class Volume(models.Model):
         verbose_name_plural = _('volumes')
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    name = models.CharField(unique=True, null=False, max_length=128)
+    name = models.CharField(unique=True,
+                            null=False,
+                            max_length=128,
+                            verbose_name=_('name'))
 
     def __str__(self):
         """Override the string representation of the model."""

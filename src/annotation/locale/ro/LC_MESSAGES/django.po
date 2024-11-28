@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-28 21:00+0200\n"
+"POT-Creation-Date: 2024-11-28 21:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,47 +27,51 @@ msgstr "volum"
 msgid "volumes"
 msgstr "volume"
 
-#: src/annotation/models.py:62
+#: src/annotation/models.py:43
+msgid "name"
+msgstr "nume"
+
+#: src/annotation/models.py:65
 msgid "page"
 msgstr "pagină"
 
-#: src/annotation/models.py:63
+#: src/annotation/models.py:66
 msgid "pages"
 msgstr "pagini"
 
-#: src/annotation/models.py:79
+#: src/annotation/models.py:82
 msgid "entry"
 msgstr "intrare"
 
-#: src/annotation/models.py:80
+#: src/annotation/models.py:83
 msgid "entries"
 msgstr "intrări"
 
-#: src/annotation/models.py:97
+#: src/annotation/models.py:100
 msgid "page entry"
 msgstr "pagină intrare"
 
-#: src/annotation/models.py:98
+#: src/annotation/models.py:101
 msgid "page entries"
 msgstr "pagini intrări"
 
-#: src/annotation/models.py:111
+#: src/annotation/models.py:114
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models.py:112
+#: src/annotation/models.py:115
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models.py:113
+#: src/annotation/models.py:116
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/annotation/models.py:118
+#: src/annotation/models.py:121
 msgid "annotation"
 msgstr "adnotare"
 
-#: src/annotation/models.py:119
+#: src/annotation/models.py:122
 msgid "annotations"
 msgstr "adnotări"
 
