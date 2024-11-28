@@ -34,6 +34,7 @@ class AnnotationAdmin(admin.ModelAdmin):
 
     list_display = ["entry", "user", "status"]
     list_filter = ["status", "user"]
+    ordering = ["entry"]
 
 
 admin.site.register(Volume, VolumeAdmin)
