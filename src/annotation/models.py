@@ -98,8 +98,12 @@ class EntryPage(models.Model):
     """Represents an association between a page and a dictionary entry."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry,
+                              on_delete=models.CASCADE,
+                              verbose_name=_('entry'))
+    page = models.ForeignKey(Page,
+                             on_delete=models.CASCADE,
+                             verbose_name=_('page'))
 
     class Meta:
         """Defines the metadata of the EntryPage model."""
