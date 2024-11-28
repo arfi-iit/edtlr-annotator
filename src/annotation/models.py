@@ -57,8 +57,10 @@ class Page(models.Model):
         return str(self.page_no)
 
     class Meta:
-        """Metadata of the Page model."""
+        """Defines the metadata of the Page model."""
 
+        verbose_name = _('page')
+        verbose_name_plural = _('pages')
         constraints = [
             models.UniqueConstraint(fields=["volume", "page_no"],
                                     name="UX_volume_id_page_no")
