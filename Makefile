@@ -41,15 +41,15 @@ app: init
 
 # Create super user
 # make superuser DJANGO_SUPERUSER_USERNAME=<username> DJANGO_SUPERUSER_PASSWORD=<password>
-superuser: init
+superuser: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py createsuperuser --no-input;
 
 # Run the development server
-start: init
+start: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py runserver 0.0.0.0:$(PORT);
 
 # Create or update the .po file containing the translation strings
-messages: init
+messages: $(SRC_DIR)/manage.py
 	if [ ! -d $(APP_DIR)/locale ]; then \
 	    mkdir $(APP_DIR)/locale; \
 	fi; \
@@ -60,21 +60,21 @@ translations: messages
 	$(VENV_BIN)/django-admin compilemessages;
 
 # Make migrations
-migrations: app
+migrations: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py makemigrations;
 
 # Apply migrations
-schema: migrations
+schema: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py migrate;
 
 # Collect static files
-static-files: app
+static-files: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py collectstatic;
 
 # Import the data into the database
 # make import STATIC_DIR=<path to static directory> IMPORT_DIR=<path to import directory>
 # The IMPORT_DIR should be a subdirectory of STATIC_DIR
-import: init
+import: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py importdata \
 		--entries-directory $(IMPORT_DIR)/entries \
 		--images-directory $(IMPORT_DIR)/images \
@@ -105,7 +105,7 @@ NUM_WORKERS=4
 GUNICORN_PATH = $(realpath $(VENV_BIN)/gunicorn)
 PYTHON_PATH=$(realpath $(SRC_DIR))
 APP_ROOT=$(realpath $(SRC_DIR)/..)
-template-expansion: app
+template-expansion: $(SRC_DIR)/manage.py
 	$(VENV_PIP) install -I gunicorn;
 
 	cp templates/.env.template templates/.env;
