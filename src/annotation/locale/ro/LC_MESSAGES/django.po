@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-21 20:01+0300\n"
+"POT-Creation-Date: 2024-11-28 20:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,17 +19,25 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/models.py:97
+#: src/annotation/models.py:100
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models.py:98
+#: src/annotation/models.py:101
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models.py:99
+#: src/annotation/models.py:102
 msgid "Conflict"
 msgstr "Conflict"
+
+#: src/annotation/models.py:107
+msgid "annotation"
+msgstr "adnotare"
+
+#: src/annotation/models.py:108
+msgid "annotations"
+msgstr "adnotări"
 
 #: src/annotation/templates/annotation/annotation-base.html:24
 msgid "Admin panel"

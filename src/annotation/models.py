@@ -101,6 +101,12 @@ class Annotation(models.Model):
         COMPLETE = 'Complete', _('Complete')
         CONFLICT = 'Conflict', _('Conflict')
 
+    class Meta:
+        """Defines the metadata of the Annotation model."""
+
+        verbose_name = _('annotation')
+        verbose_name_plural = _('annotations')
+
     id = models.AutoField(verbose_name="id", primary_key=True)
     entry = models.ForeignKey(Entry,
                               on_delete=models.CASCADE,
