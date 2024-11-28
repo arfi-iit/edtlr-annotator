@@ -30,6 +30,12 @@ def extract_entry(text: str) -> str | None:
 class Volume(models.Model):
     """Represents a volume of the dictionary."""
 
+    class Meta:
+        """Defines the metadata of the Volume model."""
+
+        verbose_name = _('volume')
+        verbose_name_plural = _('volumes')
+
     id = models.AutoField(verbose_name="id", primary_key=True)
     name = models.CharField(unique=True, null=False, max_length=128)
 
