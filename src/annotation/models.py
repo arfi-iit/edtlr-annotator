@@ -92,8 +92,10 @@ class EntryPage(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
     class Meta:
-        """Defines the metadata of the PageEntry model."""
+        """Defines the metadata of the EntryPage model."""
 
+        verbose_name = _('page entry')
+        verbose_name_plural = _('page entries')
         constraints = [
             models.UniqueConstraint(fields=["entry", "page"],
                                     name="UX_entry_id_page_id")
