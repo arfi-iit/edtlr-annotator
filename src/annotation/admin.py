@@ -6,6 +6,7 @@ from .models import EntryPage
 from .models import Volume
 from django.contrib import admin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 
 # Register your models here.
@@ -34,6 +35,7 @@ class AnnotationAdmin(admin.ModelAdmin):
 
     list_display = ["entry", "user", "status"]
     list_filter = ["status", "user"]
+    ordering = ["entry"]
 
 
 admin.site.register(Volume, VolumeAdmin)
@@ -43,3 +45,6 @@ admin.site.register(Entry)
 admin.site.register(EntryPage, EntryPageAdmin)
 
 admin.site.site_url = reverse_lazy('annotation:index')
+admin.site.index_title = _('Admin eDTLR data')
+admin.site.site_header = _('Admin eDTLR data')
+admin.site.site_title = _('Admin eDTLR data')

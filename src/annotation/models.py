@@ -30,8 +30,17 @@ def extract_entry(text: str) -> str | None:
 class Volume(models.Model):
     """Represents a volume of the dictionary."""
 
+    class Meta:
+        """Defines the metadata of the Volume model."""
+
+        verbose_name = _('volume')
+        verbose_name_plural = _('volumes')
+
     id = models.AutoField(verbose_name="id", primary_key=True)
-    name = models.CharField(unique=True, null=False, max_length=128)
+    name = models.CharField(unique=True,
+                            null=False,
+                            max_length=128,
+                            verbose_name=_('name'))
 
     def __str__(self):
         """Override the string representation of the model."""
@@ -42,17 +51,26 @@ class Page(models.Model):
     """Represents a pair of (page image, OCR text)."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    volume = models.ForeignKey(Volume, on_delete=models.CASCADE, default=1)
-    page_no = models.PositiveIntegerField(verbose_name="page_no", null=False)
-    image_path = models.CharField(unique=True, null=False, max_length=1024)
+    volume = models.ForeignKey(Volume,
+                               on_delete=models.CASCADE,
+                               default=1,
+                               verbose_name=_('volume'))
+    page_no = models.PositiveIntegerField(null=False,
+                                          verbose_name=_('page number'))
+    image_path = models.CharField(unique=True,
+                                  null=False,
+                                  max_length=1024,
+                                  verbose_name=_('image path'))
 
     def __str__(self):
         """Override the string representation of the model."""
         return str(self.page_no)
 
     class Meta:
-        """Metadata of the Page model."""
+        """Defines the metadata of the Page model."""
 
+        verbose_name = _('page')
+        verbose_name_plural = _('pages')
         constraints = [
             models.UniqueConstraint(fields=["volume", "page_no"],
                                     name="UX_volume_id_page_no")
@@ -68,7 +86,8 @@ class Entry(models.Model):
     class Meta:
         """Defines metadata of the Entry model."""
 
-        verbose_name_plural = "Entries"
+        verbose_name = _('entry')
+        verbose_name_plural = _('entries')
 
     def __str__(self):
         """Override the string representation of the model."""
@@ -79,12 +98,18 @@ class EntryPage(models.Model):
     """Represents an association between a page and a dictionary entry."""
 
     id = models.AutoField(verbose_name="id", primary_key=True)
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry,
+                              on_delete=models.CASCADE,
+                              verbose_name=_('entry'))
+    page = models.ForeignKey(Page,
+                             on_delete=models.CASCADE,
+                             verbose_name=_('page'))
 
     class Meta:
-        """Defines the metadata of the PageEntry model."""
+        """Defines the metadata of the EntryPage model."""
 
+        verbose_name = _('page entry')
+        verbose_name_plural = _('page entries')
         constraints = [
             models.UniqueConstraint(fields=["entry", "page"],
                                     name="UX_entry_id_page_id")
@@ -101,22 +126,35 @@ class Annotation(models.Model):
         COMPLETE = 'Complete', _('Complete')
         CONFLICT = 'Conflict', _('Conflict')
 
+    class Meta:
+        """Defines the metadata of the Annotation model."""
+
+        verbose_name = _('annotation')
+        verbose_name_plural = _('annotations')
+
     id = models.AutoField(verbose_name="id", primary_key=True)
     entry = models.ForeignKey(Entry,
                               on_delete=models.CASCADE,
                               null=False,
-                              default=1)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+                              default=1,
+                              verbose_name=_('entry'))
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             default=1,
+                             verbose_name=_('user'))
     text = models.TextField(verbose_name="text", null=True, max_length=250_000)
     status = models.CharField(max_length=32,
                               choices=AnnotationStatus,
                               null=False,
                               default=AnnotationStatus.IN_PROGRESS)
-    version = models.PositiveSmallIntegerField()
-    row_creation_timestamp = models.DateTimeField(blank=False,
-                                                  null=False,
-                                                  default=timezone.now)
-    row_update_timestamp = models.DateTimeField(auto_now=True)
+    version = models.PositiveSmallIntegerField(verbose_name=_('version'))
+    row_creation_timestamp = models.DateTimeField(
+        blank=False,
+        null=False,
+        default=timezone.now,
+        verbose_name=_('row creation timestamp'))
+    row_update_timestamp = models.DateTimeField(
+        auto_now=True, verbose_name=_('row update timestamp'))
 
     def __str__(self):
         """Override the string representation of the model."""
