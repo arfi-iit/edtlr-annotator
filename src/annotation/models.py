@@ -136,18 +136,25 @@ class Annotation(models.Model):
     entry = models.ForeignKey(Entry,
                               on_delete=models.CASCADE,
                               null=False,
-                              default=1)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+                              default=1,
+                              verbose_name=_('entry'))
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             default=1,
+                             verbose_name=_('user'))
     text = models.TextField(verbose_name="text", null=True, max_length=250_000)
     status = models.CharField(max_length=32,
                               choices=AnnotationStatus,
                               null=False,
                               default=AnnotationStatus.IN_PROGRESS)
-    version = models.PositiveSmallIntegerField()
-    row_creation_timestamp = models.DateTimeField(blank=False,
-                                                  null=False,
-                                                  default=timezone.now)
-    row_update_timestamp = models.DateTimeField(auto_now=True)
+    version = models.PositiveSmallIntegerField(verbose_name=_('version'))
+    row_creation_timestamp = models.DateTimeField(
+        blank=False,
+        null=False,
+        default=timezone.now,
+        verbose_name=_('row creation timestamp'))
+    row_update_timestamp = models.DateTimeField(
+        auto_now=True, verbose_name=_('row update timestamp'))
 
     def __str__(self):
         """Override the string representation of the model."""
