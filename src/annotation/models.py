@@ -68,7 +68,8 @@ class Entry(models.Model):
     class Meta:
         """Defines metadata of the Entry model."""
 
-        verbose_name_plural = "Entries"
+        verbose_name = _('entry')
+        verbose_name_plural = _('entries')
 
     def __str__(self):
         """Override the string representation of the model."""
