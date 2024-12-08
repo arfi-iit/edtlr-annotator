@@ -166,6 +166,11 @@ class Annotation(models.Model):
     row_update_timestamp = models.DateTimeField(
         auto_now=True, verbose_name=_('row update timestamp'))
 
+    @property
+    def text_length(self):
+        """Get the text length of the entry."""
+        return len(self.text) if self.text is not None else 0
+
     def __str__(self):
         """Override the string representation of the model."""
         return extract_entry(self.text)
