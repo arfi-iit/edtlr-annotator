@@ -23,6 +23,45 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ["volume"]
 
 
+class EntryAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for Entry."""
+
+    list_display = ["entry_title_word", "entry_text_length"]
+
+    def entry_title_word(self, entry):
+        """Get the localized title word of the provided entry.
+
+        Parameters
+        ----------
+        entry: models.Entry, required
+            The entry object.
+
+        Returns
+        -------
+        title_word: str
+            The title word of the entry.
+        """
+        return entry.title_word
+
+    def entry_text_length(self, entry):
+        """Get the text length of the provided entry.
+
+        Parameters
+        ----------
+        entry: models.Entry, required
+            The entry object.
+
+        Returns
+        -------
+        title_word: str
+            The title word of the entry.
+        """
+        return entry.text_length
+
+    entry_title_word.short_description = _("title word")
+    entry_text_length.short_description = _("text length")
+
+
 class EntryPageAdmin(admin.ModelAdmin):
     """Overrides the default admin options for EntryPage."""
 
@@ -41,7 +80,7 @@ class AnnotationAdmin(admin.ModelAdmin):
 admin.site.register(Volume, VolumeAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Annotation, AnnotationAdmin)
-admin.site.register(Entry)
+admin.site.register(Entry, EntryAdmin)
 admin.site.register(EntryPage, EntryPageAdmin)
 
 admin.site.site_url = reverse_lazy('annotation:index')
