@@ -41,7 +41,7 @@ class EntryAdmin(admin.ModelAdmin):
         title_word: str
             The title word of the entry.
         """
-        return entry.title_word
+        return str(entry)
 
     def entry_text_length(self, entry):
         """Get the text length of the provided entry.
@@ -56,7 +56,7 @@ class EntryAdmin(admin.ModelAdmin):
         length: int
             The length of the text of the entry.
         """
-        return entry.text_length
+        return len(entry.text) if entry.text is not None else 0
 
     entry_title_word.short_description = _("title word")
     entry_text_length.short_description = _("text length")
@@ -89,7 +89,7 @@ class AnnotationAdmin(admin.ModelAdmin):
         length: int
             The length of the annotation text.
         """
-        return annotation.text_length
+        return len(annotation.text) if annotation.text is not None else 0
 
     annotation_text_length.short_description = _("text length")
 
