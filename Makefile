@@ -69,7 +69,7 @@ schema: $(SRC_DIR)/manage.py
 
 # Collect static files
 static-files: $(SRC_DIR)/manage.py
-	$(VENV_PYTHON) $(SRC_DIR)/manage.py collectstatic;
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py collectstatic --no-input;
 
 # Import the data into the database
 # make import STATIC_DIR=<path to static directory> IMPORT_DIR=<path to import directory>
