@@ -37,31 +37,31 @@
 }
 
 .form-signin {
-  max-width: 330px;
-  padding: 1rem;
+    max-width: 330px;
+    padding: 1rem;
 }
 
 .form-signin .form-floating:focus-within {
-  z-index: 2;
+    z-index: 2;
 }
 
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .login-error{
-  width: 100%;
-  margin-top: .25rem;
-  font-size: .875em;
-  color: var(--bs-form-invalid-color);
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: var(--bs-form-invalid-color);
 }
 
 .CodeMirror{
@@ -74,6 +74,12 @@
 
 .dropdown-menu{
     z-index: 1024;
+}
+
+#footer{
+    text-align: center;
+    font-size: smaller;
+    color: dimgray;
 }
 
 .zoomable-container {
