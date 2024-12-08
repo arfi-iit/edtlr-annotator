@@ -47,5 +47,13 @@ class PageCarousel {
         });
     }
 
-
+    static updateZoom(slider, imgElement) {
+        const zoomLevel = slider.value;
+        imgElement.classList.toggle('w-100', zoomLevel==1);
+        imgElement.style.width = `${zoomLevel * 100}%`;
+        imgElement.closest('.zoomable-container').classList.toggle('scrollable', zoomLevel > 1);
+        
+        const zoomValueElement = slider.nextElementSibling;
+        zoomValueElement.textContent = `${zoomLevel}x`;
+    }
 }

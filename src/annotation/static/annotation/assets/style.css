@@ -37,31 +37,31 @@
 }
 
 .form-signin {
-  max-width: 330px;
-  padding: 1rem;
+    max-width: 330px;
+    padding: 1rem;
 }
 
 .form-signin .form-floating:focus-within {
-  z-index: 2;
+    z-index: 2;
 }
 
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .login-error{
-  width: 100%;
-  margin-top: .25rem;
-  font-size: .875em;
-  color: var(--bs-form-invalid-color);
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: var(--bs-form-invalid-color);
 }
 
 .CodeMirror{
@@ -74,4 +74,57 @@
 
 .dropdown-menu{
     z-index: 1024;
+}
+
+#footer{
+    text-align: center;
+    font-size: smaller;
+    color: dimgray;
+}
+
+.zoomable-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.scrollable {
+    overflow: auto;
+}
+
+.zoom-slider-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.zoom-slider {
+    width: 150px;
+    appearance: none;
+    height: 6px;
+    background: linear-gradient(to right, #0d6efd, #6c757d);
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease;
+}
+
+.zoom-slider::-webkit-slider-thumb,
+.zoom-slider::-moz-range-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #0d6efd;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.zoom-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0d6efd;
 }
