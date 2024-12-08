@@ -53,8 +53,8 @@ class EntryAdmin(admin.ModelAdmin):
 
         Returns
         -------
-        title_word: str
-            The title word of the entry.
+        length: int
+            The length of the text of the entry.
         """
         return entry.text_length
 
@@ -72,9 +72,26 @@ class EntryPageAdmin(admin.ModelAdmin):
 class AnnotationAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Annotation."""
 
-    list_display = ["entry", "user", "status"]
+    list_display = ["entry", "annotation_text_length", "user", "status"]
     list_filter = ["status", "user"]
     ordering = ["entry"]
+
+    def annotation_text_length(self, annotation):
+        """Get the text length of the provided annotation.
+
+        Parameters
+        ----------
+        annotation: models.Annotation, required
+            The annotation object.
+
+        Returns
+        -------
+        length: int
+            The length of the annotation text.
+        """
+        return annotation.text_length
+
+    annotation_text_length.short_description = _("text length")
 
 
 admin.site.register(Volume, VolumeAdmin)
