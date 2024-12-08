@@ -83,6 +83,16 @@ class Entry(models.Model):
     id = models.AutoField(verbose_name="id", primary_key=True)
     text = models.TextField(max_length=250_000, null=False)
 
+    @property
+    def title_word(self):
+        """Get the title word of the entry."""
+        return self.__str__()
+
+    @property
+    def text_length(self):
+        """Get the text length of the entry."""
+        return len(self.text) if self.text is not None else 0
+
     class Meta:
         """Defines metadata of the Entry model."""
 
