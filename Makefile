@@ -56,7 +56,7 @@ messages: $(SRC_DIR)/manage.py
 	$(VENV_BIN)/django-admin makemessages --locale ro;
 
 # Compile the translations
-translations: messages
+translations: $(APP_DIR)/locale/ro/LC_MESSAGES/django.po
 	$(VENV_BIN)/django-admin compilemessages;
 
 # Make migrations
