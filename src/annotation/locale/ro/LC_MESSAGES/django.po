@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-08 20:39+0200\n"
+"POT-Creation-Date: 2024-12-09 20:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,16 +23,16 @@ msgstr ""
 msgid "title word"
 msgstr "cuvânt-titlu"
 
-#: src/annotation/admin.py:62
+#: src/annotation/admin.py:62 src/annotation/admin.py:94
 msgid "text length"
 msgstr "lungime text"
 
-#: src/annotation/admin.py:87 src/annotation/admin.py:88
-#: src/annotation/admin.py:89
+#: src/annotation/admin.py:104 src/annotation/admin.py:105
+#: src/annotation/admin.py:106
 msgid "Admin eDTLR data"
 msgstr "Administrare date eDTLR"
 
-#: src/annotation/apps.py:8 src/annotation/models.py:142
+#: src/annotation/apps.py:8 src/annotation/models.py:132
 msgid "annotation"
 msgstr "adnotare"
 
@@ -56,7 +56,7 @@ msgstr "număr pagină"
 msgid "image path"
 msgstr "cale imagine"
 
-#: src/annotation/models.py:72 src/annotation/models.py:116
+#: src/annotation/models.py:72 src/annotation/models.py:106
 msgid "page"
 msgstr "pagină"
 
@@ -64,52 +64,52 @@ msgstr "pagină"
 msgid "pages"
 msgstr "pagini"
 
-#: src/annotation/models.py:99 src/annotation/models.py:113
-#: src/annotation/models.py:150
+#: src/annotation/models.py:89 src/annotation/models.py:103
+#: src/annotation/models.py:140
 msgid "entry"
 msgstr "intrare"
 
-#: src/annotation/models.py:100
+#: src/annotation/models.py:90
 msgid "entries"
 msgstr "intrări"
 
-#: src/annotation/models.py:121
+#: src/annotation/models.py:111
 msgid "page entry"
 msgstr "pagină intrare"
 
-#: src/annotation/models.py:122
+#: src/annotation/models.py:112
 msgid "page entries"
 msgstr "pagini intrări"
 
-#: src/annotation/models.py:135
+#: src/annotation/models.py:125
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models.py:136
+#: src/annotation/models.py:126
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models.py:137
+#: src/annotation/models.py:127
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/annotation/models.py:143
+#: src/annotation/models.py:133
 msgid "annotations"
 msgstr "adnotări"
 
-#: src/annotation/models.py:154
+#: src/annotation/models.py:144
 msgid "user"
 msgstr "utilizator"
 
-#: src/annotation/models.py:160
+#: src/annotation/models.py:150
 msgid "version"
 msgstr "versiune"
 
-#: src/annotation/models.py:165
+#: src/annotation/models.py:155
 msgid "row creation timestamp"
 msgstr "creat la"
 
-#: src/annotation/models.py:167
+#: src/annotation/models.py:157
 msgid "row update timestamp"
 msgstr "actualizat la"
 
