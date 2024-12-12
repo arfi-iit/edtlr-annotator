@@ -1,7 +1,8 @@
 """Defines the command for importing data into the database."""
-from django.core.management.base import BaseCommand, CommandError
 from annotation.models import Volume, Page, Entry, EntryPage
 from annotation.utils.xml2edtlrmd import convert_xml_to_edtlr_markdown
+from django.core.management.base import BaseCommand, CommandError
+from itertools import takewhile
 from pathlib import Path
 from typing import Generator, List, Dict, Callable
 import pandas as pd
@@ -51,10 +52,9 @@ class Command(BaseCommand):
         static_dir = Path(options['static_directory'])
         images = self.__scan_images(images_dir)
 
-        mappings = self.__load_mappings(mappings_file, lambda key: key.upper())
+        mappings = self.__load_mappings(mappings_file)
         for entry_file in entries_dir.glob("*.xml"):
-            entry, *_ = entry_file.stem.split()
-            entry = entry.replace(',', '')
+            entry = self.__normalize_entry(entry_file.stem)
             if entry not in mappings:
                 error = f"Could not find page mappings for entry {entry}."
                 self.stderr.write(error)
@@ -204,17 +204,13 @@ class Command(BaseCommand):
                 results[int(match.group())] = img
         return results
 
-    def __load_mappings(
-            self, mappings_file: Path,
-            normalize_key: Callable[str, str]) -> Dict[str, List[int]]:
+    def __load_mappings(self, mappings_file: Path) -> Dict[str, List[int]]:
         """Load the entry-page mappings from the provided file.
 
         Parameters
         ----------
         mappings_file: Path, required
             The path of the CSV file from which to load the mapping.
-        normalize_key: a function of (str) which returns str, required
-            The function used to normalize the dictionary key.
 
         Returns
         -------
@@ -229,12 +225,11 @@ class Command(BaseCommand):
         result = {}
         for row in df.itertuples():
             entry, *_ = row.entry.split()
-            entry = entry.replace(',', '')
             if len(str(row.pages)) == 0:
                 continue
 
             pages = [int(num) for num in row.pages.split(',')]
-            entry = normalize_key(entry)
+            entry = self.__normalize_entry(entry)
             if entry in result:
                 s1 = set(result[entry])
                 s2 = set(pages)
@@ -243,3 +238,30 @@ class Command(BaseCommand):
                 result[entry] = list(set(pages))
 
         return result
+
+    def __normalize_entry(self, entry: str) -> str:
+        """Remove problematic characters from the given entry.
+
+        Parameters
+        ----------
+        entry: str, required
+            The entry to sanitize.
+
+        Returns
+        -------
+        canonical_entry: str
+            The normalized entry.
+        """
+        if entry is None:
+            return ""
+        entry = entry.strip()
+        if len(entry) == 0:
+            return ""
+
+        entry, *_ = entry.split()
+        entry = entry.upper()
+        letters = [
+            letter for letter in takewhile(lambda c: c.isalpha(), entry)
+        ]
+        canonical_entry = ''.join(letters)
+        return canonical_entry
