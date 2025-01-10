@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from .utils import extract_title_word
+from .utils import remove_diacritics
 
 
 class Entry(models.Model):
@@ -38,6 +39,7 @@ class Entry(models.Model):
         self.text = text
         self.text_length = len(text)
         self.title_word = extract_title_word(text)
+        self.title_word_normalized = remove_diacritics(self.title_word)
 
     def __str__(self):
         """Override the string representation of the model."""

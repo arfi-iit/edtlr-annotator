@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from .entry import Entry
 from .utils import extract_title_word
+from .utils import remove_diacritics
 
 
 class Annotation(models.Model):
@@ -68,6 +69,7 @@ class Annotation(models.Model):
         self.text = text
         self.text_length = len(text)
         self.title_word = extract_title_word(text)
+        self.title_word_normalized = remove_diacritics(self.title_word)
         self.version = self.version + 1 if self.version is not None else 1
 
     def __str__(self):
