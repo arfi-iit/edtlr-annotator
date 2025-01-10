@@ -1,7 +1,7 @@
 """Defines the Entry model."""
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .utils import extract_entry
+from .utils import extract_title_word
 
 
 class Entry(models.Model):
@@ -34,7 +34,7 @@ class Entry(models.Model):
         """
         self.text = text
         self.text_length = len(text)
-        self.title_word = extract_entry(text)
+        self.title_word = extract_title_word(text)
 
     def __str__(self):
         """Override the string representation of the model."""

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from .entry import Entry
-from .utils import extract_entry
+from .utils import extract_title_word
 
 
 class Annotation(models.Model):
@@ -64,7 +64,7 @@ class Annotation(models.Model):
         """
         self.text = text
         self.text_length = len(text)
-        self.title_word = extract_entry(text)
+        self.title_word = extract_title_word(text)
         self.version = self.version + 1 if self.version is not None else 1
 
     def __str__(self):

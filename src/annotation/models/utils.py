@@ -1,7 +1,7 @@
 import re
 
 
-def extract_entry(text: str) -> str | None:
+def extract_title_word(text: str) -> str | None:
     """Extract the entry from the provided text.
 
     Parameters
