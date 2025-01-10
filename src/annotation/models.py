@@ -83,6 +83,14 @@ class Entry(models.Model):
     id = models.AutoField(verbose_name="id", primary_key=True)
     text = models.TextField(max_length=250_000, null=False)
 
+    title_word = models.TextField(max_length=100,
+                                  null=False,
+                                  default='',
+                                  verbose_name=_('title word'))
+    text_length = models.IntegerField(null=False,
+                                      default=0,
+                                      verbose_name=_('text length'))
+
     class Meta:
         """Defines metadata of the Entry model."""
 
@@ -143,6 +151,13 @@ class Annotation(models.Model):
                              default=1,
                              verbose_name=_('user'))
     text = models.TextField(verbose_name="text", null=True, max_length=250_000)
+    title_word = models.TextField(max_length=100,
+                                  null=False,
+                                  default='',
+                                  verbose_name=_('title word'))
+    text_length = models.IntegerField(null=False,
+                                      default=0,
+                                      verbose_name=_('text length'))
     status = models.CharField(max_length=32,
                               choices=AnnotationStatus,
                               null=False,
