@@ -1,10 +1,10 @@
 """Defines the command for importing data into the database."""
 from annotation.models import Volume, Page, Entry, EntryPage
 from annotation.utils.xml2edtlrmd import convert_xml_to_edtlr_markdown
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from itertools import takewhile
 from pathlib import Path
-from typing import Generator, List, Dict, Callable
+from typing import List, Dict
 import pandas as pd
 import re
 
@@ -117,7 +117,8 @@ class Command(BaseCommand):
         with open(entry_file, encoding='utf8') as f:
             contents = f.read()
 
-        entry = Entry(text=convert_xml_to_edtlr_markdown(contents))
+        entry = Entry()
+        entry.set_text(convert_xml_to_edtlr_markdown(contents))
         entry.save()
         imported_dir = entry_file.parent / "imported"
         if not imported_dir.exists():

@@ -32,7 +32,7 @@ jobs:
         ssh-keyscan ${{secrets.HOST}} >> ~/.ssh/known_hosts
 
     - name: Update
-      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd app && make update"
+      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd app && git pull && make update"
 
     - name: Cleanup
       run: rm -rf ~/.ssh

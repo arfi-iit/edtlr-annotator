@@ -26,40 +26,10 @@ class PageAdmin(admin.ModelAdmin):
 class EntryAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Entry."""
 
-    list_display = ["entry_title_word", "entry_text_length"]
-
-    def entry_title_word(self, entry):
-        """Get the localized title word of the provided entry.
-
-        Parameters
-        ----------
-        entry: models.Entry, required
-            The entry object.
-
-        Returns
-        -------
-        title_word: str
-            The title word of the entry.
-        """
-        return str(entry)
-
-    def entry_text_length(self, entry):
-        """Get the text length of the provided entry.
-
-        Parameters
-        ----------
-        entry: models.Entry, required
-            The entry object.
-
-        Returns
-        -------
-        length: int
-            The length of the text of the entry.
-        """
-        return len(entry.text) if entry.text is not None else 0
-
-    entry_title_word.short_description = _("title word")
-    entry_text_length.short_description = _("text length")
+    list_display = ["title_word", "text_length"]
+    search_fields = [
+        "title_word__icontains", "title_word_normalized__icontains"
+    ]
 
 
 class EntryPageAdmin(admin.ModelAdmin):
@@ -72,26 +42,12 @@ class EntryPageAdmin(admin.ModelAdmin):
 class AnnotationAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Annotation."""
 
-    list_display = ["entry", "annotation_text_length", "user", "status"]
+    list_display = ["entry", "title_word", "text_length", "user", "status"]
     list_filter = ["status", "user"]
+    search_fields = [
+        "title_word__icontains", "title_word_normalized__icontains"
+    ]
     ordering = ["entry"]
-
-    def annotation_text_length(self, annotation):
-        """Get the text length of the provided annotation.
-
-        Parameters
-        ----------
-        annotation: models.Annotation, required
-            The annotation object.
-
-        Returns
-        -------
-        length: int
-            The length of the annotation text.
-        """
-        return len(annotation.text) if annotation.text is not None else 0
-
-    annotation_text_length.short_description = _("text length")
 
 
 admin.site.register(Volume, VolumeAdmin)
