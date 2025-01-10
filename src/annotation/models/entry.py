@@ -14,6 +14,9 @@ class Entry(models.Model):
                                   null=False,
                                   default='',
                                   verbose_name=_('title word'))
+    title_word_normalized = models.TextField(max_length=100,
+                                             null=False,
+                                             default='')
     text_length = models.IntegerField(null=False,
                                       default=0,
                                       verbose_name=_('text length'))
