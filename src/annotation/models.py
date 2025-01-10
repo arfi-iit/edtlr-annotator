@@ -97,6 +97,18 @@ class Entry(models.Model):
         verbose_name = _('entry')
         verbose_name_plural = _('entries')
 
+    def set_text(self, text: str):
+        """Set the  text of the entry to the specified value and update metadata.
+
+        Parameters
+        ----------
+        text: str, required
+            The text of the enty.
+        """
+        self.text = text
+        self.text_length = len(text)
+        self.title_word = extract_entry(text)
+
     def __str__(self):
         """Override the string representation of the model."""
         return extract_entry(self.text)

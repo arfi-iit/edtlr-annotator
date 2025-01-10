@@ -117,7 +117,8 @@ class Command(BaseCommand):
         with open(entry_file, encoding='utf8') as f:
             contents = f.read()
 
-        entry = Entry(text=convert_xml_to_edtlr_markdown(contents))
+        entry = Entry()
+        entry.set_text(convert_xml_to_edtlr_markdown(contents))
         entry.save()
         imported_dir = entry_file.parent / "imported"
         if not imported_dir.exists():
