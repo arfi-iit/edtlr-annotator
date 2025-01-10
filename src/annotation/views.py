@@ -98,8 +98,7 @@ class IndexView(LoginRequiredMixin, View):
     def __insert_annotation(self, user: User, entry: Entry) -> Annotation:
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(entry=entry, user=user, status=status)
-        record.text = entry.text
-        record.version = 1
+        record.set_text(entry.text)
         record.save()
         return record
 
@@ -188,8 +187,7 @@ class SaveAnnotationView(LoginRequiredMixin, View):
             user=request.user,
             status=Annotation.AnnotationStatus.IN_PROGRESS)
         if annotation is not None:
-            annotation.text = text
-            annotation.version = annotation.version + 1
+            annotation.set_text(text)
             annotation.save()
         return redirect(self.index_page)
 
@@ -240,8 +238,7 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
             status=Annotation.AnnotationStatus.IN_PROGRESS)
 
         if annotation is not None:
-            annotation.text = text
-            annotation.version = annotation.version + 1
+            annotation.set_text(text)
             annotation.status = Annotation.AnnotationStatus.COMPLETE
             annotation.save()
 

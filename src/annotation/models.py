@@ -171,6 +171,19 @@ class Annotation(models.Model):
     row_update_timestamp = models.DateTimeField(
         auto_now=True, verbose_name=_('row update timestamp'))
 
+    def set_text(self, text: str):
+        """Set the  text of the annotation to the specified value and update metadata.
+
+        Parameters
+        ----------
+        text: str, required
+            The text of the annotation.
+        """
+        self.text = text
+        self.text_length = len(text)
+        self.title_word = extract_entry(text)
+        self.version = self.version + 1 if self.version is not None else 1
+
     def __str__(self):
         """Override the string representation of the model."""
         return extract_entry(self.text)
