@@ -141,3 +141,7 @@ update:
 	sudo systemctl restart edtlr-annotator.service;
 	sudo systemctl restart edtlr-annotator.socket;
 	sudo systemctl restart nginx;
+
+# Update the values of metadata columns from the database
+fresh-metadata: $(SRC_DIR)/manage.py
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py updatemetadata;

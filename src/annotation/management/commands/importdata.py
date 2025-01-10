@@ -1,10 +1,10 @@
 """Defines the command for importing data into the database."""
 from annotation.models import Volume, Page, Entry, EntryPage
 from annotation.utils.xml2edtlrmd import convert_xml_to_edtlr_markdown
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from itertools import takewhile
 from pathlib import Path
-from typing import Generator, List, Dict, Callable
+from typing import List, Dict
 import pandas as pd
 import re
 
