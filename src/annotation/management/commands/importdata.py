@@ -8,6 +8,8 @@ from typing import List, Dict
 import pandas as pd
 import re
 
+REPLACEMENT_MAP = str.maketrans("ŞşŢţÅåÁáẤấẮắ", "ȘșȚțAaAaAaAa")
+
 
 class Command(BaseCommand):
     """Implements the command for importing data into the database."""
@@ -261,6 +263,7 @@ class Command(BaseCommand):
 
         entry, *_ = entry.split()
         entry = entry.upper()
+        entry = entry.translate(REPLACEMENT_MAP)
         letters = [
             letter for letter in takewhile(lambda c: c.isalpha(), entry)
         ]
