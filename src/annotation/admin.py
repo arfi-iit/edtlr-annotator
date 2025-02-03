@@ -26,6 +26,7 @@ class PageAdmin(admin.ModelAdmin):
 class EntryAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Entry."""
 
+    exclude = ["title_word", "title_word_normalized", "text_length"]
     list_display = ["title_word", "text_length"]
     search_fields = [
         "title_word__icontains", "title_word_normalized__icontains"
@@ -42,6 +43,7 @@ class EntryPageAdmin(admin.ModelAdmin):
 class AnnotationAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Annotation."""
 
+    exclude = ["title_word", "title_word_normalized", "text_length"]
     list_display = ["entry", "title_word", "text_length", "user", "status"]
     list_filter = ["status", "user"]
     search_fields = [
