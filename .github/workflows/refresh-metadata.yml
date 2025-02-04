@@ -1,32 +1,34 @@
-# This is a basic workflow that is manually triggered
-
 name: Refresh metadata
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      name:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
-        # Input has to be provided for the workflow to run
-        required: true
-        # The data type of the input
-        type: string
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+  refresh-metadata:
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    runs-on: ubuntu-latest
+    environment: production
+
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}"
+    - name: Setup ssh authorization
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+        SSH_PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
+      run: |
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        echo "$SSH_PUBLIC_KEY" | tr -d '\r' > ~/.ssh/id_rsa.pub
+        chmod 644 ~/.ssh/id_rsa.pub
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        eval $(ssh-agent -s)
+        echo SSH agent started
+        ssh-add ~/.ssh/id_rsa
+        ssh-keyscan -H 'github.com' >> ~/.ssh/known_hosts
+        ssh-keyscan ${{secrets.HOST}} >> ~/.ssh/known_hosts
+
+    - name: Update
+      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd app && make fresh-metadata"
+
+    - name: Cleanup
+      run: rm -rf ~/.ssh
