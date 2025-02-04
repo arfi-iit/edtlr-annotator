@@ -138,7 +138,6 @@ update:
 	make static-files;
 	make translations;
 	make schema;
-	make fresh-metadata;
 	sudo systemctl restart edtlr-annotator.service;
 	sudo systemctl restart edtlr-annotator.socket;
 	sudo systemctl restart nginx;
