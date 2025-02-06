@@ -6,6 +6,12 @@
     display: none !important;
 }
 
+.flipped, .flipped > img{
+    transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    -webkit-transform: rotateX(180deg);
+}
+
 .superscript{
     position: relative;
     top: -0.5em;
