@@ -21,6 +21,10 @@ class PageAdmin(admin.ModelAdmin):
 
     list_display = ["volume", "page_no", "image_path"]
     list_filter = ["volume"]
+    search_fields = [
+        "page_no__iexact",
+        "image_path__icontains"
+    ]
 
 
 class EntryAdmin(admin.ModelAdmin):
