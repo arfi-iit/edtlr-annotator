@@ -72,14 +72,16 @@ static-files: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py collectstatic --no-input;
 
 # Import the data into the database
-# make import STATIC_DIR=<path to static directory> IMPORT_DIR=<path to import directory>
+# make import STATIC_DIR=<path to static directory> IMPORT_DIR=<path to import directory> VOLUME="volume name"
 # The IMPORT_DIR should be a subdirectory of STATIC_DIR
 import: $(SRC_DIR)/manage.py
+	test -n "$(VOLUME)"
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py importdata \
 		--entries-directory $(IMPORT_DIR)/entries \
 		--images-directory $(IMPORT_DIR)/images \
 		--static-directory $(STATIC_DIR) \
-		--mappings-file $(IMPORT_DIR)/mappings.csv;
+		--mappings-file $(IMPORT_DIR)/mappings.csv \
+		--volume "$(VOLUME)";
 
 
 # Expand the template files from the `templates` directory:
