@@ -47,6 +47,27 @@ class IndexView(LoginRequiredMixin, View):
     """Implements the index view."""
 
     template_name = "annotation/index.html"
+
+    def get(self, request):
+        """Handle the GET request.
+
+        Parameters
+        ----------
+        request: HttpRequest, required
+            The request object.
+        """
+        return render(request, self.template_name)
+
+
+def new_annotation(request):
+    # TODO: Implement method
+    return redirect("annotation:thank-you")
+
+
+class AnnotateView(LoginRequiredMixin, View):
+    """Implements the annotation view."""
+
+    template_name = "annotation/annotate.html"
     thank_you_page = 'annotation:thank-you'
 
     def get(self, request):
