@@ -59,15 +59,10 @@ class IndexView(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 
-def new_annotation(request):
-    # TODO: Implement method
-    return redirect("annotation:thank-you")
+class NewAnnotatioView(LoginRequiredMixin, View):
+    """Implements the view for creating a new annotation."""
 
-
-class AnnotateView(LoginRequiredMixin, View):
-    """Implements the annotation view."""
-
-    template_name = "annotation/annotate.html"
+    annotate_page = 'annotation:annotate'
     thank_you_page = 'annotation:thank-you'
 
     def get(self, request):
@@ -78,20 +73,10 @@ class AnnotateView(LoginRequiredMixin, View):
         request: HttpRequest, required
             The request object.
         """
-        user_id = request.user.id
-        current_annotation = self.__get_in_progress_annotation(user_id)
-        if current_annotation is not None:
-            return render(request,
-                          self.template_name,
-                          context=self.__build_template_context(
-                              current_annotation.entry))
-
         entry = self.__get_next_entry(request.user)
         if entry is not None:
-            _ = self.__insert_annotation(request.user, entry)
-            return render(request,
-                          self.template_name,
-                          context=self.__build_template_context(entry))
+            annotation = self.__insert_annotation(request.user, entry)
+            return redirect(self.annotate_page, id=annotation.id)
 
         return redirect(self.thank_you_page)
 
@@ -123,15 +108,44 @@ class AnnotateView(LoginRequiredMixin, View):
         record.save()
         return record
 
+
+class AnnotateView(LoginRequiredMixin, View):
+    """Implements the annotation view."""
+
+    template_name = "annotation/annotate.html"
+    thank_you_page = 'annotation:thank-you'
+    index_page = 'annotation:index'
+
+    def get(self, request, id: int):
+        """Handle the GET request.
+
+        Parameters
+        ----------
+        request: HttpRequest, required
+            The request object.
+        id: int, required
+            The id of the annotation.
+        """
+        user_id = request.user.id
+        current_annotation = self.__get_in_progress_annotation(user_id, id)
+        if current_annotation is not None:
+            return render(request,
+                          self.template_name,
+                          context=self.__build_template_context(
+                              current_annotation.entry))
+        else:
+            return redirect(self.index_page)
+
     def __build_template_context(self, entry: Entry) -> dict:
         entry_pages = EntryPage.objects.filter(entry=entry)
         pages = sorted([e.page for e in entry_pages], key=lambda p: p.page_no)
         page_images = [get_image_path(p) for p in pages]
         return {'entry_id': entry.id, 'page_images': page_images}
 
-    def __get_in_progress_annotation(self, user_id: int) -> Annotation | None:
+    def __get_in_progress_annotation(self, user_id: int,
+                                     annotation_id: int) -> Annotation | None:
         status = Annotation.AnnotationStatus.IN_PROGRESS
-        return Annotation.objects.filter(user_id=user_id, status=status)\
+        return Annotation.objects.filter(user_id=user_id, status=status, id=annotation_id)\
                                  .first()
 
 
@@ -192,6 +206,7 @@ class GetEntryContentsView(LoginRequiredMixin, View):
 class SaveAnnotationView(LoginRequiredMixin, View):
     """Implements the view for saving an annotation."""
 
+    annotate_page = 'annotation:annotate'
     index_page = "annotation:index"
 
     def post(self, request):
@@ -210,7 +225,7 @@ class SaveAnnotationView(LoginRequiredMixin, View):
         if annotation is not None:
             annotation.set_text(text)
             annotation.save()
-        return redirect(self.index_page)
+        return redirect(self.annotate_page, id=annotation.id)
 
     def __parse_request_body(self, request) -> Tuple[int, HttpRequest]:
         text = request.POST['text']
