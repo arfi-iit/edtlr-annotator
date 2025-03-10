@@ -134,3 +134,20 @@
     font-weight: bold;
     color: #0d6efd;
 }
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
+.centered-content .table-responsive
+{
+    height: 80%;
+}
+
+.content-wrapper {
+    width: 65%;
+}

@@ -4,66 +4,43 @@
 
 {% block title %}{% translate "Annotate text"  %}{% endblock %}
 
-{% block links %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-{% endblock %}
 
 {% block content %}
-<main>
-<div id="editor-container" class="row">
-  <div class="col-md-6">
-    {% include "./controls/page-carousel.html"  %}
-  </div>
-  <div class="col-md-6">
-    <div id="editor-container" class="sticky-top">
-      <textarea id="editor">
-      </textarea>
-      <!-- buttons -->
-      <div id="buttons-row" class="row align-items-end justify-content-start">
-	<div class="col-md-8 offset-md-4">
-	  <div class="d-flex flex-row-reverse bd-highlight">
-	    <form method="post" action="{% url 'annotation:save' %}">
-	      {% csrf_token %}
-	      <input type="hidden" name="text" value="">
-	      <input type="hidden" name="entry-id" value="{{entry_id}}">
-	      <button type="submit" id="btn-save-annotation"
-		      class="btn btn-primary" value="" >
-		<i class="bi bi-save"></i>
-		{% translate 'Save annotation' %}
-	      </button>
-	    </form>
-	    <form method="post" action="{% url 'annotation:mark-complete' %}">
-	      {% csrf_token %}
-	      <input type="hidden" name="text" value="">
-	      <input type="hidden" name="entry-id" value="{{entry_id}}">
-	      <button type="submit" id="btn-mark-complete"
-		      class="btn btn-success">
-		<i class="bi bi-check2"></i>
-		{% translate "Mark complete" %}
-	      </button>
-	    </form>
-	  </div>
-	</div>
-      </div>
+<main class="container centered-content">
+  <div class="content-wrapper">
+    <h2 class="text-center">{% translate "My annotations" %}</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>{% translate "title word"|capfirst %}</th>
+          <th>{% translate "status"|capfirst %}</th>
+        </tr>
+      </thead>
+      <tbody>
+	{% for id, title_word, status, is_editable in annotations %}
+	<tr>
+	  <td>
+	    {% if is_editable %}
+	    <a href="{% url 'annotation:annotate' id=id %}">
+	      {{ title_word }}
+	    </a>
+	    {% else %}
+	    {{ title_word }}
+	    {% endif %}
+	  </td>
+	  <td> {{ status }} </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+      </table>
+    </div>
+    <div class="text-center mt-3">
+      <a class="btn btn-primary" role="button" href="{% url 'annotation:new-annotation' %}">
+	<i class="bi bi-file-earmark-plus"></i>
+	{% translate "New annotation" %}
+      </a>
     </div>
   </div>
-</div>
 </main>
-{% endblock %}
-
-{% block page_scripts %}
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script src="{% static 'annotation/js/dom-utils.js' %}"></script>
-<script src="{% static 'annotation/js/page-carousel.js' %}"></script>
-<script src="{% static 'annotation/js/annotation-editor.js' %}"></script>
-<script src="{% static 'annotation/js/annotation-flow.js' %}"></script>
-<script>
-
-  let annotationFlow = new AnnotationFlow('image-container', 'editor',
-					  'btn-save-annotation', 'btn-mark-complete',
-					  ['text']);
-  // TODO: Pass full url using {% url } instead of hardcoding in class
-  annotationFlow.initialize({{entry_id}});
-
-</script>
 {% endblock %}

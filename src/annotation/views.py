@@ -56,7 +56,16 @@ class IndexView(LoginRequiredMixin, View):
         request: HttpRequest, required
             The request object.
         """
-        return render(request, self.template_name)
+        annotations = Annotation.objects\
+            .filter(user=request.user)\
+            .order_by('-row_update_timestamp')
+        annotations = [(a.id, a.title_word,
+                        Annotation.AnnotationStatus(a.status).label,
+                        a.status == Annotation.AnnotationStatus.IN_PROGRESS)
+                       for a in annotations]
+        return render(request,
+                      self.template_name,
+                      context={'annotations': annotations})
 
 
 class NewAnnotatioView(LoginRequiredMixin, View):
