@@ -20,7 +20,7 @@ PORT           = 8000
 # Initialize the development environment
 init: requirements.txt
 	if [ ! -d "$(VENV)" ]; then \
-	    python -m venv $(VENV);\
+	    python3.11 -m venv $(VENV);\
 	fi; \
 	$(VENV_PIP) install -U pip;
 	if [ -f requirements-dev.txt ]; then \
