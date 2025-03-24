@@ -81,6 +81,7 @@ import: $(SRC_DIR)/manage.py
 		--images-directory $(IMPORT_DIR)/images \
 		--static-directory $(STATIC_DIR) \
 		--mappings-file $(IMPORT_DIR)/mappings.csv \
+		--page-offset $(PAGE_OFFSET) \
 		--volume "$(VOLUME)";
 
 

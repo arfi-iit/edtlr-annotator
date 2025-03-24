@@ -9,6 +9,7 @@ import pandas as pd
 import re
 
 REPLACEMENT_MAP = str.maketrans("ŞşŢţÅåÁáẤấẮắ", "ȘșȚțAaAaAaAa")
+TITLE_WORD_REGEX = r"^\*\*(?P<title_word>[^*]+)\*\*"
 
 
 class Command(BaseCommand):
@@ -45,6 +46,10 @@ class Command(BaseCommand):
             '--volume',
             help="The name of the volume under which to import the data.",
             default="eDTLR")
+        parser.add_argument('--page-offset',
+                            help="The page offset.",
+                            type=int,
+                            default=0)
 
     def handle(self, *args, **options):
         """Import the data into the database."""
@@ -52,24 +57,37 @@ class Command(BaseCommand):
         images_dir = Path(options['images_directory'])
         mappings_file = Path(options['mappings_file'])
         static_dir = Path(options['static_directory'])
-        images = self.__scan_images(images_dir)
 
+        images = self.__scan_images(images_dir)
+        volume = self.__load_volume(options['volume'])
         mappings = self.__load_mappings(mappings_file)
+        pages = self.__create_pages(images, volume, static_dir)
+
         for entry_file in entries_dir.glob("*.xml"):
-            entry = self.__normalize_entry(entry_file.stem)
+            contents = self.__read_contents(entry_file)
+            if contents is None:
+                error = f'Could not extract title word from file {entry_file}.'
+                self.stderr.write(error)
+                continue
+            title_word, text = contents
+            entry = self.__normalize_entry(title_word)
             if entry not in mappings:
                 error = f"Could not find page mappings for entry {entry}."
                 self.stderr.write(error)
             else:
-                volume_name = options['volume']
-                pages = mappings[entry]
-                self.__import_data(entry_file, pages, images, volume_name,
-                                   static_dir)
+                offset = 0
+                if options['page_offset'] is not None:
+                    offset = int(options['page_offset'])
+                entry_pages = [p + offset for p in mappings[entry]]
+                entry_pages = [
+                    pages[page_no] for page_no in entry_pages
+                    if page_no in pages
+                ]
+                self.__import_data(entry_file, text, entry_pages, static_dir)
 
         self.stdout.write("Finished importing data.")
 
-    def __import_data(self, entry_file: Path, pages: List[int],
-                      images: Dict[int, Path], volume_name: str,
+    def __import_data(self, entry_file: Path, text: str, pages: List[Page],
                       static_directory: Path):
         """Import the data into the database.
 
@@ -77,71 +95,105 @@ class Command(BaseCommand):
         ----------
         entry_file: Path, required
             The path of the file containing the entry to import.
+        text: str, required
+            The text of the entry.
         pages: list of int, required
             The page numbers of the images to import.
-        images: dict of (int, Path), required
-            The page images as a dictionary of (page number, Path).
-        volume_name: str, required
-            The name of the parent volume.
         static_directory: Path, required
             The path of the directory containing static files.
         """
-        message = f"Importing pages {pages} for entry {str(entry_file)}."
+        entry = self.__get_or_create_entry(text)
+        message = f"Importing pages {[p.page_no for p in pages]} for entry {entry.title_word}."
         self.stdout.write(message)
 
-        for page_no in pages:
-            if page_no not in images:
-                message = f'No image found for page {page_no}. Import will not run.'
-                self.stderr.write(message)
-                return
+        self.__create_or_update_pages(entry, pages)
+        self.__mark_imported(entry_file)
 
-        pages_ = self.__create_pages(pages, images, volume_name,
-                                     static_directory)
+    def __create_or_update_pages(self, entry: Entry, pages: List[Page]):
+        """Create or update the pages associated with the entry.
 
-        entry = self.__create_entry(entry_file)
-        for page in pages_:
+        Parameters
+        ----------
+        entry: Entry, required
+            The entry for which to create or update pages.
+        pages: list of Page, required
+            The list of pages associated with the entry.
+        """
+        entry_pages = EntryPage.objects.filter(entry=entry)
+        for ep in entry_pages:
+            ep.delete()
+
+        for page in pages:
             ep = EntryPage(entry=entry, page=page)
             ep.save()
 
-    def __create_entry(self, entry_file: Path) -> Entry:
-        """Create an entry from the contents of the specified file.
+    def __read_contents(self, entry_file: Path) -> tuple[str, str] | None:
+        """Read the contents of the entry file.
 
         Parameters
         ----------
         entry_file: Path, required
-            The path of the file from which to create an entry.
+            The path of the entry file.
+
+        Returns
+        -------
+        (title_word, text): tuple of (str, str) or None
+            The contents of the entry file.
+        """
+        with open(entry_file, encoding='utf8') as f:
+            contents = f.read()
+
+        text = convert_xml_to_edtlr_markdown(contents)
+        match = re.match(TITLE_WORD_REGEX, text, re.MULTILINE | re.UNICODE)
+        if match is None:
+            return None
+        return (match.group(1), text)
+
+    def __get_or_create_entry(self, text: str) -> Entry:
+        """Create an entry from the contents of the specified file.
+
+        Parameters
+        ----------
+        text: str, required
+            The text of the entry.
 
         Returns
         -------
         entry: Entry
             The entry created from the contents of the file.
         """
-        with open(entry_file, encoding='utf8') as f:
-            contents = f.read()
+        entry = Entry.objects.filter(text=text).first()
+        if entry is None:
+            entry = Entry()
+            entry.set_text(text)
+            entry.save()
 
-        entry = Entry()
-        entry.set_text(convert_xml_to_edtlr_markdown(contents))
-        entry.save()
+        return entry
+
+    def __mark_imported(self, entry_file: Path):
+        """Mark the entry file as imported.
+
+        Parameters
+        ----------
+        entry_file: Path, required
+            The path of the file from which to create an entry.
+        """
         imported_dir = entry_file.parent / "imported"
         if not imported_dir.exists():
             imported_dir.mkdir(exist_ok=True)
         new_path = imported_dir / entry_file.name
         entry_file.rename(new_path)
 
-        return entry
-
-    def __create_pages(self, pages: List[int], images: Dict[int, Path],
-                       volume_name: str, static_directory: Path) -> List[Page]:
+    def __create_pages(self, images: Dict[int, Path], volume: Volume,
+                       static_directory: Path) -> Dict[int, Page]:
         """Create the pages.
 
         Parameters
         ----------
-        pages: list of int, required
-            The collection of page numbers for which to create pages.
         images: dict of (int, Path), required
             The dictionary mapping the page number to its file path.
-        volume_name: str, required
-            The name of the volume.
+        volume: Volume, required
+            The volume for which data is imported.
         static_directory: Path, required
             The path of the directory containing static files.
 
@@ -150,22 +202,43 @@ class Command(BaseCommand):
         page_list: list of Page
             The list of inserted pages.
         """
-        volume = self.__load_volume(volume_name)
+        pages = {}
+        for (page_no, image_path) in images.items():
+            page = self.__create_or_update_page(page_no, volume, image_path,
+                                                static_directory)
+            pages[page.page_no] = page
 
-        def load_or_create_page(page_no, images, volume):
-            p = Page.objects.filter(volume=volume, page_no=page_no)\
-                            .first()
-            if p is None:
-                path = images[page_no]
-                page_path = path.relative_to(static_directory)
-                p = Page(volume=volume,
-                         page_no=page_no,
-                         image_path=str(page_path))
-                p.save()
+        return pages
 
-            return p
+    def __create_or_update_page(self, page_no: int, volume: Volume,
+                                image_path: Path, static_dir: Path) -> Page:
+        """Create a page or update the page with the specified data.
 
-        return [load_or_create_page(p, images, volume) for p in pages]
+        Parameters
+        ----------
+        page_no: int, required
+            The number of the page in the volume.
+        volume: Volume, required
+            The volume which contains the page.
+        image_path: Path, required
+            The path of the page scan.
+        static_dir: Path, required
+            The path of the static directory.
+
+        Returns
+        -------
+        page: Page
+            The page object.
+        """
+        p = Page.objects.filter(volume=volume, page_no=page_no).first()
+        page_path = image_path.relative_to(static_dir)
+        if p is None:
+            p = Page(volume=volume, page_no=page_no, image_path=str(page_path))
+        else:
+            p.image_path = str(page_path)
+
+        p.save()
+        return p
 
     def __load_volume(self, volume_name: str) -> Volume:
         """Load or insert the volume with the specified name.
