@@ -175,3 +175,6 @@ templates/edtlr-annotator.service
 templates/edtlr-annotator.socket
 templates/gunicorn.conf.py
 src/config/gunicorn.conf.py
+
+# The directory with various files
+/.local/
