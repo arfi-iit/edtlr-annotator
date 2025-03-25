@@ -108,7 +108,13 @@ class NewAnnotatioView(LoginRequiredMixin, View):
             p['entry'] for p in Annotation.objects.values('entry')
         ]
 
-        return Entry.objects.exclude(id__in=in_progress_entries).first()
+        valid_ids = [
+            ep['entry_id'] for ep in EntryPage.objects.values('entry_id')
+        ]
+
+        return Entry.objects.exclude(id__in=in_progress_entries)\
+            .filter(id__in=valid_ids)\
+            .first()
 
     def __insert_annotation(self, user: User, entry: Entry) -> Annotation:
         status = Annotation.AnnotationStatus.IN_PROGRESS
