@@ -4,6 +4,7 @@ from .viewsettings import MAX_CONCURRENT_ANNOTATORS
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.utils import timezone
 from django.views import View
 from typing import Tuple
 
@@ -51,6 +52,7 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
         if annotation is not None:
             annotation.set_text(text)
             annotation.status = Annotation.AnnotationStatus.COMPLETE
+            annotation.row_update_timestamp = timezone.now()
             annotation.save()
 
     def __parse_request_body(self, request) -> Tuple[int, object]:

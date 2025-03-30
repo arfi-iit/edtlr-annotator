@@ -3,6 +3,7 @@ from ..models.annotation import Annotation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest
 from django.shortcuts import redirect
+from django.utils import timezone
 from django.views import View
 from typing import Tuple
 
@@ -28,6 +29,8 @@ class SaveAnnotationView(LoginRequiredMixin, View):
             status=Annotation.AnnotationStatus.IN_PROGRESS)
         if annotation is not None:
             annotation.set_text(text)
+            annotation.version = annotation.version + 1
+            annotation.row_update_timestamp = timezone.now()
             annotation.save()
         return redirect(self.annotate_page, id=annotation.id)
 
