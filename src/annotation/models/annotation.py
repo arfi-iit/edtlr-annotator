@@ -56,7 +56,8 @@ class Annotation(models.Model):
         default=timezone.now,
         verbose_name=_('row creation timestamp'))
     row_update_timestamp = models.DateTimeField(
-        auto_now=True, verbose_name=_('row update timestamp'))
+        null=True,
+        verbose_name=_('row update timestamp'))
 
     def set_text(self, text: str):
         """Set the  text of the annotation to the specified value and update metadata.
