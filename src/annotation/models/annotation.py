@@ -1,11 +1,11 @@
 """Defines the Annotation model."""
-from django.db import models
+from annotation.models.entry import Entry
+from annotation.models.utils import extract_title_word
+from annotation.models.utils import remove_diacritics
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from .entry import Entry
-from .utils import extract_title_word
-from .utils import remove_diacritics
 
 
 class Annotation(models.Model):
@@ -56,8 +56,7 @@ class Annotation(models.Model):
         default=timezone.now,
         verbose_name=_('row creation timestamp'))
     row_update_timestamp = models.DateTimeField(
-        null=True,
-        verbose_name=_('row update timestamp'))
+        null=True, verbose_name=_('row update timestamp'))
 
     def set_text(self, text: str):
         """Set the  text of the annotation to the specified value and update metadata.

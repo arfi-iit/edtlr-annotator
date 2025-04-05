@@ -3,6 +3,24 @@ import argparse
 from pathlib import Path
 import re
 
+CEDILLA_DIACRITICS_MAP = str.maketrans("ŞşŢţ", "ȘșȚț")
+
+
+def correct_diacritics(text: str) -> str:
+    """Replace diacritics with cedilla to diacritics with comma below in te input text.
+
+    Parameters
+    ----------
+    text: str, required
+        The input text.
+
+    Returns
+    -------
+    corrected_text: str
+        The text with proper diacritics.
+    """
+    return text.translate(CEDILLA_DIACRITICS_MAP)
+
 
 def convert_xml_to_edtlr_markdown(xml_string: str) -> str:
     """Conver the provided XML string to eDTLR markdown.
@@ -24,7 +42,7 @@ def convert_xml_to_edtlr_markdown(xml_string: str) -> str:
     data = re.sub(r"<\/?i>", "*", data)
     data = re.sub(r"<\/?sup>", "^", data)
     data = re.sub(r"<\/?sg>", "@", data)
-    return data.strip()
+    return correct_diacritics(data.strip())
 
 
 def main(input_file: Path, output_file: Path = None):

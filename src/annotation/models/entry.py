@@ -1,8 +1,8 @@
 """Defines the Entry model."""
+from annotation.models.utils import extract_title_word
+from annotation.models.utils import remove_diacritics
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .utils import extract_title_word
-from .utils import remove_diacritics
 
 
 class Entry(models.Model):
