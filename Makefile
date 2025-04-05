@@ -148,3 +148,7 @@ update:
 # Update the values of metadata columns from the database
 fresh-metadata: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py updatemetadata;
+
+# Replaces diacritics with cedilla to diacritics with comma below.
+correct-diacritics: $(SRC_DIR)/manage.py
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py correctdiacritics;
