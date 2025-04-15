@@ -143,9 +143,14 @@
     height: 90vh;
 }
 
-.centered-content .table-responsive
+.centered-content
 {
     height: 80%;
+}
+
+.user-annotations{
+    height: 50em;
+    overflow-y: scroll;
 }
 
 .content-wrapper {
