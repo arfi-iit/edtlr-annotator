@@ -1,11 +1,12 @@
 """The view for saving an annotation."""
-from ..models.annotation import Annotation
+from typing import Tuple
+
+from annotation.models.annotation import Annotation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import View
-from typing import Tuple
 
 
 class SaveAnnotationView(LoginRequiredMixin, View):
@@ -25,12 +26,12 @@ class SaveAnnotationView(LoginRequiredMixin, View):
         entry_id, text = self.__parse_request_body(request)
         annotation = Annotation.objects.get(
             entry=entry_id,
-            user=request.user,
-            status=Annotation.AnnotationStatus.IN_PROGRESS)
+            user=request.user)
         if annotation is not None:
             annotation.set_text(text)
             annotation.version = annotation.version + 1
             annotation.row_update_timestamp = timezone.now()
+            annotation.status = Annotation.AnnotationStatus.IN_PROGRESS
             annotation.save()
         return redirect(self.annotate_page, id=annotation.id)
 

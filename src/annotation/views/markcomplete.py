@@ -1,12 +1,13 @@
 """The view for marking an annotation as complete."""
-from ..models.annotation import Annotation
-from .viewsettings import MAX_CONCURRENT_ANNOTATORS
+from typing import Tuple
+
+from annotation.models.annotation import Annotation
+from annotation.views.viewsettings import MAX_CONCURRENT_ANNOTATORS
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import View
-from typing import Tuple
 
 
 class MarkAnnotationCompleteView(LoginRequiredMixin, View):
@@ -22,16 +23,19 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
         return redirect(self.index_page)
 
     def __check_conflicts(self, entry_id: int):
-        entry_annotations = Annotation.objects.filter(
-            entry=entry_id, status=Annotation.AnnotationStatus.COMPLETE)
+        entry_annotations = Annotation.objects.filter(entry=entry_id)\
+            .exclude(status=Annotation.AnnotationStatus.IN_PROGRESS)
         if len(entry_annotations) < MAX_CONCURRENT_ANNOTATORS:
             return
 
+        status = Annotation.AnnotationStatus.COMPLETE
         if self.__have_conflicts(entry_annotations):
-            for annotation in entry_annotations:
-                annotation.version = annotation.version + 1
-                annotation.status = Annotation.AnnotationStatus.CONFLICT
-                annotation.save()
+            status = Annotation.AnnotationStatus.CONFLICT
+
+        for annotation in entry_annotations:
+            annotation.version = annotation.version + 1
+            annotation.status = status
+            annotation.save()
 
     def __have_conflicts(self, entry_annotations) -> bool:
         iterator = iter(entry_annotations)
@@ -44,10 +48,7 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
         return False
 
     def __mark_annotation_complete(self, entry_id: int, text: str, user: User):
-        annotation = Annotation.objects.get(
-            entry=entry_id,
-            user=user,
-            status=Annotation.AnnotationStatus.IN_PROGRESS)
+        annotation = Annotation.objects.get(entry=entry_id, user=user)
 
         if annotation is not None:
             annotation.set_text(text)
