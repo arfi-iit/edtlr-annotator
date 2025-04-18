@@ -8,6 +8,8 @@ SRC_DIR        = src
 APP_NAME       = annotation
 APP_DIR        = $(SRC_DIR)/$(APP_NAME)
 
+LOG_DIR        = logs
+
 STATIC_DIR     = $(APP_DIR)/static/annotation
 DATA_DIR       = $(STATIC_DIR)/data
 IMPORT_DIR     = $(DATA_DIR)
@@ -141,6 +143,7 @@ update:
 	make static-files;
 	make translations;
 	make schema;
+	mkdir -p $(LOG_DIR);
 	sudo systemctl restart edtlr-annotator.service;
 	sudo systemctl restart edtlr-annotator.socket;
 	sudo systemctl restart nginx;
