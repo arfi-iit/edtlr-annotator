@@ -1,5 +1,5 @@
 """The index view."""
-from ..models.annotation import Annotation
+from annotation.models.annotation import Annotation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import View
@@ -23,8 +23,9 @@ class IndexView(LoginRequiredMixin, View):
             .order_by('-row_update_timestamp')
         annotations = [(a.id, a.title_word,
                         Annotation.AnnotationStatus(a.status).label,
-                        a.status == Annotation.AnnotationStatus.IN_PROGRESS)
+                        a.status != Annotation.AnnotationStatus.COMPLETE)
                        for a in annotations]
+
         return render(request,
                       self.template_name,
                       context={'annotations': annotations})

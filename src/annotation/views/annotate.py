@@ -1,10 +1,10 @@
 """The view for annotating an entry."""
-from ..models.annotation import Annotation
-from ..models.entry import Entry
-from ..models.entrypage import EntryPage
-from .utils import get_image_path
+from annotation.models.annotation import Annotation
+from annotation.models.entry import Entry
+from annotation.models.entrypage import EntryPage
+from annotation.views.utils import get_image_path
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
 
 
@@ -43,6 +43,5 @@ class AnnotateView(LoginRequiredMixin, View):
 
     def __get_in_progress_annotation(self, user_id: int,
                                      annotation_id: int) -> Annotation | None:
-        status = Annotation.AnnotationStatus.IN_PROGRESS
-        return Annotation.objects.filter(user_id=user_id, status=status, id=annotation_id)\
-                                 .first()
+        return Annotation.objects.filter(user_id=user_id,
+                                         id=annotation_id).first()
