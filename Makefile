@@ -98,7 +98,11 @@ import: $(SRC_DIR)/manage.py
 # Example invocation:
 # make template-expansion \
 #     SECRET_KEY='<secret-key>' \
-#     DATABASE_URL='<database URL>' \
+#     DATABASE_HOST='<database server>' \
+#     DATABASE_NAME='<database name>' \
+#     DATABASE_USER='<database user>' \
+#     DATABASE_PASSWORD='<password>' \
+#     DATABASE_PORT=<port> \
 #     USER=<user> \
 #     GROUP=<group> \
 #     SERVER_NAME=<server name>
@@ -118,7 +122,11 @@ template-expansion: $(SRC_DIR)/manage.py
 	sed -i "s/__SECRET_KEY__/$(SECRET_KEY)/g" templates/.env;
 	sed -i "s/__STATIC_ROOT__/$(STATIC_ROOT)/g" templates/.env;
 	sed -i "s/__MAX_CONCURRENT_ANNOTATORS__/$(MAX_CONCURRENT_ANNOTATORS)/g" templates/.env;
-	sed -i "s/__DATABASE_URL__/$(DATABASE_URL)/g" templates/.env;
+	sed -i "s/__DATABASE_HOST__/$(DATABASE_HOST)/g" templates/.env;
+	sed -i "s/__DATABASE_NAME__/$(DATABASE_NAME)/g" templates/.env;
+	sed -i "s/__DATABASE_USER__/$(DATABASE_USER)/g" templates/.env;
+	sed -i "s/__DATABASE_PASSWORD__/$(DATABASE_PASSWORD)/g" templates/.env;
+	sed -i "s/__DATABASE_PORT__/$(DATABASE_PORT)/g" templates/.env;
 
 	cp templates/gunicorn.conf.py.template templates/gunicorn.conf.py;
 	sed -i "s~__GUNICORN_PATH__~$(GUNICORN_PATH)~g" templates/gunicorn.conf.py;
