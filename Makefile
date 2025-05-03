@@ -148,6 +148,7 @@ template-expansion: $(SRC_DIR)/manage.py
 
 .PHONY: update
 update:
+	$(VENV_PIP) install -r requirements.txt;
 	make static-files;
 	make translations;
 	make schema;
