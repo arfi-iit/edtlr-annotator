@@ -6,6 +6,16 @@ import re
 CEDILLA_DIACRITICS_MAP = str.maketrans("ŞşŢţ", "ȘșȚț")
 
 
+class Marks:
+    """Defines the marks used annotations."""
+
+    BOLD = '**'
+    EMPHASIS = '*'
+    SUPERSCRIPT = '^'
+    SUBSCRIPT = '_'
+    REFERENCE = '@'
+
+
 def correct_diacritics(text: str) -> str:
     """Replace diacritics with cedilla to diacritics with comma below in te input text.
 
@@ -38,10 +48,10 @@ def convert_xml_to_edtlr_markdown(xml_string: str) -> str:
     data = xml_string.strip()
     data = re.sub(r"<\/?entry>", "", data)
     data = re.sub(r"<\/?p>", "\n", data)
-    data = re.sub(r"<\/?b>", "**", data)
-    data = re.sub(r"<\/?i>", "*", data)
-    data = re.sub(r"<\/?sup>", "^", data)
-    data = re.sub(r"<\/?sg>", "@", data)
+    data = re.sub(r"<\/?b>", Marks.BOLD, data)
+    data = re.sub(r"<\/?i>", Marks.EMPHASIS, data)
+    data = re.sub(r"<\/?sup>", Marks.SUPERSCRIPT, data)
+    data = re.sub(r"<\/?sg>", Marks.REFERENCE, data)
     return correct_diacritics(data.strip())
 
 
