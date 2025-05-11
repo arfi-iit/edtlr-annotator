@@ -18,7 +18,7 @@ class Reference(models.Model):
                             null=False,
                             unique=True,
                             max_length=250)
-    is_approved = models.BooleanField(verbose_name="is_approved",
+    is_approved = models.BooleanField(verbose_name=_("is_approved"),
                                       blank=False,
                                       null=False)
     row_creation_timestamp = models.DateTimeField(
