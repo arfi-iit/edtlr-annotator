@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-07 20:54+0200\n"
+"POT-Creation-Date: 2025-05-11 19:08+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,8 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/admin.py:66 src/annotation/admin.py:67
-#: src/annotation/admin.py:68
+#: src/annotation/admin.py:73 src/annotation/admin.py:74
+#: src/annotation/admin.py:75
 msgid "Admin eDTLR data"
 msgstr "Administrare date eDTLR"
 
@@ -54,7 +54,7 @@ msgid "user"
 msgstr "utilizator"
 
 #: src/annotation/models/annotation.py:41 src/annotation/models/entry.py:17
-#: src/annotation/templates/annotation/index.html:76
+#: src/annotation/templates/annotation/index.html:16
 msgid "title word"
 msgstr "cuvânt-titlu"
 
@@ -66,11 +66,11 @@ msgstr "lungime text"
 msgid "version"
 msgstr "versiune"
 
-#: src/annotation/models/annotation.py:57
+#: src/annotation/models/annotation.py:57 src/annotation/models/reference.py:25
 msgid "row creation timestamp"
 msgstr "creat la"
 
-#: src/annotation/models/annotation.py:59
+#: src/annotation/models/annotation.py:59 src/annotation/models/reference.py:31
 msgid "row update timestamp"
 msgstr "actualizat la"
 
@@ -105,6 +105,18 @@ msgstr "cale imagine"
 #: src/annotation/models/page.py:30
 msgid "pages"
 msgstr "pagini"
+
+#: src/annotation/models/reference.py:13
+msgid "reference"
+msgstr "siglă"
+
+#: src/annotation/models/reference.py:14
+msgid "references"
+msgstr "sigle"
+
+#: src/annotation/models/reference.py:21
+msgid "is_approved"
+msgstr "aprobată"
 
 #: src/annotation/models/volume.py:13
 msgid "volumes"
@@ -153,15 +165,15 @@ msgstr "Deconectare"
 msgid "eDTLR annotator"
 msgstr "Adnotator eDTLR"
 
-#: src/annotation/templates/annotation/index.html:72
+#: src/annotation/templates/annotation/index.html:11
 msgid "My annotations"
 msgstr "Adnotările mele"
 
-#: src/annotation/templates/annotation/index.html:77
+#: src/annotation/templates/annotation/index.html:17
 msgid "status"
 msgstr "status"
 
-#: src/annotation/templates/annotation/index.html:90
+#: src/annotation/templates/annotation/index.html:41
 msgid "New annotation"
 msgstr "Adnotare nouă"
 
