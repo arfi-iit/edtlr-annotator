@@ -148,6 +148,7 @@ template-expansion: $(SRC_DIR)/manage.py
 
 .PHONY: update
 update:
+	$(VENV_PIP) install -r requirements.txt;
 	make static-files;
 	make translations;
 	make schema;
@@ -163,3 +164,9 @@ fresh-metadata: $(SRC_DIR)/manage.py
 # Replaces diacritics with cedilla to diacritics with comma below.
 correct-diacritics: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py correctdiacritics;
+
+# Import references from the file specified by REFERENCES_FILE variable
+REFERENCES_FILE=references.txt
+references: $(REFERENCES_FILE)
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py importreferences \
+		--input-file $(REFERENCES_FILE);
