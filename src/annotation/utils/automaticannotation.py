@@ -1,9 +1,26 @@
 """Automatic annotation of entry texts."""
-import ahocorasick
 from annotation.utils.xml2edtlrmd import Marks
 from collections import namedtuple
+import ahocorasick
+import re
 
 TextRef = namedtuple('TextRef', ['start_index', 'end_index', 'reference'])
+
+
+def apply_preprocessing(text: str) -> str:
+    """Apply some preprocessing to the input string.
+
+    Parameters
+    ----------
+    text: str, required
+        The string to which to apply preprocessing.
+
+    Returns
+    -------
+    processed_text: str
+        The processed text.
+    """
+    return re.sub('\n+', '\n', text)
 
 
 class ReferenceAnnotator:
@@ -17,12 +34,8 @@ class ReferenceAnnotator:
         references: list of str, required
             The list of references.
         """
-        self.__references = references
-        self.__automaton = ahocorasick.Automaton()
-        for idx, key in enumerate(references):
-            key = key.strip()
-            self.__automaton.add_word(key, (idx, key))
-        self.__automaton.make_automaton()
+        self.__references = references if references is not None else []
+        self.__automaton = self.__make_automaton()
 
     def annotate(self, text: str) -> str:
         """Annotate the references in the specified text.
@@ -37,6 +50,9 @@ class ReferenceAnnotator:
         annotated_text: str
             The annotated text.
         """
+        if len(self.__references) == 0:
+            return text
+
         text = text.replace(Marks.REFERENCE, "")
         found_refs = self.__search_references(text)
         found_refs.sort(key=lambda ref: ref.start_index)
@@ -112,3 +128,19 @@ class ReferenceAnnotator:
             ref = TextRef(start_idx, end_idx, original_value)
             found_refs.append(ref)
         return found_refs
+
+    def __make_automaton(self) -> ahocorasick.Automaton:
+        """Make the automaton for fast searching of references.
+
+        Returns
+        -------
+        automaton: ahocorasick.Automaton
+            The automaton for fast search within text.
+        """
+        automaton = ahocorasick.Automaton()
+        if len(self.__references) > 0:
+            for idx, key in enumerate(self.__references):
+                key = key.strip()
+                automaton.add_word(key, (idx, key))
+            automaton.make_automaton()
+        return automaton

@@ -5,6 +5,7 @@ from annotation.models.entrypage import EntryPage
 from annotation.models.page import Page
 from annotation.models.reference import Reference
 from annotation.utils.automaticannotation import ReferenceAnnotator
+from annotation.utils.automaticannotation import apply_preprocessing
 from annotation.views.viewsettings import MAX_CONCURRENT_ANNOTATORS
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -29,7 +30,10 @@ class NewAnnotationView(LoginRequiredMixin, View):
         refs = cache.get(CACHE_KEY)
         if refs is None:
             print("Loading all references.")
-            refs = list(Reference.objects.values_list('text', flat=True))
+            refs = Reference.objects\
+                            .filter(is_approved=True)\
+                            .values_list('text', flat=True)
+            refs = list(refs)
             cache.set(CACHE_KEY, refs, CACHE_TIMEOUT)
         return refs
 
@@ -105,7 +109,7 @@ class NewAnnotationView(LoginRequiredMixin, View):
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(entry=entry, user=user, status=status)
         annotator = ReferenceAnnotator(self.references)
-        text = annotator.annotate(entry.text)
+        text = annotator.annotate(apply_preprocessing(entry.text))
         record.set_text(text)
         record.save()
         return record
