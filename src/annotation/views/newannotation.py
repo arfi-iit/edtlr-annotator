@@ -29,7 +29,10 @@ class NewAnnotationView(LoginRequiredMixin, View):
         refs = cache.get(CACHE_KEY)
         if refs is None:
             print("Loading all references.")
-            refs = list(Reference.objects.values_list('text', flat=True))
+            refs = Reference.objects\
+                            .filter(is_approved=True)\
+                            .values_list('text', flat=True)
+            refs = list(refs)
             cache.set(CACHE_KEY, refs, CACHE_TIMEOUT)
         return refs
 
