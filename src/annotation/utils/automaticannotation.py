@@ -1,9 +1,26 @@
 """Automatic annotation of entry texts."""
-import ahocorasick
 from annotation.utils.xml2edtlrmd import Marks
 from collections import namedtuple
+import ahocorasick
+import re
 
 TextRef = namedtuple('TextRef', ['start_index', 'end_index', 'reference'])
+
+
+def apply_preprocessing(text: str) -> str:
+    """Apply some preprocessing to the input string.
+
+    Parameters
+    ----------
+    text: str, required
+        The string to which to apply preprocessing.
+
+    Returns
+    -------
+    processed_text: str
+        The processed text.
+    """
+    return re.sub('\n+', '\n', text)
 
 
 class ReferenceAnnotator:
