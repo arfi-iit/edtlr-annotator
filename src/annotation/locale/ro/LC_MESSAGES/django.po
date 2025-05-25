@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-11 19:08+0300\n"
+"POT-Creation-Date: 2025-05-25 14:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,6 +164,32 @@ msgstr "Deconectare"
 #: src/annotation/templates/annotation/base.html:9
 msgid "eDTLR annotator"
 msgstr "Adnotator eDTLR"
+
+#: src/annotation/templates/annotation/controls/user-statistics.html:4
+msgid "Statistics"
+msgstr "Statistici"
+
+#: src/annotation/templates/annotation/controls/user-statistics.html:8
+msgid "Grand total"
+msgstr "Total general"
+
+#: src/annotation/templates/annotation/controls/user-statistics.html:11
+#: src/annotation/templates/annotation/controls/user-statistics.html:36
+msgid "Number of annotations"
+msgstr "Număr adnotări"
+
+#: src/annotation/templates/annotation/controls/user-statistics.html:15
+#: src/annotation/templates/annotation/controls/user-statistics.html:40
+msgid "Number of symbols"
+msgstr "Număr simboluri"
+
+#: src/annotation/templates/annotation/controls/user-statistics.html:21
+msgid "Number of annotations per status"
+msgstr "Număr adnotări per status"
+
+#: src/annotation/templates/annotation/controls/user-statistics.html:32
+msgid "Statistics for the year"
+msgstr "Statistici pentru anul"
 
 #: src/annotation/templates/annotation/index.html:11
 msgid "My annotations"

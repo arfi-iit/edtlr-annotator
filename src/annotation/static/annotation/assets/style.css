@@ -137,9 +137,9 @@
 
 .centered-content {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-evenly;
     height: 90vh;
 }
 
@@ -155,4 +155,12 @@
 
 .content-wrapper {
     width: 65%;
+}
+
+.user-stats-header-row{
+    font-weight: bold;
+}
+
+.user-stats-header-row, .user-stats-header-row td{
+    border:none;
 }
