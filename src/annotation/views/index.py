@@ -67,15 +67,15 @@ class UserStatisticsCalculator:
         stats: UserStatistics
             The statistics.
         """
-        grand_total = UserStatisticsCalculator.__calculate_stats(annotations)
-        per_status = UserStatisticsCalculator.__calculate_stats_per_status(
+        grand_total = UserStatisticsCalculator.calculate_stats(annotations)
+        per_status = UserStatisticsCalculator.calculate_stats_per_status(
             annotations)
-        per_year = UserStatisticsCalculator.__calculate_stats_per_year(
+        per_year = UserStatisticsCalculator.calculate_stats_per_year(
             annotations)
         return UserStatistics(grand_total, per_status, per_year)
 
     @staticmethod
-    def __calculate_stats_per_year(
+    def calculate_stats_per_year(
             annotations: list[Annotation]) -> list[tuple[int, StatisticItem]]:
         """Calculate the statistics per year.
 
@@ -97,11 +97,11 @@ class UserStatisticsCalculator:
             return annotation.row_creation_timestamp.year
 
         grouped = groupby(annotations, get_group_key)
-        return [(year, UserStatisticsCalculator.__calculate_stats(list(group)))
+        return [(year, UserStatisticsCalculator.calculate_stats(list(group)))
                 for year, group in grouped]
 
     @staticmethod
-    def __calculate_stats_per_status(
+    def calculate_stats_per_status(
         annotations: list[Annotation]
     ) -> list[tuple[Annotation.AnnotationStatus, StatisticItem]]:
         """Calculate the statistics per status.
@@ -125,12 +125,12 @@ class UserStatisticsCalculator:
 
         for status in statuses:
             data = [a for a in annotations if a.status == status]
-            item = UserStatisticsCalculator.__calculate_stats(data)
+            item = UserStatisticsCalculator.calculate_stats(data)
             stats.append((status, item))
         return stats
 
     @staticmethod
-    def __calculate_stats(annotations: list[Annotation]) -> StatisticItem:
+    def calculate_stats(annotations: list[Annotation]) -> StatisticItem:
         """Calculate the statistics for the provided list of annotations.
 
         Parameters:
