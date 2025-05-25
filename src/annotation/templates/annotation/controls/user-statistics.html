@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<div class="user-statistics">
+  <h2>{% translate "Statistics" %}</h2>
+  <table class="table table-bordered">
+    <tbody>
+      <tr class="user-stats-header-row">
+        <td>{% translate "Grand total" %}</td><td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>{% translate "Number of annotations" %}</td>
+        <td>{{ statistics.grand_total.num_annotations }}</td>
+      </tr>
+      <tr>
+        <td>{% translate "Number of symbols" %}</td>
+        <td>{{ statistics.grand_total.num_symbols }}</td>
+      </tr>
+
+
+      <tr class="user-stats-header-row">
+        <td>{% translate "Number of annotations per status" %}</td><td>&nbsp;</td>
+      </tr>
+      {% for status, data in statistics.per_status %}
+      <tr>
+        <td>{{ status.label }}</td>
+        <td>{{ data.num_annotations }}</td>
+      </tr>
+      {% endfor %}
+
+      {% for year, data in statistics.per_year %}
+      <tr class="user-stats-header-row">
+        <td>{% translate "Statistics for the year" %}</td>
+        <td>{{ year }}</td>
+      </tr>
+      <tr>
+        <td>{% translate "Number of annotations" %}</td>
+        <td>{{ data.num_annotations }}</td>
+      </tr>
+      <tr>
+        <td>{% translate "Number of symbols" %}</td>
+        <td>{{ data.num_symbols }}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
