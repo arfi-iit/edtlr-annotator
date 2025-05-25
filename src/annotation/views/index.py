@@ -96,6 +96,7 @@ class UserStatisticsCalculator:
 
             return annotation.row_creation_timestamp.year
 
+        annotations = sorted(annotations, key=get_group_key)
         grouped = groupby(annotations, get_group_key)
         return [(year, UserStatisticsCalculator.calculate_stats(list(group)))
                 for year, group in grouped]
