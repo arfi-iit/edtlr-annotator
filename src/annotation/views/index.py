@@ -1,6 +1,5 @@
 """The index view."""
 from annotation.models.annotation import Annotation
-from collections import namedtuple
 from dataclasses import dataclass
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
@@ -38,7 +37,12 @@ class IndexView(LoginRequiredMixin, View):
                       })
 
 
-StatisticItem = namedtuple('StatisticItem', ['num_annotations', 'num_symbols'])
+@dataclass
+class StatisticItem:
+    """Defines a container for statistics."""
+
+    num_annotations: int
+    num_symbols: int
 
 
 @dataclass
@@ -144,5 +148,6 @@ class UserStatisticsCalculator:
         stats: StatisticItem
             The statistics calculated from the annotations.
         """
-        return StatisticItem(len(annotations),
-                             sum(a.text_length for a in annotations))
+        num_symbols = sum([a.text_length for a in annotations])
+        return StatisticItem(num_annotations=len(annotations),
+                             num_symbols=num_symbols)
