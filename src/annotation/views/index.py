@@ -148,6 +148,9 @@ class UserStatisticsCalculator:
         stats: StatisticItem
             The statistics calculated from the annotations.
         """
-        num_symbols = sum([a.text_length for a in annotations])
+        num_symbols = sum([
+            len(a.text) for a in annotations
+            if a.status != Annotation.AnnotationStatus.IN_PROGRESS
+        ])
         return StatisticItem(num_annotations=len(annotations),
                              num_symbols=num_symbols)
