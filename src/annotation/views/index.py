@@ -1,10 +1,11 @@
 """The index view."""
 from annotation.models.annotation import Annotation
 from dataclasses import dataclass
+from datetime import datetime
+from datetime import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import View
-from itertools import groupby
 
 
 class IndexView(LoginRequiredMixin, View):
@@ -46,12 +47,67 @@ class StatisticItem:
 
 
 @dataclass
+class TimeInterval:
+    """Defines a time interval for which to compute statistics."""
+
+    name: str
+    start_date: datetime | None
+    end_date: datetime | None
+
+    def get_start_date(self, tz=None):
+        """Get the start date if it's not None or datetime.min value.
+
+        Returns
+        -------
+        start_date: datetime
+            The value of start_date or datetime.min if the start_date is None.
+        """
+        if tz is None:
+            return self.start_date if self.start_date is not None else datetime.min
+        if self.start_date is None or self.start_date == datetime.min:
+            return datetime.min.astimezone(tz)
+        return self.start_date.astimezone(tz)
+
+    def get_end_date(self, tz=None):
+        """Get the end date if it isn't None or datetime.max value.
+
+        Returns
+        end_date: datetime
+            The value of end_date or datetime.max if the end_date is None.
+        """
+        if tz is None:
+            return self.end_date if self.end_date is not None else datetime.max
+        if self.end_date is None or self.end_date == datetime.max:
+            return datetime.max.astimezone(tz)
+        return self.end_date.astimezone(tz)
+
+    def contains(self, time_point: datetime) -> bool:
+        """Check if the current interval contains the given point in time.
+
+        Returns
+        -------
+        contains: bool
+            True if the time point is greater or equal to start date, and less than end date; False otherwise.
+        """
+        date_time = time_point.astimezone(timezone.utc)
+        return self.get_start_date(
+            timezone.utc) <= date_time < self.get_end_date(timezone.utc)
+
+
+INTERVALS = [
+    TimeInterval("Semestrul II 2024-2025",
+                 datetime(2025, 3, 6).astimezone(timezone.utc),
+                 datetime(2025, 6, 30).astimezone(timezone.utc))
+]
+
+
+@dataclass
 class UserStatistics:
     """Contains user statistics."""
 
     grand_total: StatisticItem
     per_status: list[tuple[Annotation.AnnotationStatus, StatisticItem]]
-    per_year: list[tuple[int, StatisticItem]]
+    current_interval: list[tuple[str, StatisticItem]]
 
 
 class UserStatisticsCalculator:
@@ -74,13 +130,29 @@ class UserStatisticsCalculator:
         grand_total = UserStatisticsCalculator.calculate_stats(annotations)
         per_status = UserStatisticsCalculator.calculate_stats_per_status(
             annotations)
-        per_year = UserStatisticsCalculator.calculate_stats_per_year(
+        current_interval = UserStatisticsCalculator.calculate_stats_for_curent_interval(
             annotations)
-        return UserStatistics(grand_total, per_status, per_year)
+        return UserStatistics(grand_total, per_status, [current_interval])
 
     @staticmethod
-    def calculate_stats_per_year(
-            annotations: list[Annotation]) -> list[tuple[int, StatisticItem]]:
+    def get_current_interval() -> TimeInterval | None:
+        """Get the current interval.
+
+        Returns
+        -------
+        interval: TimeInterval
+            The current interval or None.
+        """
+        now = datetime.now(tz=None)
+        for interval in INTERVALS:
+            if interval.contains(now):
+                return interval
+
+        return None
+
+    @staticmethod
+    def calculate_stats_for_curent_interval(
+            annotations: list[Annotation]) -> tuple[int, StatisticItem] | None:
         """Calculate the statistics per year.
 
         Parameters
@@ -93,17 +165,23 @@ class UserStatisticsCalculator:
         stats: list of (int, StatisticItem) tuples
             The statistics per year as a list of (year, StatisticItem) tuples.
         """
+        interval = UserStatisticsCalculator.get_current_interval()
+        if interval is None:
+            return None
+        annotations = [
+            a for a in annotations
+            if a.status != Annotation.AnnotationStatus.IN_PROGRESS
+        ]
 
-        def get_group_key(annotation):
+        def is_in_interval(interval, annotation):
+            dt = annotation.row_creation_timestamp
             if annotation.row_update_timestamp is not None:
-                return annotation.row_update_timestamp.year
+                dt = annotation.row_update_timestamp
+            return interval.contains(dt)
 
-            return annotation.row_creation_timestamp.year
-
-        annotations = sorted(annotations, key=get_group_key)
-        grouped = groupby(annotations, get_group_key)
-        return [(year, UserStatisticsCalculator.calculate_stats(list(group)))
-                for year, group in grouped]
+        annotations = [a for a in annotations if is_in_interval(interval, a)]
+        return (interval.name,
+                UserStatisticsCalculator.calculate_stats(annotations))
 
     @staticmethod
     def calculate_stats_per_status(
