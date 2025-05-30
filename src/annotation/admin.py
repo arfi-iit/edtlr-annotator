@@ -67,6 +67,7 @@ class EvaluationIntervalAdmin(admin.ModelAdmin):
     """Overrides the default admin options for EvaluationModel."""
 
     ordering = ["start_date", "end_date"]
+    list_display = ["name", "start_date", "end_date"]
 
 
 admin.site.register(Annotation, AnnotationAdmin)
