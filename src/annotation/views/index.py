@@ -1,10 +1,10 @@
 """The index view."""
 from annotation.models.annotation import Annotation
+from annotation.models.evaluationinterval import EvaluationInterval
 from dataclasses import dataclass
-from datetime import datetime
-from datetime import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.utils import timezone
 from django.views import View
 
 
@@ -47,61 +47,6 @@ class StatisticItem:
 
 
 @dataclass
-class TimeInterval:
-    """Defines a time interval for which to compute statistics."""
-
-    name: str
-    start_date: datetime | None
-    end_date: datetime | None
-
-    def get_start_date(self, tz=None):
-        """Get the start date if it's not None or datetime.min value.
-
-        Returns
-        -------
-        start_date: datetime
-            The value of start_date or datetime.min if the start_date is None.
-        """
-        if tz is None:
-            return self.start_date if self.start_date is not None else datetime.min
-        if self.start_date is None or self.start_date == datetime.min:
-            return datetime.min.astimezone(tz)
-        return self.start_date.astimezone(tz)
-
-    def get_end_date(self, tz=None):
-        """Get the end date if it isn't None or datetime.max value.
-
-        Returns
-        end_date: datetime
-            The value of end_date or datetime.max if the end_date is None.
-        """
-        if tz is None:
-            return self.end_date if self.end_date is not None else datetime.max
-        if self.end_date is None or self.end_date == datetime.max:
-            return datetime.max.astimezone(tz)
-        return self.end_date.astimezone(tz)
-
-    def contains(self, time_point: datetime) -> bool:
-        """Check if the current interval contains the given point in time.
-
-        Returns
-        -------
-        contains: bool
-            True if the time point is greater or equal to start date, and less than end date; False otherwise.
-        """
-        date_time = time_point.astimezone(timezone.utc)
-        return self.get_start_date(
-            timezone.utc) <= date_time < self.get_end_date(timezone.utc)
-
-
-INTERVALS = [
-    TimeInterval("Semestrul II 2024-2025",
-                 datetime(2025, 3, 6).astimezone(timezone.utc),
-                 datetime(2025, 6, 30).astimezone(timezone.utc))
-]
-
-
-@dataclass
 class UserStatistics:
     """Contains user statistics."""
 
@@ -132,23 +77,23 @@ class UserStatisticsCalculator:
             annotations)
         current_interval = UserStatisticsCalculator.calculate_stats_for_curent_interval(
             annotations)
-        return UserStatistics(grand_total, per_status, [current_interval])
+        return UserStatistics(
+            grand_total, per_status,
+            [current_interval] if current_interval is not None else [])
 
     @staticmethod
-    def get_current_interval() -> TimeInterval | None:
+    def get_current_interval() -> EvaluationInterval | None:
         """Get the current interval.
 
         Returns
         -------
-        interval: TimeInterval
+        interval: EvaluationInterval
             The current interval or None.
         """
-        now = datetime.now(tz=None)
-        for interval in INTERVALS:
-            if interval.contains(now):
-                return interval
-
-        return None
+        now = timezone.now()
+        return EvaluationInterval.objects\
+                                 .filter(start_date__lte=now, end_date__gt=now)\
+                                 .first()
 
     @staticmethod
     def calculate_stats_for_curent_interval(
@@ -177,7 +122,7 @@ class UserStatisticsCalculator:
             dt = annotation.row_creation_timestamp
             if annotation.row_update_timestamp is not None:
                 dt = annotation.row_update_timestamp
-            return interval.contains(dt)
+            return interval.contains(dt.date())
 
         annotations = [a for a in annotations if is_in_interval(interval, a)]
         return (interval.name,

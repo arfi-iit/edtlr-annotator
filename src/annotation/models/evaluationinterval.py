@@ -1,6 +1,6 @@
 """Defines the EvaluationInterval model."""
 from django.db import models
-from django.utils import timezone
+from datetime import date
 from django.utils.translation import gettext_lazy as _
 
 
@@ -24,3 +24,22 @@ class EvaluationInterval(models.Model):
     end_date = models.DateField(verbose_name=_('end date'),
                                 blank=False,
                                 null=False)
+
+    def __str__(self):
+        """Override the string representation of the model."""
+        return self.name
+
+    def contains(self, dt: date):
+        """Check if the current interval contains the given date.
+
+        Parameters
+        ----------
+        dt: datetime.date, required
+            The date to check.
+
+        Returns
+        -------
+        contains: bool
+            True if the time point is greater or equal to start date, and less than end date; False otherwise.
+        """
+        return self.start_date <= dt and dt < self.end_date
