@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-25 14:26+0300\n"
+"POT-Creation-Date: 2025-05-30 23:46+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,6 +90,27 @@ msgstr "pagină intrare"
 msgid "page entries"
 msgstr "pagini intrări"
 
+#: src/annotation/models/evaluationinterval.py:13
+msgid "evaluation interval"
+msgstr "interval de evaluare"
+
+#: src/annotation/models/evaluationinterval.py:14
+msgid "evaluation intervals"
+msgstr "intervale de evaluare"
+
+#: src/annotation/models/evaluationinterval.py:20
+#: src/annotation/models/volume.py:19
+msgid "name"
+msgstr "nume"
+
+#: src/annotation/models/evaluationinterval.py:21
+msgid "start date"
+msgstr "dată de început"
+
+#: src/annotation/models/evaluationinterval.py:24
+msgid "end date"
+msgstr "dată de sfârșit"
+
 #: src/annotation/models/page.py:14 src/annotation/models/volume.py:12
 msgid "volume"
 msgstr "volum"
@@ -121,10 +142,6 @@ msgstr "aprobată"
 #: src/annotation/models/volume.py:13
 msgid "volumes"
 msgstr "volume"
-
-#: src/annotation/models/volume.py:19
-msgid "name"
-msgstr "nume"
 
 #: src/annotation/templates/annotation/annotate.html:5
 #: src/annotation/templates/annotation/index.html:5
@@ -186,10 +203,6 @@ msgstr "Număr simboluri"
 #: src/annotation/templates/annotation/controls/user-statistics.html:21
 msgid "Number of annotations per status"
 msgstr "Număr adnotări per status"
-
-#: src/annotation/templates/annotation/controls/user-statistics.html:32
-msgid "Statistics for the year"
-msgstr "Statistici pentru anul"
 
 #: src/annotation/templates/annotation/index.html:11
 msgid "My annotations"

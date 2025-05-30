@@ -27,10 +27,10 @@
       </tr>
       {% endfor %}
 
-      {% for year, data in statistics.per_year %}
+      {% for name, data in statistics.current_interval %}
       <tr class="user-stats-header-row">
-        <td>{% translate "Statistics for the year" %}</td>
-        <td>{{ year }}</td>
+        <td>{{ name }}</td>
+	<td>&nbsp;</td>
       </tr>
       <tr>
         <td>{% translate "Number of annotations" %}</td>

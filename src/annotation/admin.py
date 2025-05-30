@@ -2,6 +2,7 @@
 from annotation.models.annotation import Annotation
 from annotation.models.entry import Entry
 from annotation.models.entrypage import EntryPage
+from annotation.models.evaluationinterval import EvaluationInterval
 from annotation.models.page import Page
 from annotation.models.reference import Reference
 from annotation.models.volume import Volume
@@ -62,9 +63,17 @@ class ReferenceAdmin(admin.ModelAdmin):
     search_fields = ["text__icontains"]
 
 
+class EvaluationIntervalAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for EvaluationModel."""
+
+    ordering = ["start_date", "end_date"]
+    list_display = ["name", "start_date", "end_date"]
+
+
 admin.site.register(Annotation, AnnotationAdmin)
 admin.site.register(Entry, EntryAdmin)
 admin.site.register(EntryPage, EntryPageAdmin)
+admin.site.register(EvaluationInterval, EvaluationIntervalAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Reference, ReferenceAdmin)
 admin.site.register(Volume, VolumeAdmin)
