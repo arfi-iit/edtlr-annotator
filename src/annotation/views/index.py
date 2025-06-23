@@ -72,7 +72,8 @@ class UserStatisticsCalculator:
         stats: UserStatistics
             The statistics.
         """
-        grand_total = UserStatisticsCalculator.calculate_stats(annotations)
+        grand_total = UserStatisticsCalculator.calculate_grand_total_stats(
+            annotations)
         per_status = UserStatisticsCalculator.calculate_stats_per_status(
             annotations)
         current_interval = UserStatisticsCalculator.calculate_stats_for_curent_interval(
@@ -80,6 +81,29 @@ class UserStatisticsCalculator:
         return UserStatistics(
             grand_total, per_status,
             [current_interval] if current_interval is not None else [])
+
+    @staticmethod
+    def calculate_grand_total_stats(
+            annotations: list[Annotation]) -> StatisticItem:
+        """Calculate the grand total statistics.
+
+        Parameters
+        ----------
+        annotations: list of Annotation, required
+            The annotations of the user.
+
+        Returns
+        -------
+        stats: StatisticItem
+            The statistics.
+        """
+        grand_total_annotations = [
+            a for a in annotations
+            if a.status != Annotation.AnnotationStatus.IN_PROGRESS
+        ]
+        grand_total = UserStatisticsCalculator.calculate_stats(
+            grand_total_annotations)
+        return grand_total
 
     @staticmethod
     def get_current_interval() -> EvaluationInterval | None:
