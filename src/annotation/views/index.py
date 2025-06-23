@@ -76,7 +76,7 @@ class UserStatisticsCalculator:
             annotations)
         per_status = UserStatisticsCalculator.calculate_stats_per_status(
             annotations)
-        current_interval = UserStatisticsCalculator.calculate_stats_for_curent_interval(
+        current_interval = UserStatisticsCalculator.calculate_stats_for_current_interval(
             annotations)
         return UserStatistics(
             grand_total, per_status,
@@ -120,7 +120,7 @@ class UserStatisticsCalculator:
                                  .first()
 
     @staticmethod
-    def calculate_stats_for_curent_interval(
+    def calculate_stats_for_current_interval(
             annotations: list[Annotation]) -> tuple[int, StatisticItem] | None:
         """Calculate the statistics per year.
 
