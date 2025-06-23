@@ -120,8 +120,6 @@ class UserStatisticsCalculator:
 
         def is_in_interval(interval, annotation):
             dt = annotation.row_creation_timestamp
-            if annotation.row_update_timestamp is not None:
-                dt = annotation.row_update_timestamp
             return interval.contains(dt.date())
 
         annotations = [a for a in annotations if is_in_interval(interval, a)]
