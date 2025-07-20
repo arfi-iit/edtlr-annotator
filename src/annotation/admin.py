@@ -43,12 +43,33 @@ class EntryPageAdmin(admin.ModelAdmin):
     list_filter = ["page"]
 
 
+class EvaluationIntervalFilter(admin.SimpleListFilter):
+    """Filters the annotations by evaluation interval."""
+
+    title = _("evaluation interval")
+    parameter_name = "interval"
+
+    def lookups(self, request, model_admin):
+        """Get the lookup values for the filter."""
+        values = EvaluationInterval.objects.values_list('id', 'name')
+        return list(values)
+
+    def queryset(self, request, queryset):
+        """Get the queryset for the filter."""
+        if self.value() is None:
+            return queryset
+        interval = EvaluationInterval.objects.get(id=self.value())
+        return queryset.filter(row_creation_timestamp__range=[
+            interval.start_date, interval.end_date
+        ])
+
+
 class AnnotationAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Annotation."""
 
     exclude = ["title_word", "title_word_normalized", "text_length"]
     list_display = ["entry", "title_word", "text_length", "user", "status"]
-    list_filter = ["status", "user"]
+    list_filter = ["status", EvaluationIntervalFilter, "user"]
     search_fields = [
         "title_word__icontains", "title_word_normalized__icontains"
     ]
