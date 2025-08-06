@@ -155,8 +155,8 @@ STATIC_ROOT = env('STATIC_ROOT')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/annotate'
-LOGOUT_REDIRECT_URL = '/accounts/login'
+LOGIN_REDIRECT_URL = 'annotation:index'
+LOGOUT_REDIRECT_URL = 'annotation:index'
 
 # Application constants
 MAX_CONCURRENT_ANNOTATORS = env('MAX_CONCURRENT_ANNOTATORS')
