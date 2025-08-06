@@ -1,5 +1,6 @@
 """Defines utility methods for views."""
-from ..models.page import Page
+from annotation.models.page import Page
+from annotation.apps import AnnotationConfig
 
 
 def get_image_path(page: Page | None) -> str:
@@ -17,4 +18,4 @@ def get_image_path(page: Page | None) -> str:
     """
     if page is None:
         return None
-    return f'/static/annotation/{page.image_path}'
+    return f'/{AnnotationConfig.name}/{page.image_path}'
