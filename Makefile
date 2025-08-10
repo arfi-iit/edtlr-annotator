@@ -108,12 +108,13 @@ import: $(SRC_DIR)/manage.py
 #     SERVER_NAME=<server name>
 # The schema of the database URI is defined in
 # https://pypi.org/project/python-environ/
-DEBUG = False
-MAX_CONCURRENT_ANNOTATORS = 2
-NUM_WORKERS=4
-GUNICORN_PATH = $(realpath $(VENV_BIN)/gunicorn)
-PYTHON_PATH=$(realpath $(SRC_DIR))
-APP_ROOT=$(realpath $(SRC_DIR)/..)
+DEBUG				= False
+MAX_CONCURRENT_ANNOTATORS	= 2
+LOGIN_URL			= '/annotate/accounts/login'
+NUM_WORKERS			= 4
+GUNICORN_PATH			= $(realpath $(VENV_BIN)/gunicorn)
+PYTHON_PATH			= $(realpath $(SRC_DIR))
+APP_ROOT			= $(realpath $(SRC_DIR)/..)
 template-expansion: $(SRC_DIR)/manage.py
 	$(VENV_PIP) install -I gunicorn;
 
@@ -121,6 +122,7 @@ template-expansion: $(SRC_DIR)/manage.py
 	sed -i "s/__DEBUG__/$(DEBUG)/g" templates/.env;
 	sed -i "s/__SECRET_KEY__/$(SECRET_KEY)/g" templates/.env;
 	sed -i "s/__STATIC_ROOT__/$(STATIC_ROOT)/g" templates/.env;
+	sed -i "s/__LOGIN_URL__/$(LOGIN_URL)/g" templates/.env;
 	sed -i "s/__MAX_CONCURRENT_ANNOTATORS__/$(MAX_CONCURRENT_ANNOTATORS)/g" templates/.env;
 	sed -i "s/__DATABASE_HOST__/$(DATABASE_HOST)/g" templates/.env;
 	sed -i "s/__DATABASE_NAME__/$(DATABASE_NAME)/g" templates/.env;

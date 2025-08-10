@@ -156,6 +156,7 @@ STATIC_ROOT = env('STATIC_ROOT')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = env('LOGIN_URL')
 LOGIN_REDIRECT_URL = 'annotation:index'
 LOGOUT_REDIRECT_URL = 'annotation:index'
 
