@@ -91,7 +91,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
+# yapf: disable
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -106,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+# yapf: enable
 # Logging
 LOGGING = {
     'version': 1,
@@ -148,7 +148,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'annotate/static/'
+STATIC_URL = env('STATIC_URL', default='static').rstrip('/') + '/'
 STATIC_ROOT = env('STATIC_ROOT')
 
 # Default primary key field type
@@ -156,6 +156,7 @@ STATIC_ROOT = env('STATIC_ROOT')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = env('LOGIN_URL')
 LOGIN_REDIRECT_URL = 'annotation:index'
 LOGOUT_REDIRECT_URL = 'annotation:index'
 

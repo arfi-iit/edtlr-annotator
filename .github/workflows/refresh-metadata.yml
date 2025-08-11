@@ -28,7 +28,7 @@ jobs:
         ssh-keyscan ${{secrets.HOST}} >> ~/.ssh/known_hosts
 
     - name: Update
-      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd app && make fresh-metadata"
+      run: ssh -p ${{secrets.SSH_PORT}} ${{secrets.USERNAME}}@${{secrets.HOST}} "cd annotate && make fresh-metadata"
 
     - name: Cleanup
       run: rm -rf ~/.ssh

@@ -1,22 +1,29 @@
 # Variables
-VENV           = .venv
-VENV_BIN       = $(VENV)/bin
-VENV_PYTHON    = $(VENV_BIN)/python
-VENV_PIP       = $(VENV_BIN)/pip
+VENV				= .venv
+VENV_BIN			= $(VENV)/bin
+VENV_PYTHON			= $(VENV_BIN)/python
+VENV_PIP			= $(VENV_BIN)/pip
+GUNICORN_PATH			= $(realpath $(VENV_BIN)/gunicorn)
+PYTHON_PATH			= $(realpath $(SRC_DIR))
 
-SRC_DIR        = src
-APP_NAME       = annotation
-APP_DIR        = $(SRC_DIR)/$(APP_NAME)
+APP_NAME			= annotation
+SRC_DIR				= src
+APP_DIR				= $(SRC_DIR)/$(APP_NAME)
+LOG_DIR				= logs
+STATIC_DIR			= $(APP_DIR)/static/annotation
+DATA_DIR			= $(STATIC_DIR)/data
+IMPORT_DIR			= $(DATA_DIR)
 
-LOG_DIR        = logs
+STATIC_ROOT			= static
+STATIC_URL			= static
 
-STATIC_DIR     = $(APP_DIR)/static/annotation
-DATA_DIR       = $(STATIC_DIR)/data
-IMPORT_DIR     = $(DATA_DIR)
+DEBUG				= False
+MAX_CONCURRENT_ANNOTATORS	= 2
+LOGIN_URL			= /annotate/accounts/login
+NUM_WORKERS			= 4
 
-STATIC_ROOT    = static
+PORT				= 8000
 
-PORT           = 8000
 # Recipes
 
 # Initialize the development environment
@@ -86,6 +93,37 @@ import: $(SRC_DIR)/manage.py
 		--page-offset $(PAGE_OFFSET) \
 		--volume "$(VOLUME)";
 
+dot-env-file: templates/.env.template
+	cp templates/.env.template templates/.env;
+	sed -i "s/__DEBUG__/$(DEBUG)/g" templates/.env;
+	sed -i "s/__SECRET_KEY__/$(SECRET_KEY)/g" templates/.env;
+	sed -i "s/__STATIC_ROOT__/$(STATIC_ROOT)/g" templates/.env;
+	sed -i "s/__STATIC_URL__/$(STATIC_URL)/g" templates/.env;
+	sed -i "s~__LOGIN_URL__~$(LOGIN_URL)~g" templates/.env;
+	sed -i "s/__MAX_CONCURRENT_ANNOTATORS__/$(MAX_CONCURRENT_ANNOTATORS)/g" templates/.env;
+	sed -i "s/__DATABASE_HOST__/$(DATABASE_HOST)/g" templates/.env;
+	sed -i "s/__DATABASE_NAME__/$(DATABASE_NAME)/g" templates/.env;
+	sed -i "s/__DATABASE_USER__/$(DATABASE_USER)/g" templates/.env;
+	sed -i "s/__DATABASE_PASSWORD__/$(DATABASE_PASSWORD)/g" templates/.env;
+	sed -i "s/__DATABASE_PORT__/$(DATABASE_PORT)/g" templates/.env;
+
+gunicorn-config: templates/gunicorn.conf.py.template
+	cp templates/gunicorn.conf.py.template templates/gunicorn.conf.py;
+	sed -i "s~__GUNICORN_PATH__~$(GUNICORN_PATH)~g" templates/gunicorn.conf.py;
+	sed -i "s~__SRC_DIR_PATH__~$(PYTHON_PATH)~g" templates/gunicorn.conf.py;
+	sed -i "s/__NUM_WORKERS__/$(NUM_WORKERS)/g" templates/gunicorn.conf.py;
+
+service-config: templates/edtlr-annotator.service.template
+	cp templates/edtlr-annotator.service.template templates/edtlr-annotator.service;
+	sed -i "s~__GUNICORN_PATH__~$(GUNICORN_PATH)~g" templates/edtlr-annotator.service;
+	sed -i "s~__SRC_DIR_PATH__~$(PYTHON_PATH)~g" templates/edtlr-annotator.service;
+	sed -i "s/__USER__/$(USER)/g" templates/edtlr-annotator.service;
+	sed -i "s/__GROUP__/$(GROUP)/g" templates/edtlr-annotator.service;
+
+nginx-config: templates/edtlr-annotator.conf.template
+	cp templates/edtlr-annotator.conf.template templates/edtlr-annotator.conf;
+	sed -i "s~__STATIC_ROOT__~$(realpath $(STATIC_ROOT))~g" templates/edtlr-annotator.conf;
+	sed -i "s/__STATIC_URL__/$(STATIC_URL)/g" templates/edtlr-annotator.conf;
 
 # Expand the template files from the `templates` directory:
 # - `.env.template` into the `.env` file containing application settings,
@@ -104,47 +142,12 @@ import: $(SRC_DIR)/manage.py
 #     DATABASE_PASSWORD='<password>' \
 #     DATABASE_PORT=<port> \
 #     USER=<user> \
-#     GROUP=<group> \
-#     SERVER_NAME=<server name>
+#     GROUP=<group>
 # The schema of the database URI is defined in
 # https://pypi.org/project/python-environ/
-DEBUG = False
-MAX_CONCURRENT_ANNOTATORS = 2
-NUM_WORKERS=4
-GUNICORN_PATH = $(realpath $(VENV_BIN)/gunicorn)
-PYTHON_PATH=$(realpath $(SRC_DIR))
-APP_ROOT=$(realpath $(SRC_DIR)/..)
-template-expansion: $(SRC_DIR)/manage.py
+template-expansion: dot-env-file gunicorn-config service-config nginx-config
 	$(VENV_PIP) install -I gunicorn;
-
-	cp templates/.env.template templates/.env;
-	sed -i "s/__DEBUG__/$(DEBUG)/g" templates/.env;
-	sed -i "s/__SECRET_KEY__/$(SECRET_KEY)/g" templates/.env;
-	sed -i "s/__STATIC_ROOT__/$(STATIC_ROOT)/g" templates/.env;
-	sed -i "s/__MAX_CONCURRENT_ANNOTATORS__/$(MAX_CONCURRENT_ANNOTATORS)/g" templates/.env;
-	sed -i "s/__DATABASE_HOST__/$(DATABASE_HOST)/g" templates/.env;
-	sed -i "s/__DATABASE_NAME__/$(DATABASE_NAME)/g" templates/.env;
-	sed -i "s/__DATABASE_USER__/$(DATABASE_USER)/g" templates/.env;
-	sed -i "s/__DATABASE_PASSWORD__/$(DATABASE_PASSWORD)/g" templates/.env;
-	sed -i "s/__DATABASE_PORT__/$(DATABASE_PORT)/g" templates/.env;
-
-	cp templates/gunicorn.conf.py.template templates/gunicorn.conf.py;
-	sed -i "s~__GUNICORN_PATH__~$(GUNICORN_PATH)~g" templates/gunicorn.conf.py;
-	sed -i "s~__SRC_DIR_PATH__~$(PYTHON_PATH)~g" templates/gunicorn.conf.py;
-	sed -i "s/__NUM_WORKERS__/$(NUM_WORKERS)/g" templates/gunicorn.conf.py;
-
-	cp templates/edtlr-annotator.service.template templates/edtlr-annotator.service;
-	sed -i "s~__GUNICORN_PATH__~$(GUNICORN_PATH)~g" templates/edtlr-annotator.service;
-	sed -i "s~__SRC_DIR_PATH__~$(PYTHON_PATH)~g" templates/edtlr-annotator.service;
-	sed -i "s/__USER__/$(USER)/g" templates/edtlr-annotator.service;
-	sed -i "s/__GROUP__/$(GROUP)/g" templates/edtlr-annotator.service;
-
 	cp templates/edtlr-annotator.socket.template templates/edtlr-annotator.socket;
-
-	cp templates/nginx-config.template templates/edtlr-annotator;
-	sed -i "s/__SERVER_NAME__/$(SERVER_NAME)/g" templates/edtlr-annotator;
-	sed -i "s/__STATIC_ROOT__/$(STATIC_ROOT)/g" templates/edtlr-annotator;
-	sed -i "s~__APP_ROOT__~$(APP_ROOT)~g" templates/edtlr-annotator;
 
 .PHONY: update
 update:

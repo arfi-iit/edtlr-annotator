@@ -1,0 +1,14 @@
+location /annotate/__STATIC_URL__/ {
+    alias __STATIC_ROOT__;
+}
+
+location /annotate/ {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Annotate-Base-Url /annotate;
+    # we don't want nginx trying to do something clever with
+    # redirects, we set the Host: header above already.
+    proxy_redirect off;
+    proxy_pass http://unix:/run/edtlr-annotator.sock;
+}
