@@ -2,7 +2,7 @@
 VENV				= .venv
 VENV_BIN			= $(VENV)/bin
 VENV_PYTHON			= $(VENV_BIN)/python
-VENV_PIP			= $(VENV_BIN)/pi
+VENV_PIP			= $(VENV_BIN)/pip
 GUNICORN_PATH			= $(realpath $(VENV_BIN)/gunicorn)
 PYTHON_PATH			= $(realpath $(SRC_DIR))
 
