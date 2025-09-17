@@ -75,7 +75,7 @@ class Command(BaseCommand):
         file_path: Path, required
             The path of the file where to save the entry.
         """
-        indent(entry)
+        indent(entry.getroot())
         entry.write(file_path, xml_declaration=True, encoding='UTF-8')
 
     def __get_entry_file_path(self, output_dir: str, title_word: str,
