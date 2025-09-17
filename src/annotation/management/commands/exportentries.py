@@ -119,7 +119,7 @@ class Command(BaseCommand):
             The element tree that represents the entry.
         """
         entry_elem = Element("entry", id=str(entry_id))
-        entry_elem.set('xmlns:edtlr', 'https://edtrl.iit.academiaromana-is.ro')
+        entry_elem.set('xmlns:edtlr', 'https://edtlr.iit.academiaromana-is.ro')
 
         tw_elem = Element("titleWord",
                           md5hash=self.__compute_md5_hash(title_word))
