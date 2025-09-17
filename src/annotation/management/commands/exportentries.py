@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Export complete entries."""
-        batch_size = options['batch_size'] if 'batch_size' in options else 1000
+        batch_size = options['batch_size']
         output_dir = options['output_dir']
         if not os.path.exists(output_dir):
             message = self.style.NOTICE(f'Creating directory {output_dir}.')
