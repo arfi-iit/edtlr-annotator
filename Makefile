@@ -173,3 +173,7 @@ REFERENCES_FILE=references.txt
 references: $(REFERENCES_FILE)
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py importreferences \
 		--input-file $(REFERENCES_FILE);
+
+# Export complete entries
+entries-export: $(SRC_DIR)/manage.py
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py exportentries;
