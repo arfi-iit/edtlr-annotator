@@ -78,7 +78,7 @@ class Command(BaseCommand):
         try:
             indent(entry.getroot())
             entry.write(file_path, xml_declaration=True, encoding='UTF-8')
-        except Exception as ex:
+        except (FileNotFoundError, AttributeError) as ex:
             style = self.style.ERROR
             self.stderr.write(f'Error saving entry to file {file_path}. {ex}',
                               style)
