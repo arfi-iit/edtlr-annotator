@@ -8,19 +8,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 23:46+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2025-11-21 21:33+0200\n"
+"PO-Revision-Date: 2025-11-21 21:40+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
-#: src/annotation/admin.py:73 src/annotation/admin.py:74
-#: src/annotation/admin.py:75
+#: src/annotation/admin.py:49 src/annotation/models/evaluationinterval.py:13
+msgid "evaluation interval"
+msgstr "interval de evaluare"
+
+#: src/annotation/admin.py:103 src/annotation/admin.py:104
+#: src/annotation/admin.py:105
 msgid "Admin eDTLR data"
 msgstr "Administrare date eDTLR"
 
@@ -90,10 +93,6 @@ msgstr "pagină intrare"
 msgid "page entries"
 msgstr "pagini intrări"
 
-#: src/annotation/models/evaluationinterval.py:13
-msgid "evaluation interval"
-msgstr "interval de evaluare"
-
 #: src/annotation/models/evaluationinterval.py:14
 msgid "evaluation intervals"
 msgstr "intervale de evaluare"
@@ -156,31 +155,43 @@ msgstr "Salvează adnotare"
 msgid "Mark complete"
 msgstr "Marchează finalizată"
 
-#: src/annotation/templates/annotation/annotation-base.html:23
+#: src/annotation/templates/annotation/base.html:9
+msgid "eDTLR annotator"
+msgstr "Adnotator eDTLR"
+
+#: src/annotation/templates/annotation/controls/navbar.html:22
 msgid "Home"
 msgstr "Pagina principală"
 
-#: src/annotation/templates/annotation/annotation-base.html:30
+#: src/annotation/templates/annotation/controls/navbar.html:29
 msgid "Admin panel"
 msgstr "Panou administrare"
 
-#: src/annotation/templates/annotation/annotation-base.html:37
-msgid "Annotation manual"
-msgstr "Reguli de adnotare"
+#: src/annotation/templates/annotation/controls/navbar.html:38
+msgid "Resources"
+msgstr "Resurse"
 
-#: src/annotation/templates/annotation/annotation-base.html:48
+#: src/annotation/templates/annotation/controls/navbar.html:46
+msgid "Annotation guide"
+msgstr "Ghid de adnotare"
+
+#: src/annotation/templates/annotation/controls/navbar.html:51
+msgid "DLR Bibliography"
+msgstr "Siglar DLR"
+
+#: src/annotation/templates/annotation/controls/navbar.html:56
+msgid "DA Bibliography"
+msgstr "Siglar DA"
+
+#: src/annotation/templates/annotation/controls/navbar.html:71
 #, fuzzy
 #| msgid "Password"
 msgid "Change password"
 msgstr "Parolă"
 
-#: src/annotation/templates/annotation/annotation-base.html:56
+#: src/annotation/templates/annotation/controls/navbar.html:79
 msgid "Logout"
 msgstr "Deconectare"
-
-#: src/annotation/templates/annotation/base.html:9
-msgid "eDTLR annotator"
-msgstr "Adnotator eDTLR"
 
 #: src/annotation/templates/annotation/controls/user-statistics.html:4
 msgid "Statistics"
