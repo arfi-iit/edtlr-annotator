@@ -6,6 +6,8 @@ from annotation.models.page import Page
 from annotation.models.reference import Reference
 from annotation.utils.automaticannotation import ReferenceAnnotator
 from annotation.utils.automaticannotation import apply_preprocessing
+from annotation.views.viewsettings import APPLICATION_MODE
+from annotation.views.viewsettings import ApplicationModes
 from annotation.views.viewsettings import MAX_CONCURRENT_ANNOTATORS
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -106,10 +108,43 @@ class NewAnnotationView(LoginRequiredMixin, View):
         annotation: Annotation
             The new annotation.
         """
+        record = AnnotationFactory.create(user, entry, self.references)
+        record.save()
+        return record
+
+
+class AnnotationFactory:
+    """Creates annotation instances."""
+
+    @staticmethod
+    def create(user: User, entry: Entry, references: list[str]) -> Annotation:
+        """Create a new annotation for the specified entry and user.
+
+        Parameters
+        ----------
+        user: User, required
+            The annotation user.
+        entry: Entry, required
+            The entry of the annotation.
+        references: list of str, required
+            The list of references to identify from the entry text.
+
+        Returns
+        -------
+        annotation: Annotation
+            The new annotation.
+        """
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(entry=entry, user=user, status=status)
-        annotator = ReferenceAnnotator(self.references)
-        text = annotator.annotate(apply_preprocessing(entry.text))
+
+        text = ''
+        if APPLICATION_MODE == ApplicationModes.AnnotateEntries:
+            annotator = ReferenceAnnotator(references)
+            text = annotator.annotate(apply_preprocessing(entry.text))
         record.set_text(text)
-        record.save()
+
+        record.title_word = entry.title_word
+        record.title_word_normalized = entry.title_word_normalized
+        record.version = 1
+
         return record
