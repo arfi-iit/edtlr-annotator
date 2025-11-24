@@ -137,10 +137,12 @@ class AnnotationFactory:
         status = Annotation.AnnotationStatus.IN_PROGRESS
         record = Annotation(entry=entry, user=user, status=status)
 
-        text = ''
-        if APPLICATION_MODE == ApplicationModes.AnnotateEntries:
-            annotator = ReferenceAnnotator(references)
-            text = annotator.annotate(apply_preprocessing(entry.text))
+        match APPLICATION_MODE:
+            case ApplicationModes.AnnotateEntries:
+                annotator = ReferenceAnnotator(references)
+                text = annotator.annotate(apply_preprocessing(entry.text))
+            case _:
+                text = f'**{entry.title_word}**'
         record.set_text(text)
 
         record.title_word = entry.title_word
