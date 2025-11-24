@@ -52,10 +52,7 @@ class AnnotationEditor {
         strikethrough: false,
         underscoresBreakWords: true,
       },
-      placeholder: "Type here...",
-      previewRender: function (plainText) {
-        return customMarkdownParser(plainText); // Returns HTML from a custom parser
-      },
+      placeholder: "Text...",
       previewRender: function (plainText, preview) {
         // Async method
         setTimeout(function () {
