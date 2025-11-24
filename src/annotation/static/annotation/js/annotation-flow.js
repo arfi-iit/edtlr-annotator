@@ -30,11 +30,7 @@ class AnnotationFlow {
 
   onTextChange(value) {
     this.hiddenFields.map((hf) => (hf.value = value));
-    if (value) {
-      this.setButtonsEnabled(true);
-    } else {
-      this.setButtonsEnabled(false);
-    }
+    this.setButtonsEnabled(Boolean(value));
   }
 
   setControlsVisible(visible) {
