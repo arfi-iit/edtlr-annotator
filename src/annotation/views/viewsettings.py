@@ -9,7 +9,7 @@ MAX_CONCURRENT_ANNOTATORS = int(
 class ApplicationModes(Enum):
     """Defines the modes in which the application runs."""
 
-    AnnotateEntries = 0,
+    AnnotateEntries = 0
     WriteEntries = 1
 
 
