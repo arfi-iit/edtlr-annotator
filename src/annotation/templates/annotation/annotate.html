@@ -10,6 +10,12 @@
 
 {% block content %}
 <main>
+{% if messages %}
+   {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+   {% endfor %}
+{% endif %}
+
 <div id="editor-container" class="row">
   <div class="col-md-6">
     {% include "./controls/page-carousel.html"  %}
