@@ -11,12 +11,20 @@ AUTOMATIC_REFERENCE_ANNOTATION = getattr(settings, 'AUTOMATIC_REFERENCE_ANNOTATI
 class ApplicationModes(Enum):
     """Defines the modes in which the application runs."""
 
-    AnnotateEntries = 0
-    WriteEntries = 1
+    CorrectAnnotatedEntries = 0
+    """Correct the text of the entries that have been (partially) annotated."""
+
+    CreateEntries = 1
+    """Type dictionary entries by hand."""
+
+    AnnotateOcrText = 2
+    """Annotate the raw text resulted from OCR."""
 
 
 match getattr(settings, 'APPLICATION_MODE', 'annotate'):
+    case 'correct':
+        APPLICATION_MODE = ApplicationModes.CorrectAnnotatedEntries
     case 'annotate':
-        APPLICATION_MODE = ApplicationModes.AnnotateEntries
+        APPLICATION_MODE = ApplicationModes.AnnotateOcrText
     case _:
-        APPLICATION_MODE = ApplicationModes.WriteEntries
+        APPLICATION_MODE = ApplicationModes.CreateEntries
