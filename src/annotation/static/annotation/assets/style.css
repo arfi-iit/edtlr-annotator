@@ -82,10 +82,8 @@
     z-index: 1024;
 }
 
-#footer{
-    text-align: center;
+footer p{
     font-size: smaller;
-    color: dimgray;
 }
 
 .zoomable-container {
@@ -149,7 +147,7 @@
 }
 
 .user-annotations{
-    height: 50em;
+    max-height: 31em;
     overflow-y: scroll;
 }
 
