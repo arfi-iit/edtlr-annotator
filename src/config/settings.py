@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import environ
 from pathlib import Path
 
-env = environ.Env(DEBUG=(bool, False), APPLICATION_MODE=(str, 'annotate'))
+env = environ.Env(DEBUG=(bool, False),
+                  APPLICATION_MODE=(str, 'annotate'),
+                  AUTOMATIC_REFERENCE_ANNOTATION=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -162,3 +164,4 @@ LOGOUT_REDIRECT_URL = 'annotation:index'
 # Application constants
 MAX_CONCURRENT_ANNOTATORS = env('MAX_CONCURRENT_ANNOTATORS')
 APPLICATION_MODE = env('APPLICATION_MODE')
+AUTOMATIC_REFERENCE_ANNOTATION = env('AUTOMATIC_REFERENCE_ANNOTATION')
