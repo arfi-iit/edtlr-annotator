@@ -33,6 +33,27 @@ def correct_diacritics(text: str) -> str:
     return text.translate(CEDILLA_DIACRITICS_MAP)
 
 
+def remove_annotation_marks(text: str) -> str:
+    """Remove the annotation marks from the provided text.
+
+    Parameters
+    ----------
+    text: str, required
+        The text from which to remove the annotation marks.
+
+    Returns
+    -------
+    stripped_text: str
+        The text without the annotation marks.
+    """
+    marks = [
+        Marks.BOLD, Marks.EMPHASIS, Marks.REFERENCE, Marks.SPACED,
+        Marks.SUBSCRIPT, Marks.SUPERSCRIPT
+    ]
+    pattern = re.compile('|'.join(map(re.escape, marks)))
+    return pattern.sub('', text)
+
+
 def convert_xml_to_edtlr_markdown(xml_string: str) -> str:
     """Conver the provided XML string to eDTLR markdown.
 
