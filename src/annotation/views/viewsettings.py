@@ -18,7 +18,7 @@ class ApplicationModes(Enum):
     """Type dictionary entries by hand."""
 
     AnnotateOcrText = 2
-    """Annotate the raw text resulted from OCR."""
+    """Annotate the raw text extracted using OCR."""
 
 
 match getattr(settings, 'APPLICATION_MODE', 'annotate'):
