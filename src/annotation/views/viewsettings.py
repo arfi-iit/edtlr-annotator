@@ -5,7 +5,7 @@ from enum import Enum
 MAX_CONCURRENT_ANNOTATORS = int(
     getattr(settings, "MAX_CONCURRENT_ANNOTATORS", 2))
 
-AUTOMATIC_REFERENCE_ANNOTATION = bool(getattr(settings, 'AUTOMATIC_REFERENCE_ANNOTATION', False))
+AUTOMATIC_REFERENCE_ANNOTATION = getattr(settings, 'AUTOMATIC_REFERENCE_ANNOTATION', False)
 
 
 class ApplicationModes(Enum):
