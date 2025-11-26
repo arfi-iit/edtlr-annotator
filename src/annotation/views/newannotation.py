@@ -9,6 +9,7 @@ from annotation.utils.automaticannotation import apply_preprocessing
 from annotation.views.viewsettings import APPLICATION_MODE
 from annotation.views.viewsettings import ApplicationModes
 from annotation.views.viewsettings import MAX_CONCURRENT_ANNOTATORS
+from annotation.views.viewsettings import AUTOMATIC_REFERENCE_ANNOTATION
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -139,8 +140,10 @@ class AnnotationFactory:
 
         match APPLICATION_MODE:
             case ApplicationModes.AnnotateEntries:
-                annotator = ReferenceAnnotator(references)
-                text = annotator.annotate(apply_preprocessing(entry.text))
+                text = apply_preprocessing(entry.text)
+                if AUTOMATIC_REFERENCE_ANNOTATION:
+                    annotator = ReferenceAnnotator(references)
+                    text = annotator.annotate(text)
             case _:
                 text = f'**{entry.title_word}**'
         record.set_text(text)
