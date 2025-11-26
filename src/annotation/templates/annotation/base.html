@@ -29,9 +29,11 @@
     <div id="content" class="container-fluid">
       {% block content %}{% endblock %}
     </div>
-    <div id="footer">
-      <span>&copy; {% now 'Y' %}</span>
-    </div>
+    <footer class="py-3 my-4 fixed-bottom">
+      <p class="text-center text-muted">
+        <span>&copy; {% now 'Y' %}</span>
+      </p>
+    </footer>
     {% block scripts %}
     {% endblock %}
 </body>
