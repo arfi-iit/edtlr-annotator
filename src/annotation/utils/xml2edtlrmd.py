@@ -14,6 +14,7 @@ class Marks:
     SUPERSCRIPT = '^'
     SUBSCRIPT = '_'
     REFERENCE = '@'
+    SPACED = '$'
 
 
 def correct_diacritics(text: str) -> str:
