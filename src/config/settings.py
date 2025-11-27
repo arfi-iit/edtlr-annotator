@@ -14,7 +14,8 @@ from pathlib import Path
 
 env = environ.Env(DEBUG=(bool, False),
                   APPLICATION_MODE=(str, 'annotate'),
-                  AUTOMATIC_REFERENCE_ANNOTATION=(bool, False))
+                  AUTOMATIC_REFERENCE_ANNOTATION=(bool, False),
+                  PRESERVE_ENTRY_TEXT=(bool, True))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -161,7 +162,8 @@ LOGIN_URL = env('LOGIN_URL')
 LOGIN_REDIRECT_URL = 'annotation:index'
 LOGOUT_REDIRECT_URL = 'annotation:index'
 
-# Application constants
+# Application settings
 MAX_CONCURRENT_ANNOTATORS = env('MAX_CONCURRENT_ANNOTATORS')
 APPLICATION_MODE = env('APPLICATION_MODE')
 AUTOMATIC_REFERENCE_ANNOTATION = env('AUTOMATIC_REFERENCE_ANNOTATION')
+PRESERVE_ENTRY_TEXT = env('PRESERVE_ENTRY_TEXT')

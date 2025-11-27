@@ -8,15 +8,17 @@ from annotation.utils.automaticannotation import ReferenceAnnotator
 from annotation.utils.automaticannotation import apply_preprocessing
 from annotation.utils.xml2edtlrmd import remove_annotation_marks
 from annotation.views.viewsettings import APPLICATION_MODE
+from annotation.views.viewsettings import AUTOMATIC_REFERENCE_ANNOTATION
 from annotation.views.viewsettings import ApplicationModes
 from annotation.views.viewsettings import MAX_CONCURRENT_ANNOTATORS
-from annotation.views.viewsettings import AUTOMATIC_REFERENCE_ANNOTATION
+from annotation.views.viewsettings import PRESERVE_ENTRY_TEXT
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.views import View
+import random
 
 
 class NewAnnotationView(LoginRequiredMixin, View):
@@ -118,6 +120,11 @@ class NewAnnotationView(LoginRequiredMixin, View):
 class AnnotationFactory:
     """Creates annotation instances."""
 
+    MIN_LEN_DIFF_FOR_RANDOMIZATION = 5
+    MULTIPLE_EDITS_THRESHOLD = 100
+    NUM_EDITS_BEFORE_THRESHOLD = 1
+    NUM_EDITS_AFTER_THRESHOLD = 5
+
     @staticmethod
     def create(user: User, entry: Entry, references: list[str]) -> Annotation:
         """Create a new annotation for the specified entry and user.
@@ -142,12 +149,14 @@ class AnnotationFactory:
         match APPLICATION_MODE:
             case ApplicationModes.CorrectAnnotatedEntries:
                 text = apply_preprocessing(entry.text)
+                text = AnnotationFactory.randomize_text(text, entry.title_word)
                 if AUTOMATIC_REFERENCE_ANNOTATION:
                     annotator = ReferenceAnnotator(references)
                     text = annotator.annotate(text)
             case ApplicationModes.AnnotateOcrText:
                 text = apply_preprocessing(entry.text)
                 text = remove_annotation_marks(text)
+                text = AnnotationFactory.randomize_text(text, entry.title_word)
             case _:
                 text = f'**{entry.title_word}**'
         record.set_text(text)
@@ -157,3 +166,43 @@ class AnnotationFactory:
         record.version = 1
 
         return record
+
+    @staticmethod
+    def randomize_text(text: str, title_word: str) -> str:
+        """Apply random deletions to the annotation text.
+
+        This method randomly deletes several characters from the given text,
+        in order to make the initial text of the annotations of the same entry
+        different from each other. The method returns the same text if the flag
+        `PRESERVE_ENTRY_TEXT` is set to `True`.
+
+        Parameters
+        ----------
+        text: str, required
+            The text to which postprocessing should be applied.
+        title_word: str, required
+            The title-word of the entry.
+
+        Returns
+        -------
+        post_processed_text: str
+            The text after post processing.
+        """
+        if PRESERVE_ENTRY_TEXT:
+            return text
+
+        text = text if text is not None else ''
+        formatted_title_word = f'**{title_word}**' if title_word is not None else ''
+
+        len_diff = len(text) - len(formatted_title_word)
+        if len_diff < AnnotationFactory.MIN_LEN_DIFF_FOR_RANDOMIZATION:
+            return text
+
+        num_edits = AnnotationFactory.NUM_EDITS_BEFORE_THRESHOLD
+        if len_diff < AnnotationFactory.MULTIPLE_EDITS_THRESHOLD:
+            num_edits = AnnotationFactory.NUM_EDITS_AFTER_THRESHOLD
+        random.seed()
+        for _ in range(num_edits):
+            idx = random.randint(len(formatted_title_word), len(text) - 1)
+            text = text[:idx] + text[idx + 1:]
+        return text
