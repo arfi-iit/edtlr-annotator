@@ -120,6 +120,11 @@ class NewAnnotationView(LoginRequiredMixin, View):
 class AnnotationFactory:
     """Creates annotation instances."""
 
+    MIN_LEN_DIFF_FOR_RANDOMIZATION = 5
+    MULTIPLE_EDITS_THRESHOLD = 100
+    NUM_EDITS_BEFORE_THRESHOLD = 1
+    NUM_EDITS_AFTER_THRESHOLD = 5
+
     @staticmethod
     def create(user: User, entry: Entry, references: list[str]) -> Annotation:
         """Create a new annotation for the specified entry and user.
@@ -144,14 +149,14 @@ class AnnotationFactory:
         match APPLICATION_MODE:
             case ApplicationModes.CorrectAnnotatedEntries:
                 text = apply_preprocessing(entry.text)
-                text = AnnotationFactory.apply_postprocessing(text, entry.title_word)
+                text = AnnotationFactory.randomize_text(text, entry.title_word)
                 if AUTOMATIC_REFERENCE_ANNOTATION:
                     annotator = ReferenceAnnotator(references)
                     text = annotator.annotate(text)
             case ApplicationModes.AnnotateOcrText:
                 text = apply_preprocessing(entry.text)
                 text = remove_annotation_marks(text)
-                text = AnnotationFactory.apply_postprocessing(text, entry.title_word)
+                text = AnnotationFactory.randomize_text(text, entry.title_word)
             case _:
                 text = f'**{entry.title_word}**'
         record.set_text(text)
@@ -163,8 +168,13 @@ class AnnotationFactory:
         return record
 
     @staticmethod
-    def apply_postprocessing(text: str, title_word: str) -> str:
-        """Apply post-processing to the annotation text.
+    def randomize_text(text: str, title_word: str) -> str:
+        """Apply random deletions to the annotation text.
+
+        This method randomly deletes several characters from the given text,
+        in order to make the initial text of the annotations of the same entry
+        different from each other. The method returns the same text if the flag
+        `PRESERVE_ENTRY_TEXT` is set to `True`.
 
         Parameters
         ----------
@@ -180,13 +190,19 @@ class AnnotationFactory:
         """
         if PRESERVE_ENTRY_TEXT:
             return text
+
         text = text if text is not None else ''
-        title_word = title_word if title_word is not None else ''
-        len_diff = len(text) - len(f'**{title_word}**')
-        if len_diff < 2:
+        formatted_title_word = f'**{title_word}**' if title_word is not None else ''
+
+        len_diff = len(text) - len(formatted_title_word)
+        if len_diff < AnnotationFactory.MIN_LEN_DIFF_FOR_RANDOMIZATION:
             return text
-        num_edits = 1 if len_diff < 100 else 5
+
+        num_edits = AnnotationFactory.NUM_EDITS_BEFORE_THRESHOLD
+        if len_diff < AnnotationFactory.MULTIPLE_EDITS_THRESHOLD:
+            num_edits = AnnotationFactory.NUM_EDITS_AFTER_THRESHOLD
+        random.seed()
         for _ in range(num_edits):
-            idx = random.randint(len(f'**{title_word}**'), len(text))
-            text = text[:idx] + text[1 + idx:]
+            idx = random.randint(len(formatted_title_word), len(text) - 1)
+            text = text[:idx] + text[idx + 1:]
         return text
