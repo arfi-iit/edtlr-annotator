@@ -8,15 +8,17 @@ from annotation.utils.automaticannotation import ReferenceAnnotator
 from annotation.utils.automaticannotation import apply_preprocessing
 from annotation.utils.xml2edtlrmd import remove_annotation_marks
 from annotation.views.viewsettings import APPLICATION_MODE
+from annotation.views.viewsettings import AUTOMATIC_REFERENCE_ANNOTATION
 from annotation.views.viewsettings import ApplicationModes
 from annotation.views.viewsettings import MAX_CONCURRENT_ANNOTATORS
-from annotation.views.viewsettings import AUTOMATIC_REFERENCE_ANNOTATION
+from annotation.views.viewsettings import PRESERVE_ENTRY_TEXT
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.views import View
+import random
 
 
 class NewAnnotationView(LoginRequiredMixin, View):
@@ -142,12 +144,14 @@ class AnnotationFactory:
         match APPLICATION_MODE:
             case ApplicationModes.CorrectAnnotatedEntries:
                 text = apply_preprocessing(entry.text)
+                text = AnnotationFactory.apply_postprocessing(text, entry.title_word)
                 if AUTOMATIC_REFERENCE_ANNOTATION:
                     annotator = ReferenceAnnotator(references)
                     text = annotator.annotate(text)
             case ApplicationModes.AnnotateOcrText:
                 text = apply_preprocessing(entry.text)
                 text = remove_annotation_marks(text)
+                text = AnnotationFactory.apply_postprocessing(text, entry.title_word)
             case _:
                 text = f'**{entry.title_word}**'
         record.set_text(text)
@@ -157,3 +161,32 @@ class AnnotationFactory:
         record.version = 1
 
         return record
+
+    @staticmethod
+    def apply_postprocessing(text: str, title_word: str) -> str:
+        """Apply post-processing to the annotation text.
+
+        Parameters
+        ----------
+        text: str, required
+            The text to which postprocessing should be applied.
+        title_word: str, required
+            The title-word of the entry.
+
+        Returns
+        -------
+        post_processed_text: str
+            The text after post processing.
+        """
+        if PRESERVE_ENTRY_TEXT:
+            return text
+        text = text if text is not None else ''
+        title_word = title_word if title_word is not None else ''
+        len_diff = len(text) - len(f'**{title_word}**')
+        if len_diff < 2:
+            return text
+        num_edits = 1 if len_diff < 100 else 5
+        for _ in range(num_edits):
+            idx = random.randint(len(f'**{title_word}**'), len(text))
+            text = text[:idx] + text[1 + idx:]
+        return text
