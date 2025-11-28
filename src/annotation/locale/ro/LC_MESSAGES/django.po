@@ -8,15 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 21:33+0200\n"
-"PO-Revision-Date: 2025-11-21 21:40+0200\n"
+"POT-Creation-Date: 2025-11-28 13:58+0200\n"
+"PO-Revision-Date: 2025-11-28 13:59+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #: src/annotation/admin.py:49 src/annotation/models/evaluationinterval.py:13
 msgid "evaluation interval"
@@ -147,11 +148,11 @@ msgstr "volume"
 msgid "Annotate text"
 msgstr "Adnotare text"
 
-#: src/annotation/templates/annotation/annotate.html:32
+#: src/annotation/templates/annotation/annotate.html:38
 msgid "Save annotation"
 msgstr "Salvează adnotare"
 
-#: src/annotation/templates/annotation/annotate.html:42
+#: src/annotation/templates/annotation/annotate.html:48
 msgid "Mark complete"
 msgstr "Marchează finalizată"
 
@@ -171,25 +172,25 @@ msgstr "Panou administrare"
 msgid "Resources"
 msgstr "Resurse"
 
-#: src/annotation/templates/annotation/controls/navbar.html:46
-msgid "Annotation guide"
+#: src/annotation/templates/annotation/controls/navbar.html:45
+msgid "Annotation tutorial"
 msgstr "Ghid de adnotare"
 
-#: src/annotation/templates/annotation/controls/navbar.html:51
+#: src/annotation/templates/annotation/controls/navbar.html:52
 msgid "DLR Bibliography"
 msgstr "Siglar DLR"
 
-#: src/annotation/templates/annotation/controls/navbar.html:56
+#: src/annotation/templates/annotation/controls/navbar.html:59
 msgid "DA Bibliography"
 msgstr "Siglar DA"
 
-#: src/annotation/templates/annotation/controls/navbar.html:71
+#: src/annotation/templates/annotation/controls/navbar.html:76
 #, fuzzy
 #| msgid "Password"
 msgid "Change password"
 msgstr "Parolă"
 
-#: src/annotation/templates/annotation/controls/navbar.html:79
+#: src/annotation/templates/annotation/controls/navbar.html:84
 msgid "Logout"
 msgstr "Deconectare"
 
