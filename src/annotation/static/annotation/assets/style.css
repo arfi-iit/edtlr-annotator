@@ -146,6 +146,15 @@ footer p{
     height: 80%;
 }
 
+.user-annotations-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 .user-annotations{
     max-height: 31em;
     overflow-y: scroll;

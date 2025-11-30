@@ -2,44 +2,46 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Annotate text"  %}{% endblock %}
+{% block title %}{% translate "Annotate text" %}{% endblock %}
 
 
 {% block content %}
 <main class="container centered-content">
   <div class="content-wrapper">
-    <h2 class="text-center">{% translate "My annotations" %}</h2>
+    <div class="user-annotations-header">
+      <h2 class="text-center">{% translate "My annotations" %}</h2>
+      <div class="text-center">
+        <a class="btn btn-success" role="button" href="{% url 'annotation:new-annotation' %}">
+          <i class="bi bi-file-earmark-plus"></i>
+          {% translate "New annotation" %}
+        </a>
+      </div>
+    </div>
     <div class="user-annotations">
       <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>{% translate "title word"|capfirst %}</th>
-          <th>{% translate "status"|capfirst %}</th>
-        </tr>
-      </thead>
-      <tbody>
-	{% for id, title_word, status, is_editable in annotations %}
-	<tr>
-	  <td>
-	    {% if is_editable %}
-	    <a href="{% url 'annotation:annotate' id=id %}">
-	      {{ title_word }}
-	    </a>
-	    {% else %}
-	    {{ title_word }}
-	    {% endif %}
-	  </td>
-	  <td> {{ status }} </td>
-	</tr>
-	{% endfor %}
-      </tbody>
+        <thead>
+          <tr>
+            <th>{% translate "title word"|capfirst %}</th>
+            <th>{% translate "status"|capfirst %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for id, title_word, status, is_editable in annotations %}
+          <tr>
+            <td>
+              {% if is_editable %}
+              <a href="{% url 'annotation:annotate' id=id %}">
+                {{ title_word }}
+              </a>
+              {% else %}
+              {{ title_word }}
+              {% endif %}
+            </td>
+            <td> {{ status }} </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
-    </div>
-    <div class="text-center mt-3">
-      <a class="btn btn-primary" role="button" href="{% url 'annotation:new-annotation' %}">
-	<i class="bi bi-file-earmark-plus"></i>
-	{% translate "New annotation" %}
-      </a>
     </div>
   </div>
   {% include "./controls/user-statistics.html" %}
