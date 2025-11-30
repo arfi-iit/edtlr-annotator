@@ -9,13 +9,11 @@
 <main class="container centered-content">
   <div class="content-wrapper">
     <div class="user-annotations-header">
-      <h2 class="text-center">{% translate "My annotations" %}</h2>
-      <div class="text-center">
-        <a class="btn btn-success" role="button" href="{% url 'annotation:new-annotation' %}">
-          <i class="bi bi-file-earmark-plus"></i>
-          {% translate "New annotation" %}
-        </a>
-      </div>
+      <h2>{% translate "My annotations" %}</h2>
+      <a class="btn btn-success" role="button" href="{% url 'annotation:new-annotation' %}">
+        <i class="bi bi-file-earmark-plus"></i>
+        {% translate "New annotation" %}
+      </a>
     </div>
     <div class="user-annotations">
       <table class="table table-bordered">
