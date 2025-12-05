@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 13:58+0200\n"
-"PO-Revision-Date: 2025-11-28 13:59+0200\n"
+"POT-Creation-Date: 2025-12-05 23:00+0200\n"
+"PO-Revision-Date: 2025-12-05 23:04+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -19,12 +18,17 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/admin.py:49 src/annotation/models/evaluationinterval.py:13
+#: src/annotation/admin.py:41 src/annotation/models/page.py:14
+#: src/annotation/models/volume.py:12
+msgid "volume"
+msgstr "volum"
+
+#: src/annotation/admin.py:56 src/annotation/models/evaluationinterval.py:13
 msgid "evaluation interval"
 msgstr "interval de evaluare"
 
-#: src/annotation/admin.py:103 src/annotation/admin.py:104
-#: src/annotation/admin.py:105
+#: src/annotation/admin.py:110 src/annotation/admin.py:111
+#: src/annotation/admin.py:112
 msgid "Admin eDTLR data"
 msgstr "Administrare date eDTLR"
 
@@ -58,7 +62,7 @@ msgid "user"
 msgstr "utilizator"
 
 #: src/annotation/models/annotation.py:41 src/annotation/models/entry.py:17
-#: src/annotation/templates/annotation/index.html:16
+#: src/annotation/templates/annotation/index.html:22
 msgid "title word"
 msgstr "cuvânt-titlu"
 
@@ -110,10 +114,6 @@ msgstr "dată de început"
 #: src/annotation/models/evaluationinterval.py:24
 msgid "end date"
 msgstr "dată de sfârșit"
-
-#: src/annotation/models/page.py:14 src/annotation/models/volume.py:12
-msgid "volume"
-msgstr "volum"
 
 #: src/annotation/models/page.py:16
 msgid "page number"
@@ -185,10 +185,8 @@ msgid "DA Bibliography"
 msgstr "Siglar DA"
 
 #: src/annotation/templates/annotation/controls/navbar.html:76
-#, fuzzy
-#| msgid "Password"
 msgid "Change password"
-msgstr "Parolă"
+msgstr "Modificare parolă"
 
 #: src/annotation/templates/annotation/controls/navbar.html:84
 msgid "Logout"
@@ -216,17 +214,17 @@ msgstr "Număr simboluri"
 msgid "Number of annotations per status"
 msgstr "Număr adnotări per status"
 
-#: src/annotation/templates/annotation/index.html:11
+#: src/annotation/templates/annotation/index.html:12
 msgid "My annotations"
 msgstr "Adnotările mele"
 
-#: src/annotation/templates/annotation/index.html:17
-msgid "status"
-msgstr "status"
-
-#: src/annotation/templates/annotation/index.html:41
+#: src/annotation/templates/annotation/index.html:15
 msgid "New annotation"
 msgstr "Adnotare nouă"
+
+#: src/annotation/templates/annotation/index.html:23
+msgid "status"
+msgstr "status"
 
 #: src/annotation/templates/annotation/thank-you.html:5
 msgid "Thank you!"
@@ -274,3 +272,7 @@ msgstr ""
 #: src/annotation/templates/registration/login.html:43
 msgid "Please login to see this page."
 msgstr "Vă rugăm să vă autentificați pentru a accesa pagina."
+
+#: src/annotation/views/markcomplete.py:41
+msgid "Entry text is too short."
+msgstr "Textul intării este prea scurt."
