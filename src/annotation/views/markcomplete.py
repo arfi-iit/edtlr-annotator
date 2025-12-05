@@ -68,8 +68,6 @@ class MarkAnnotationCompleteView(LoginRequiredMixin, View):
 
     def __mark_annotation_complete(self, entry_id: int, text: str, user: User):
         annotation = Annotation.objects.get(entry=entry_id, user=user)
-        if annotation is None:
-            return
         self.__update_annotation(annotation, text,
                                  Annotation.AnnotationStatus.COMPLETE)
 
