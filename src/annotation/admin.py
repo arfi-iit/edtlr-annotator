@@ -11,7 +11,6 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 
-# Register your models here.
 class VolumeAdmin(admin.ModelAdmin):
     """Overrides the default admin options for Volume."""
 
@@ -39,8 +38,16 @@ class EntryAdmin(admin.ModelAdmin):
 class EntryPageAdmin(admin.ModelAdmin):
     """Overrides the default admin options for EntryPage."""
 
-    list_display = ["entry", "page"]
-    list_filter = ["page"]
+    @admin.display(description=_('volume'))
+    def volume_name(self, obj):
+        """Get the volume name of the entry page."""
+        return obj.page.volume.name
+
+    list_display = ["entry", "page", "volume_name"]
+
+    search_fields = [
+        "entry__title_word_normalized__icontains", "page__page_no__iexact"
+    ]
 
 
 class EvaluationIntervalFilter(admin.SimpleListFilter):
