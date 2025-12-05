@@ -153,6 +153,7 @@ footer p{
     align-content: center;
     align-items: center;
     margin-bottom: 15px;
+    margin-top: 35px;
 }
 
 .user-annotations{
@@ -162,6 +163,10 @@ footer p{
 
 .content-wrapper {
     width: 65%;
+}
+
+.user-statistics{
+    margin-top: 35px;
 }
 
 .user-stats-header-row{
