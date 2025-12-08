@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 23:00+0200\n"
-"PO-Revision-Date: 2025-12-05 23:28+0200\n"
+"POT-Creation-Date: 2025-12-08 19:42+0200\n"
+"PO-Revision-Date: 2025-12-08 19:44+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -173,22 +173,26 @@ msgid "Resources"
 msgstr "Resurse"
 
 #: src/annotation/templates/annotation/controls/navbar.html:45
-msgid "Annotation tutorial"
+msgid "Annotation guide"
 msgstr "Ghid de adnotare"
 
-#: src/annotation/templates/annotation/controls/navbar.html:52
+#: src/annotation/templates/annotation/controls/navbar.html:53
+msgid "Annotation tutorial"
+msgstr "Tutorial de adnotare"
+
+#: src/annotation/templates/annotation/controls/navbar.html:60
 msgid "DLR Bibliography"
 msgstr "Siglar DLR"
 
-#: src/annotation/templates/annotation/controls/navbar.html:59
+#: src/annotation/templates/annotation/controls/navbar.html:67
 msgid "DA Bibliography"
 msgstr "Siglar DA"
 
-#: src/annotation/templates/annotation/controls/navbar.html:76
+#: src/annotation/templates/annotation/controls/navbar.html:84
 msgid "Change password"
 msgstr "Modificare parolă"
 
-#: src/annotation/templates/annotation/controls/navbar.html:84
+#: src/annotation/templates/annotation/controls/navbar.html:92
 msgid "Logout"
 msgstr "Deconectare"
 
