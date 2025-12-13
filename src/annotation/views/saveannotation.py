@@ -25,9 +25,7 @@ class SaveAnnotationView(LoginRequiredMixin, View):
         """
         entry_id, text = self.__parse_request_body(request)
         annotation = Annotation.objects.get(entry=entry_id, user=request.user)
-        if annotation is None:
-            return redirect(self.annotate_page, id=None)
-
+        # The `get()` method throws a `DoesNoExist` exception if the annotation is not found
         self.__update_annotation(annotation, text)
         return redirect(self.annotate_page, id=annotation.id)
 
