@@ -2,6 +2,7 @@
 from annotation.models.entry import Entry
 from annotation.models.utils import extract_title_word
 from annotation.models.utils import remove_diacritics
+from annotation.utils.xml2edtlrmd import Marks
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -71,6 +72,10 @@ class Annotation(models.Model):
         self.title_word = extract_title_word(text)
         self.title_word_normalized = remove_diacritics(self.title_word)
         self.version = self.version + 1 if self.version is not None else 1
+
+        if self.title_word == text and Marks.BOLD not in text:
+            self.title_word = self.entry.title_word
+            self.title_word_normalized = self.entry.title_word_normalized
 
     def __str__(self):
         """Override the string representation of the model."""

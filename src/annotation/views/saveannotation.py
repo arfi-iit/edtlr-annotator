@@ -24,16 +24,16 @@ class SaveAnnotationView(LoginRequiredMixin, View):
             The HTTP request object.
         """
         entry_id, text = self.__parse_request_body(request)
-        annotation = Annotation.objects.get(
-            entry=entry_id,
-            user=request.user)
-        if annotation is not None:
-            annotation.set_text(text)
-            annotation.version = annotation.version + 1
-            annotation.row_update_timestamp = timezone.now()
-            annotation.status = Annotation.AnnotationStatus.IN_PROGRESS
-            annotation.save()
+        annotation = Annotation.objects.get(entry=entry_id, user=request.user)
+        # The `get()` method throws a `DoesNoExist` exception if the annotation is not found
+        self.__update_annotation(annotation, text)
         return redirect(self.annotate_page, id=annotation.id)
+
+    def __update_annotation(self, annotation: Annotation, text: str):
+        annotation.set_text(text)
+        annotation.row_update_timestamp = timezone.now()
+        annotation.status = Annotation.AnnotationStatus.IN_PROGRESS
+        annotation.save()
 
     def __parse_request_body(self, request) -> Tuple[int, HttpRequest]:
         text = request.POST['text']
