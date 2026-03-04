@@ -58,11 +58,11 @@ export class AnnotationFlow {
         fetch(`api/entries/${entryId}`)
             .then((res) => res.json())
             .then((data) => {
-                const { contents, current_page, previous_page, next_page } = data;
+                const { text } = data;
 
                 this.setControlsVisible(true);
                 this.setControlsEnabled(true);
-                this.dictmarkdownEditor.setText(contents);
+                this.dictmarkdownEditor.setText(text);
             });
     }
 }
