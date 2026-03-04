@@ -22,8 +22,8 @@
   </div>
   <div class="col-md-6">
     <div id="editor-container" class="sticky-top">
-      <textarea id="editor">
-      </textarea>
+      <div id="editor">
+      </div>
       <!-- buttons -->
       <div id="buttons-row" class="row align-items-end justify-content-start">
 	<div class="col-md-8 offset-md-4">
@@ -63,9 +63,9 @@
 <script src="{% static 'annotation/js/dom-utils.js' %}"></script>
 <script src="{% static 'annotation/js/page-carousel.js' %}"></script>
 <script src="{% static 'annotation/js/annotation-editor.js' %}"></script>
-<script src="{% static 'annotation/js/annotation-flow.js' %}"></script>
-<script>
-
+<script type="module" src="{% static 'annotation/js/annotation-flow.js' %}"></script>
+<script type="module">
+  import {AnnotationFlow} from '{% static "annotation/js/annotation-flow.js" %}';
   let annotationFlow = new AnnotationFlow('image-container', 'editor',
 					  'btn-save-annotation', 'btn-mark-complete',
 					  ['text']);
