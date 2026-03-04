@@ -166,8 +166,10 @@ cython_debug/
 # Emacs backup files
 *~
 
-# Static directory
+# Ignore the `static` directory in the application root but not the
+# `static` directory in the source code.
 static/
+!src/annotation/static/
 
 # Expanded templates
 templates/edtlr-annotator
