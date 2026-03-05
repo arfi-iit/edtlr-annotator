@@ -4,10 +4,6 @@
 
 {% block title %}{% translate "Annotate text"  %}{% endblock %}
 
-{% block links %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-{% endblock %}
-
 {% block content %}
 <main>
 {% if messages %}
@@ -59,11 +55,8 @@
 {% endblock %}
 
 {% block page_scripts %}
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script src="{% static 'annotation/js/dom-utils.js' %}"></script>
 <script src="{% static 'annotation/js/page-carousel.js' %}"></script>
-<script src="{% static 'annotation/js/annotation-editor.js' %}"></script>
-<script type="module" src="{% static 'annotation/js/annotation-flow.js' %}"></script>
 <script type="module">
   import {AnnotationFlow} from '{% static "annotation/js/annotation-flow.js" %}';
   let annotationFlow = new AnnotationFlow('image-container', 'editor',
