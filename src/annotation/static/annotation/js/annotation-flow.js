@@ -23,9 +23,6 @@ export class AnnotationFlow {
         this.setControlsEnabled(false);
         this.setControlsVisible(false);
 
-        this.formSave = this.btnSave.parentElement;
-        this.formMarkComplete=this.btnMarkComplete.parentElement;
-
         this.dictmarkdownEditor = createDictmarkdownEditor(this.editor);
         this.dictmarkdownEditor.onTextChange(this.onTextChange);
     }
