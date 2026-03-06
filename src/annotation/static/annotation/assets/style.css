@@ -2,9 +2,6 @@
     margin-top: 25px;
 }
 
-#editor{
-    display: none !important;
-}
 
 .flipped, .flipped > img{
     transform: rotateX(180deg);
@@ -175,4 +172,32 @@ footer p{
 
 .user-stats-header-row, .user-stats-header-row td{
     border:none;
+}
+
+.dictmarkdown-panel-button{
+    margin: 0px 0px 0px 15px;
+    padding: 0px 5px;
+    border: 1px solid transparent;
+}
+
+.cm-panel{
+    padding: 15px 0px;
+}
+
+.cm-editor { height: 80vh; }
+.cm-scroller { overflow: auto; }
+.dictmarkdown-button-active{
+    border-color: #95a5a6;
+    background: #fcfcfc;
+}
+
+.dictmarkdown-editor-panel{
+    border-left: 1px solid #ccc;
+    margin-left: 3px;
+}
+
+#editor{
+    height: 80vh;
+    border: 1px solid #ccc;
+    /* width: 50%; */
 }
