@@ -2,7 +2,6 @@
 from ..models.annotation import Annotation
 from ..models.entry import Entry
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
 from django.http import JsonResponse
 from django.views import View
 
@@ -10,7 +9,7 @@ from django.views import View
 class GetEntryContentsView(LoginRequiredMixin, View):
     """Implements the view for retrieving the contents of the specified entry."""
 
-    def get(self, request, entry_id: int) -> JsonResponse | Http404:
+    def get(self, request, entry_id: int) -> JsonResponse:
         """Retrieve the contents for the specified entry.
 
         Parameters
@@ -25,14 +24,14 @@ class GetEntryContentsView(LoginRequiredMixin, View):
         response: JsonResponse or Http404
             The response data.
             If the response is a JsonResponse, then it contains the following fields:
-            - 'contents': the text of the entry
+            - 'text': the text of the entry
         """
-        try:
-            entry = Entry.objects.get(pk=entry_id)
-            annotation = Annotation.objects.filter(entry=entry,
-                                                   user=request.user).first()
+        entry = Entry.objects.get(pk=entry_id)
+        annotation = Annotation.objects.filter(entry=entry,
+                                               user=request.user)\
+                                       .first()
+        if entry is None:
+            return JsonResponse({'text': ''})
 
-            data = {'text': annotation.text}
-            return JsonResponse(data)
-        except (Annotation.DoesNotExist):
-            raise Http404()
+        data = {'text': annotation.text}
+        return JsonResponse(data)

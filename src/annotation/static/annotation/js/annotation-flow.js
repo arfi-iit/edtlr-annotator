@@ -53,7 +53,13 @@ export class AnnotationFlow {
 
     initialize(entryId) {
         fetch(`api/entries/${entryId}`)
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                console.debug(res);
+                return { text: "" };
+            })
             .then((data) => {
                 const { text } = data;
 
