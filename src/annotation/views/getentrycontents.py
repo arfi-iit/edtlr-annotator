@@ -21,9 +21,8 @@ class GetEntryContentsView(LoginRequiredMixin, View):
 
         Returns
         -------
-        response: JsonResponse or Http404
-            The response data.
-            If the response is a JsonResponse, then it contains the following fields:
+        response: JsonResponse
+            A JSON response containing the following fields:
             - 'text': the text of the entry
         """
         entry = Entry.objects.get(pk=entry_id)
