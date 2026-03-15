@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-08 19:42+0200\n"
-"PO-Revision-Date: 2025-12-08 19:44+0200\n"
+"POT-Creation-Date: 2026-03-15 12:53+0200\n"
+"PO-Revision-Date: 2026-03-15 12:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -32,55 +32,69 @@ msgstr "interval de evaluare"
 msgid "Admin eDTLR data"
 msgstr "Administrare date eDTLR"
 
-#: src/annotation/apps.py:8 src/annotation/models/annotation.py:24
+#: src/annotation/apps.py:8 src/annotation/models/annotation.py:25
 msgid "annotation"
 msgstr "adnotare"
 
-#: src/annotation/models/annotation.py:17
+#: src/annotation/models/annotation.py:18
 msgid "In progress"
 msgstr "În desfășurare"
 
-#: src/annotation/models/annotation.py:18
+#: src/annotation/models/annotation.py:19
 msgid "Complete"
 msgstr "Completă"
 
-#: src/annotation/models/annotation.py:19
+#: src/annotation/models/annotation.py:20
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/annotation/models/annotation.py:25
+#: src/annotation/models/annotation.py:26
 msgid "annotations"
 msgstr "adnotări"
 
-#: src/annotation/models/annotation.py:32 src/annotation/models/entry.py:28
+#: src/annotation/models/annotation.py:33 src/annotation/models/entry.py:28
 #: src/annotation/models/entrypage.py:14
 msgid "entry"
 msgstr "intrare"
 
-#: src/annotation/models/annotation.py:36
+#: src/annotation/models/annotation.py:37
 msgid "user"
 msgstr "utilizator"
 
-#: src/annotation/models/annotation.py:41 src/annotation/models/entry.py:17
+#: src/annotation/models/annotation.py:42 src/annotation/models/entry.py:17
 #: src/annotation/templates/annotation/index.html:22
 msgid "title word"
 msgstr "cuvânt-titlu"
 
-#: src/annotation/models/annotation.py:47 src/annotation/models/entry.py:23
+#: src/annotation/models/annotation.py:48 src/annotation/models/entry.py:23
 msgid "text length"
 msgstr "lungime text"
 
-#: src/annotation/models/annotation.py:52
+#: src/annotation/models/annotation.py:53
 msgid "version"
 msgstr "versiune"
 
-#: src/annotation/models/annotation.py:57 src/annotation/models/reference.py:25
+#: src/annotation/models/annotation.py:58 src/annotation/models/reference.py:25
 msgid "row creation timestamp"
 msgstr "creat la"
 
-#: src/annotation/models/annotation.py:59 src/annotation/models/reference.py:31
+#: src/annotation/models/annotation.py:60 src/annotation/models/reference.py:31
 msgid "row update timestamp"
 msgstr "actualizat la"
+
+#: src/annotation/models/dictionary.py:12
+msgid "dictionary"
+msgstr "dicționar"
+
+#: src/annotation/models/dictionary.py:13
+msgid "dictionaries"
+msgstr "dicționare"
+
+#: src/annotation/models/dictionary.py:19
+#: src/annotation/models/evaluationinterval.py:20
+#: src/annotation/models/volume.py:19
+msgid "name"
+msgstr "nume"
 
 #: src/annotation/models/entry.py:29
 msgid "entries"
@@ -101,11 +115,6 @@ msgstr "pagini intrări"
 #: src/annotation/models/evaluationinterval.py:14
 msgid "evaluation intervals"
 msgstr "intervale de evaluare"
-
-#: src/annotation/models/evaluationinterval.py:20
-#: src/annotation/models/volume.py:19
-msgid "name"
-msgstr "nume"
 
 #: src/annotation/models/evaluationinterval.py:21
 msgid "start date"
@@ -148,11 +157,11 @@ msgstr "volume"
 msgid "Annotate text"
 msgstr "Adnotare text"
 
-#: src/annotation/templates/annotation/annotate.html:38
+#: src/annotation/templates/annotation/annotate.html:34
 msgid "Save annotation"
 msgstr "Salvează adnotare"
 
-#: src/annotation/templates/annotation/annotate.html:48
+#: src/annotation/templates/annotation/annotate.html:44
 msgid "Mark complete"
 msgstr "Marchează finalizată"
 
