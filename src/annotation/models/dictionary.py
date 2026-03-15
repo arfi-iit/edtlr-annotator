@@ -17,6 +17,10 @@ class Dictionary(models.Model):
                             null=False,
                             max_length=256,
                             verbose_name=_('name'))
+    is_active = models.BooleanField(verbose_name=_('is_active'),
+                                    blank=False,
+                                    null=False,
+                                    default=True)
 
     def __str__(self, ):
         """Override the string representation of the model."""

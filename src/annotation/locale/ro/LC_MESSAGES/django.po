@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-15 12:53+0200\n"
-"PO-Revision-Date: 2026-03-15 12:55+0200\n"
+"POT-Creation-Date: 2026-03-15 18:30+0200\n"
+"PO-Revision-Date: 2026-03-15 18:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -19,7 +19,7 @@ msgstr ""
 "2:1));\n"
 
 #: src/annotation/admin.py:41 src/annotation/models/page.py:14
-#: src/annotation/models/volume.py:12
+#: src/annotation/models/volume.py:13
 msgid "volume"
 msgstr "volum"
 
@@ -82,7 +82,7 @@ msgstr "creat la"
 msgid "row update timestamp"
 msgstr "actualizat la"
 
-#: src/annotation/models/dictionary.py:12
+#: src/annotation/models/dictionary.py:12 src/annotation/models/volume.py:19
 msgid "dictionary"
 msgstr "dicționar"
 
@@ -92,9 +92,13 @@ msgstr "dicționare"
 
 #: src/annotation/models/dictionary.py:19
 #: src/annotation/models/evaluationinterval.py:20
-#: src/annotation/models/volume.py:19
+#: src/annotation/models/volume.py:25
 msgid "name"
 msgstr "nume"
+
+#: src/annotation/models/dictionary.py:20
+msgid "is_active"
+msgstr "activ"
 
 #: src/annotation/models/entry.py:29
 msgid "entries"
@@ -148,7 +152,7 @@ msgstr "sigle"
 msgid "is_approved"
 msgstr "aprobată"
 
-#: src/annotation/models/volume.py:13
+#: src/annotation/models/volume.py:14
 msgid "volumes"
 msgstr "volume"
 
