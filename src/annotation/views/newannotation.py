@@ -73,10 +73,9 @@ class NewAnnotationView(LoginRequiredMixin, View):
         """
         entries_from_active_dictionary = Entry.objects.filter(entrypage__page__volume__dictionary__is_active=True)
         next_entries = entries_from_active_dictionary.exclude(annotation__user=user)\
-                                                     .annotate(annotation_count=Count('annotation'))\
+                                                     .annotate(annotation_count=Count('annotation', distinct=True))\
                                                      .filter(annotation_count__lt=MAX_CONCURRENT_ANNOTATORS)\
                                                      .distinct()
-        print(next_entries.query)
         next_entry = next_entries.first()
         if next_entry is not None:
             return next_entry
