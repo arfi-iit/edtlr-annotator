@@ -19,7 +19,7 @@ class Volume(models.Model):
 
     id = models.AutoField(verbose_name="id", primary_key=True)
     dictionary = models.ForeignKey(Dictionary,
-                                   on_delete=models.DO_NOTHING,
+                                   on_delete=models.PROTECT,
                                    verbose_name=_('dictionary'),
                                    null=False,
                                    default=1)
