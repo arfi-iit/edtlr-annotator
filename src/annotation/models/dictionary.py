@@ -22,6 +22,6 @@ class Dictionary(models.Model):
                                     null=False,
                                     default=True)
 
-    def __str__(self, ):
+    def __str__(self):
         """Override the string representation of the model."""
         return str(self.name)
