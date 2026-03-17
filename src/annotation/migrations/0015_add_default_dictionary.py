@@ -37,10 +37,7 @@ def rollback_update_dictionary_for_all_volumes(apps, schema_editor):
     except Dictionary.DoesNotExist:
         # Nothing to revert
         return
-
-    for volume in Volume.objects.filter(dictionary=edtlr):
-        volume.dictionary = None
-        volume.save()
+    Volume.objects.update(dictionary=None)
 
 
 class Migration(migrations.Migration):
