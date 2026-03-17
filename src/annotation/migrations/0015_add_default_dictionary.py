@@ -2,31 +2,60 @@
 
 from django.db import migrations
 
+APP_NAME = 'annotation'
+DICTIONARY_MODEL = 'Dictionary'
+VOLUME_MODEL = 'Volume'
+DICTIONARY_NAME = 'eDTLR'
+
 
 def add_edtlr_dictionary(apps, schema_editor):
     """Add the eDTLR dictionary to the database."""
-    Dictionary = apps.get_model('annotation', 'Dictionary')
-    edtlr = Dictionary(name="eDTLR")
+    Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
+    edtlr = Dictionary(name=DICTIONARY_NAME)
     edtlr.save()
+
+
+def rollback_add_edltr_dictionary(apps, schema_editor):
+    """Rollback the insertion fo the eDTLR dictionary to the database."""
+    Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
+    Dictionary.objects.filter(name=DICTIONARY_NAME).delete()
 
 
 def update_dictionary_for_all_volumes(apps, schema_editor):
     """Set the parent dictionary for all volumes from the database."""
-    Dictionary = apps.get_model('annotation', 'Dictionary')
+    Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
     edtlr = Dictionary.objects.first()
-    Volume = apps.get_model('annotation', 'Volume')
+    Volume = apps.get_model(APP_NAME, VOLUME_MODEL)
     for volume in Volume.objects.all():
         volume.dictionary = edtlr
+        volume.save()
+
+
+def rollback_update_dictionary_for_all_volumes(apps, schema_editor):
+    """Rollback setting of the parent dictionary for all volumes from the database."""
+    Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
+    Volume = apps.get_model(APP_NAME, VOLUME_MODEL)
+    try:
+        edtlr = Dictionary.objects.get(name=DICTIONARY_NAME)
+    except Dictionary.DoesNotExist:
+        # Nothing to revert
+        return
+
+    for volume in Volume.objects.filter(dictionary=edtlr):
+        volume.dictionary = None
         volume.save()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('annotation', '0014_dictionary_volume_dictionary'),
+        (APP_NAME, '0014_dictionary_volume_dictionary'),
     ]
 
     operations = [
-        migrations.RunPython(add_edtlr_dictionary),
-        migrations.RunPython(update_dictionary_for_all_volumes)
+        migrations.RunPython(add_edtlr_dictionary,
+                             reverse_code=rollback_add_edltr_dictionary),
+        migrations.RunPython(
+            update_dictionary_for_all_volumes,
+            reverse_code=rollback_update_dictionary_for_all_volumes)
     ]
