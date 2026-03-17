@@ -1,7 +1,6 @@
 """The view for a new annotation."""
 from annotation.models.annotation import Annotation
 from annotation.models.entry import Entry
-from annotation.models.entrypage import EntryPage
 from annotation.models.page import Page
 from annotation.models.reference import Reference
 from annotation.utils.automaticannotation import ReferenceAnnotator
@@ -77,9 +76,6 @@ class NewAnnotationView(LoginRequiredMixin, View):
                                                      .filter(annotation_count__lt=MAX_CONCURRENT_ANNOTATORS)\
                                                      .distinct()
         next_entry = next_entries.first()
-        if next_entry is not None:
-            return next_entry
-        next_entry = entries_from_active_dictionary.distinct().first()
         return next_entry
 
     def __insert_annotation(self, user: User, entry: Entry) -> Annotation:
