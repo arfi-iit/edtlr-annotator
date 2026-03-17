@@ -21,8 +21,7 @@ class Volume(models.Model):
     dictionary = models.ForeignKey(Dictionary,
                                    on_delete=models.PROTECT,
                                    verbose_name=_('dictionary'),
-                                   null=False,
-                                   default=1)
+                                   null=False)
     name = models.CharField(null=False, max_length=128, verbose_name=_('name'))
 
     def __str__(self):
