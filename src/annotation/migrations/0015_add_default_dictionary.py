@@ -11,8 +11,7 @@ DICTIONARY_NAME = 'eDTLR'
 def add_edtlr_dictionary(apps, schema_editor):
     """Add the eDTLR dictionary to the database."""
     Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
-    edtlr = Dictionary(name=DICTIONARY_NAME)
-    edtlr.save()
+    Dictionary.objects.get_or_create(name=DICTIONARY_NAME)
 
 
 def rollback_add_edltr_dictionary(apps, schema_editor):
@@ -24,11 +23,9 @@ def rollback_add_edltr_dictionary(apps, schema_editor):
 def update_dictionary_for_all_volumes(apps, schema_editor):
     """Set the parent dictionary for all volumes from the database."""
     Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
-    edtlr = Dictionary.objects.first()
+    edtlr = Dictionary.objects.get(name=DICTIONARY_NAME)
     Volume = apps.get_model(APP_NAME, VOLUME_MODEL)
-    for volume in Volume.objects.all():
-        volume.dictionary = edtlr
-        volume.save()
+    Volume.objects.update(dictionary=edtlr)
 
 
 def rollback_update_dictionary_for_all_volumes(apps, schema_editor):
