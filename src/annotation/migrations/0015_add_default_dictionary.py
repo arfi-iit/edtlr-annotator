@@ -14,8 +14,8 @@ def add_edtlr_dictionary(apps, schema_editor):
     Dictionary.objects.get_or_create(name=DICTIONARY_NAME)
 
 
-def rollback_add_edltr_dictionary(apps, schema_editor):
-    """Rollback the insertion fo the eDTLR dictionary to the database."""
+def rollback_add_edtlr_dictionary(apps, schema_editor):
+    """Rollback the insertion of the eDTLR dictionary to the database."""
     Dictionary = apps.get_model(APP_NAME, DICTIONARY_MODEL)
     Dictionary.objects.filter(name=DICTIONARY_NAME).delete()
 
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(add_edtlr_dictionary,
-                             reverse_code=rollback_add_edltr_dictionary),
+                             reverse_code=rollback_add_edtlr_dictionary),
         migrations.RunPython(
             update_dictionary_for_all_volumes,
             reverse_code=rollback_update_dictionary_for_all_volumes)
