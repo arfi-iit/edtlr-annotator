@@ -6,6 +6,7 @@ from annotation.models.evaluationinterval import EvaluationInterval
 from annotation.models.page import Page
 from annotation.models.reference import Reference
 from annotation.models.volume import Volume
+from annotation.models.dictionary import Dictionary
 from django.contrib import admin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -98,6 +99,12 @@ class EvaluationIntervalAdmin(admin.ModelAdmin):
     list_display = ["name", "start_date", "end_date"]
 
 
+class DictionaryAdmin(admin.ModelAdmin):
+    """Overrides the default admin options for Dictionary."""
+
+    list_display = ["id", "name", "is_active"]
+
+
 admin.site.register(Annotation, AnnotationAdmin)
 admin.site.register(Entry, EntryAdmin)
 admin.site.register(EntryPage, EntryPageAdmin)
@@ -105,6 +112,7 @@ admin.site.register(EvaluationInterval, EvaluationIntervalAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Reference, ReferenceAdmin)
 admin.site.register(Volume, VolumeAdmin)
+admin.site.register(Dictionary, DictionaryAdmin)
 
 admin.site.site_url = reverse_lazy('annotation:index')
 admin.site.index_title = _('Admin eDTLR data')

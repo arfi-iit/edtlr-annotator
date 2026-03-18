@@ -1,7 +1,6 @@
 """The view for a new annotation."""
 from annotation.models.annotation import Annotation
 from annotation.models.entry import Entry
-from annotation.models.entrypage import EntryPage
 from annotation.models.page import Page
 from annotation.models.reference import Reference
 from annotation.utils.automaticannotation import ReferenceAnnotator
@@ -71,31 +70,13 @@ class NewAnnotationView(LoginRequiredMixin, View):
         entry: Entry
             The next entry to annotate.
         """
-        in_progress_annotations = Annotation.objects.values('entry')\
-                                                    .annotate(count=Count('entry'))\
-                                                    .order_by('entry')\
-                                                    .filter(count__lt=MAX_CONCURRENT_ANNOTATORS)
-
-        user_annotations = Annotation.objects.filter(user=user)\
-                                             .values('entry')
-        user_annotations = set([a['entry'] for a in user_annotations])
-
-        for annotation in in_progress_annotations:
-            entry_id = annotation['entry']
-            if entry_id not in user_annotations:
-                return Entry.objects.get(pk=entry_id)
-
-        in_progress_entries = [
-            p['entry'] for p in Annotation.objects.values('entry')
-        ]
-
-        valid_ids = [
-            ep['entry_id'] for ep in EntryPage.objects.values('entry_id')
-        ]
-
-        return Entry.objects.exclude(id__in=in_progress_entries)\
-            .filter(id__in=valid_ids)\
-            .first()
+        entries_from_active_dictionary = Entry.objects.filter(entrypage__page__volume__dictionary__is_active=True)
+        next_entries = entries_from_active_dictionary.exclude(annotation__user=user)\
+                                                     .annotate(annotation_count=Count('annotation', distinct=True))\
+                                                     .filter(annotation_count__lt=MAX_CONCURRENT_ANNOTATORS)\
+                                                     .distinct()
+        next_entry = next_entries.order_by('-annotation_count').first()
+        return next_entry
 
     def __insert_annotation(self, user: User, entry: Entry) -> Annotation:
         """Create a new annotation for the specified entry and user.

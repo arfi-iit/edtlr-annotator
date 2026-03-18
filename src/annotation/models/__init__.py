@@ -8,3 +8,4 @@ from .reference import Reference
 from .utils import extract_title_word
 from .utils import remove_diacritics
 from .volume import Volume
+from .dictionary import Dictionary

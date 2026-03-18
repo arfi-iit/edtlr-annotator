@@ -1,5 +1,5 @@
 """Defines the command for importing data into the database."""
-from annotation.models import Volume, Page, Entry, EntryPage
+from annotation.models import Dictionary, Volume, Page, Entry, EntryPage
 from annotation.utils.xml2edtlrmd import convert_xml_to_edtlr_markdown
 from django.core.management.base import BaseCommand
 from itertools import takewhile
@@ -43,9 +43,13 @@ class Command(BaseCommand):
             help="The file containing mappings between entries and pages.",
             required=True)
         parser.add_argument(
+            '--dictionary',
+            help='The name of the dictionary for which to import the data.',
+            required=True)
+        parser.add_argument(
             '--volume',
             help="The name of the volume under which to import the data.",
-            default="eDTLR")
+            default="Vol. I")
         parser.add_argument('--page-offset',
                             help="The page offset.",
                             type=int,
@@ -59,7 +63,8 @@ class Command(BaseCommand):
         static_dir = Path(options['static_directory'])
 
         images = self.__scan_images(images_dir)
-        volume = self.__load_volume(options['volume'])
+        dictionary = self.__load_dictionary(options['dictionary'])
+        volume = self.__load_volume(options['volume'], dictionary)
         mappings = self.__load_mappings(mappings_file)
         pages = self.__create_pages(images, volume, static_dir)
 
@@ -240,13 +245,16 @@ class Command(BaseCommand):
         p.save()
         return p
 
-    def __load_volume(self, volume_name: str) -> Volume:
+    def __load_volume(self, volume_name: str,
+                      dictionary: Dictionary) -> Volume:
         """Load or insert the volume with the specified name.
 
         Parameters
         ----------
         volume_name: str, required
             The name of the volume.
+        dictionary: Dictionary, required
+            The dictionary to which the volume belongs.
 
         Returns
         -------
@@ -254,11 +262,33 @@ class Command(BaseCommand):
             The volume with the specified name.
         """
         volume = Volume.objects.filter(name=volume_name)\
+                               .filter(dictionary=dictionary)\
                                .first()
         if volume is None:
             volume = Volume(name=volume_name)
+            volume.dictionary = dictionary
             volume.save()
         return volume
+
+    def __load_dictionary(self, dictionary_name: str) -> Dictionary:
+        """Load or insert the dictionary with the specified name.
+
+        Parameters
+        ----------
+        dictionary_name: str, required
+            The name of the dictionary.
+
+        Returns
+        -------
+        dictionary: Dictionary
+            The dictionary with the specified name.
+        """
+        dictionary = Dictionary.objects.filter(name=dictionary_name)\
+            .first()
+        if dictionary is None:
+            dictionary = Dictionary(name=dictionary_name)
+            dictionary.save()
+        return dictionary
 
     def __scan_images(self,
                       directory: Path,
