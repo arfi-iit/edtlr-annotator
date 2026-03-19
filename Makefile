@@ -85,9 +85,7 @@ static-files: $(SRC_DIR)/manage.py
 # The IMPORT_DIR should be a subdirectory of STATIC_DIR
 import: $(SRC_DIR)/manage.py
 	test -n "$(DICTIONARY)"
-	ifeq ($(VOLUME),)
-		VOLUME := $(DICTIONARY)
-	endif
+	test -n "$(VOLUME)"
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py importdata \
 		--entries-directory $(IMPORT_DIR)/entries \
 		--images-directory $(IMPORT_DIR)/images \
