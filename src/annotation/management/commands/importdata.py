@@ -18,6 +18,12 @@ class Command(BaseCommand):
     help = "Import the data into the database."
     requires_migrations_checks = True
 
+    class EntryParsingStrategy:
+        """Defines the names of entry parsing strategies."""
+
+        TAKE_FIRST_WORD = 'TakeFirstWord'
+        LEAVE_UNCHANGED = 'LeaveUnchanged'
+
     def add_arguments(self, parser):
         """Add command-line arguments.
 
@@ -54,6 +60,14 @@ class Command(BaseCommand):
                             help="The page offset.",
                             type=int,
                             default=0)
+        parser.add_argument(
+            '--parse-strategy',
+            help="The strategy used for parsing the entry.",
+            choices=[
+                Command.EntryParsingStrategy.TAKE_FIRST_WORD,
+                Command.EntryParsingStrategy.LEAVE_UNCHANGED
+            ],
+            default=Command.EntryParsingStrategy.TAKE_FIRST_WORD)
 
     def handle(self, *args, **options):
         """Import the data into the database."""
@@ -61,11 +75,12 @@ class Command(BaseCommand):
         images_dir = Path(options['images_directory'])
         mappings_file = Path(options['mappings_file'])
         static_dir = Path(options['static_directory'])
+        parse_strategy = options['parse_strategy']
 
         images = self.__scan_images(images_dir)
         dictionary = self.__load_dictionary(options['dictionary'])
         volume = self.__load_volume(options['volume'], dictionary)
-        mappings = self.__load_mappings(mappings_file)
+        mappings = self.__load_mappings(mappings_file, parse_strategy)
         pages = self.__create_pages(images, volume, static_dir)
 
         for entry_file in entries_dir.glob("*.xml"):
@@ -310,13 +325,16 @@ class Command(BaseCommand):
                 results[int(match.group())] = img
         return results
 
-    def __load_mappings(self, mappings_file: Path) -> Dict[str, List[int]]:
+    def __load_mappings(self, mappings_file: Path,
+                        parse_strategy: str) -> Dict[str, List[int]]:
         """Load the entry-page mappings from the provided file.
 
         Parameters
         ----------
         mappings_file: Path, required
             The path of the CSV file from which to load the mapping.
+        parse_strategy: str, required
+            The strategy used to extract the entry from the mapping table.
 
         Returns
         -------
@@ -330,7 +348,9 @@ class Command(BaseCommand):
                          dtype=str)
         result = {}
         for row in df.itertuples():
-            entry, *_ = row.entry.split()
+            entry = row.entry
+            if parse_strategy == Command.EntryParsingStrategy.TAKE_FIRST_WORD:
+                entry, *_ = row.entry.split()
             if len(str(row.pages)) == 0:
                 continue
 

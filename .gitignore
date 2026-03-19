@@ -180,3 +180,6 @@ src/config/gunicorn.conf.py
 
 # The directory with various files
 /.local/
+
+# The data directory
+/src/annotation/static/annotation/data/
