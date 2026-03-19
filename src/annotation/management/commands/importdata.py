@@ -19,7 +19,7 @@ class Command(BaseCommand):
     requires_migrations_checks = True
 
     class EntryParsingStrategy:
-        """Defines the names of entry parsing strategy."""
+        """Defines the names of entry parsing strategies."""
 
         TAKE_FIRST_WORD = 'TakeFirstWord'
         LEAVE_UNCHANGED = 'LeaveUnchanged'
