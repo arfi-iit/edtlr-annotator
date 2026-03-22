@@ -75,7 +75,7 @@ class NewAnnotationView(LoginRequiredMixin, View):
                                                      .annotate(annotation_count=Count('annotation', distinct=True))\
                                                      .filter(annotation_count__lt=MAX_CONCURRENT_ANNOTATORS)\
                                                      .distinct()
-        next_entry = next_entries.order_by('-annotation_count').first()
+        next_entry = next_entries.order_by('-annotation_count', 'id').first()
         return next_entry
 
     def __insert_annotation(self, user: User, entry: Entry) -> Annotation:
