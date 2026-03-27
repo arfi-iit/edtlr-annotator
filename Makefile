@@ -179,3 +179,10 @@ references: $(REFERENCES_FILE)
 # Export complete entries
 entries-export: $(SRC_DIR)/manage.py
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py exportentries;
+
+# Shift pages of a dictionary volume
+page-shift: $(SRC_DIR)/manage.py
+	$(VENV_PYTHON) $(SRC_DIR)/manage.py shiftentrypages \
+		--dictionary $(DICTIONARY) \
+		--volume $(VOLUME) \
+		--page-offset $(PAGE_OFFSET);
