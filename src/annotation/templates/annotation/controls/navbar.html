@@ -33,14 +33,15 @@
 
         <!-- Resources dropdown menu -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="helpDropdown" role="button" data-bs-toggle="dropdown"
+          <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             {% translate 'Resources' %}
           </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="helpDropdown">
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="resourcesDropdown">
+            <!-- Clemens category -->
+            <li class="dropdown-header">Clemens</li>
             <li>
-              <a class="dropdown-item"
-                 href="https://docs.google.com/document/d/1hGun5ZqLHtkWkCsp1KLpKKq9TrO3-JNR/"
+              <a class="dropdown-item" href="https://docs.google.com/document/d/1T-kkfDBiQf76OZ81xu1SNTBiv8Kfouap/"
                  target="_blank" rel="noopener noreferrer">
                 {% translate 'Annotation guide' %}
                 <span aria-hidden="true" class="ms-1"><i class="bi bi-box-arrow-up-right"></i></span>
@@ -48,8 +49,38 @@
             </li>
             <li>
               <a class="dropdown-item"
-                 href="https://drive.google.com/file/d/1jyptLX3yTcYrAePaxdE-oiGxaDSaVACj/view?usp=sharing"
-                 target="_blank" rel="noopener noreferrer">
+                href="https://drive.google.com/file/d/1AQeiPfhxB14ri6tmlA5pDlhOHzpGfh2W/view?usp=drive_link"
+                target="_blank" rel="noopener noreferrer">
+                {% translate 'Annotation tutorial I' %}
+                <span aria-hidden="true" class="ms-1"><i class="bi bi-box-arrow-up-right"></i></span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item"
+                href="https://drive.google.com/file/d/1pjEvovtQBE7_y96GzTIH-orPA3YT-auz/view?usp=drive_link"
+                target="_blank" rel="noopener noreferrer">
+                {% translate 'Annotation tutorial II' %}
+                <span aria-hidden="true" class="ms-1"><i class="bi bi-box-arrow-up-right"></i></span>
+              </a>
+            </li>
+
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <!-- eDTLR category -->
+            <li class="dropdown-header">eDTLR</li>
+            <li>
+              <a class="dropdown-item" href="https://docs.google.com/document/d/1hGun5ZqLHtkWkCsp1KLpKKq9TrO3-JNR/"
+                target="_blank" rel="noopener noreferrer">
+                {% translate 'Annotation guide' %}
+                <span aria-hidden="true" class="ms-1"><i class="bi bi-box-arrow-up-right"></i></span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item"
+                href="https://drive.google.com/file/d/1jyptLX3yTcYrAePaxdE-oiGxaDSaVACj/view?usp=sharing"
+                target="_blank" rel="noopener noreferrer">
                 {% translate 'Annotation tutorial' %}
                 <span aria-hidden="true" class="ms-1"><i class="bi bi-box-arrow-up-right"></i></span>
               </a>
@@ -70,7 +101,6 @@
             </li>
           </ul>
         </li>
-
         <!-- User dropdown menu -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
