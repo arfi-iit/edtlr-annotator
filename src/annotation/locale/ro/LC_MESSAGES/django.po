@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-15 18:30+0200\n"
-"PO-Revision-Date: 2026-03-15 18:32+0200\n"
+"POT-Creation-Date: 2026-04-03 14:45+0300\n"
+"PO-Revision-Date: 2026-04-03 14:50+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,17 +18,17 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: src/annotation/admin.py:41 src/annotation/models/page.py:14
+#: src/annotation/admin.py:42 src/annotation/models/page.py:14
 #: src/annotation/models/volume.py:13
 msgid "volume"
 msgstr "volum"
 
-#: src/annotation/admin.py:56 src/annotation/models/evaluationinterval.py:13
+#: src/annotation/admin.py:57 src/annotation/models/evaluationinterval.py:13
 msgid "evaluation interval"
 msgstr "interval de evaluare"
 
-#: src/annotation/admin.py:110 src/annotation/admin.py:111
-#: src/annotation/admin.py:112
+#: src/annotation/admin.py:118 src/annotation/admin.py:119
+#: src/annotation/admin.py:120
 msgid "Admin eDTLR data"
 msgstr "Administrare date eDTLR"
 
@@ -82,7 +82,7 @@ msgstr "creat la"
 msgid "row update timestamp"
 msgstr "actualizat la"
 
-#: src/annotation/models/dictionary.py:12 src/annotation/models/volume.py:19
+#: src/annotation/models/dictionary.py:12 src/annotation/models/volume.py:23
 msgid "dictionary"
 msgstr "dicționar"
 
@@ -185,27 +185,36 @@ msgstr "Panou administrare"
 msgid "Resources"
 msgstr "Resurse"
 
-#: src/annotation/templates/annotation/controls/navbar.html:45
+#: src/annotation/templates/annotation/controls/navbar.html:46
+#: src/annotation/templates/annotation/controls/navbar.html:76
 msgid "Annotation guide"
 msgstr "Ghid de adnotare"
 
-#: src/annotation/templates/annotation/controls/navbar.html:53
+#: src/annotation/templates/annotation/controls/navbar.html:54
+msgid "Annotation tutorial I"
+msgstr "Tutorial de adnotare I"
+
+#: src/annotation/templates/annotation/controls/navbar.html:62
+msgid "Annotation tutorial II"
+msgstr "Tutorial de adnotare II"
+
+#: src/annotation/templates/annotation/controls/navbar.html:84
 msgid "Annotation tutorial"
 msgstr "Tutorial de adnotare"
 
-#: src/annotation/templates/annotation/controls/navbar.html:60
+#: src/annotation/templates/annotation/controls/navbar.html:91
 msgid "DLR Bibliography"
 msgstr "Siglar DLR"
 
-#: src/annotation/templates/annotation/controls/navbar.html:67
+#: src/annotation/templates/annotation/controls/navbar.html:98
 msgid "DA Bibliography"
 msgstr "Siglar DA"
 
-#: src/annotation/templates/annotation/controls/navbar.html:84
+#: src/annotation/templates/annotation/controls/navbar.html:114
 msgid "Change password"
 msgstr "Modificare parolă"
 
-#: src/annotation/templates/annotation/controls/navbar.html:92
+#: src/annotation/templates/annotation/controls/navbar.html:122
 msgid "Logout"
 msgstr "Deconectare"
 
