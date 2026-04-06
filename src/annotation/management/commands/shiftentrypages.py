@@ -38,10 +38,10 @@ class Command(BaseCommand):
         volume_name = kwargs['volume']
         page_offset = int(kwargs['page_offset'])
         volume = self.__load_volume(volume_name, dictionary_name)
-        pages_by_no, pages_by_id = self.__load_page_maps(volume)
+        pages_by_no = self.__load_page_map(volume)
 
         for ep in self.__load_entry_pages(volume):
-            current_page = pages_by_id[ep.page_id]
+            current_page = ep.page
             page_no = current_page.page_no + page_offset
             if page_no not in pages_by_no:
                 message = self.style.WARNING(
@@ -73,9 +73,8 @@ class Command(BaseCommand):
         ]
         return entry_pages
 
-    def __load_page_maps(
-            self, volume: Volume) -> tuple[dict[int, Page], dict[int, Page]]:
-        """Load the collections that map page numbers and page ids to the pages.
+    def __load_page_map(self, volume: Volume) -> dict[int, Page]:
+        """Load the collection that maps page numbersn to the pages.
 
         Parameters
         ----------
@@ -84,15 +83,13 @@ class Command(BaseCommand):
 
         Returns
         -------
-        (pages_by_no, pages_by_id): tuple of dict(int, Page), dict(int, Page)
-            The tuple containing the mappings between page number and page (first item),
-            and the mappings between page id and page (second item).
+        pages_by_no: dict(int, Page)
+            The dict containing the mappings between page number and page.
         """
-        pages_by_no, pages_by_id = {}, {}
+        pages_by_no = {}
         for page in Page.objects.filter(volume=volume):
             pages_by_no[page.page_no] = page
-            pages_by_id[page.id] = page
-        return pages_by_no, pages_by_id
+        return pages_by_no
 
     def __load_volume(self, volume_name: str, dictionary_name: str) -> Volume:
         """Load the volume specified by name and dictionary name."""
