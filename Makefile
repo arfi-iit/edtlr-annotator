@@ -182,7 +182,10 @@ entries-export: $(SRC_DIR)/manage.py
 
 # Shift pages of a dictionary volume
 page-shift: $(SRC_DIR)/manage.py
+	test -n "$(DICTIONARY)";
+	test -n "$(VOLUME)";
+	test -n "$(PAGE_OFFSET)";
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py shiftentrypages \
-		--dictionary $(DICTIONARY) \
-		--volume $(VOLUME) \
-		--page-offset $(PAGE_OFFSET);
+		--dictionary "$(DICTIONARY)" \
+		--volume "$(VOLUME)" \
+		--page-offset "$(PAGE_OFFSET)";
