@@ -67,11 +67,9 @@ class Command(BaseCommand):
 
     def __load_entry_pages(self, volume: Volume) -> list[EntryPage]:
         """Load the entry pages for the specified volume."""
-        entry_pages = [
-            ep for ep in EntryPage.objects.filter(page__volume=volume).
-            select_related('entry', 'page').order_by('entry_id')
-        ]
-        return entry_pages
+        return list(
+            EntryPage.objects.filter(page__volume=volume).select_related(
+                'entry', 'page').order_by('entry_id'))
 
     def __load_page_map(self, volume: Volume) -> dict[int, Page]:
         """Load the collection that maps page numbersn to the pages.
