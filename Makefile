@@ -84,15 +84,15 @@ static-files: $(SRC_DIR)/manage.py
 # make import STATIC_DIR=<path to static directory> IMPORT_DIR=<path to import directory> DICTIONARY="dictionary name" VOLUME="volume name"
 # The IMPORT_DIR should be a subdirectory of STATIC_DIR
 import: $(SRC_DIR)/manage.py
-	test -n "$(DICTIONARY)"
-	test -n "$(VOLUME)"
+	DICTIONARY="$(DICTIONARY)"; : "$${DICTIONARY:?DICTIONARY is required}";
+	VOLUME="$(VOLUME)"; : "$${VOLUME:?VOLUME is required}";
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py importdata \
 		--entries-directory $(IMPORT_DIR)/entries \
 		--images-directory $(IMPORT_DIR)/images \
 		--static-directory $(STATIC_DIR) \
 		--mappings-file $(IMPORT_DIR)/mappings.csv \
 		--page-offset $(PAGE_OFFSET) \
-		--dictionary $(DICTIONARY) \
+		--dictionary "$(DICTIONARY)" \
 		--volume "$(VOLUME)";
 
 dot-env-file: templates/.env.template
@@ -182,7 +182,10 @@ entries-export: $(SRC_DIR)/manage.py
 
 # Shift pages of a dictionary volume
 page-shift: $(SRC_DIR)/manage.py
+	DICTIONARY="$(DICTIONARY)"; : "$${DICTIONARY:?DICTIONARY is required}";
+	VOLUME="$(VOLUME)"; : "$${VOLUME:?VOLUME is required}";
+	PAGE_OFFSET="$(PAGE_OFFSET)"; : "$${PAGE_OFFSET:?PAGE_OFFSET is required}";
 	$(VENV_PYTHON) $(SRC_DIR)/manage.py shiftentrypages \
-		--dictionary $(DICTIONARY) \
-		--volume $(VOLUME) \
-		--page-offset $(PAGE_OFFSET);
+		--dictionary "$(DICTIONARY)" \
+		--volume "$(VOLUME)" \
+		--page-offset "$(PAGE_OFFSET)";
